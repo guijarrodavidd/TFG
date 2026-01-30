@@ -1,0 +1,36 @@
+CRITICAL - 2026-01-27 09:39:19 --> Error: Class "App\Models\UsuarioModel" not found
+[Method: POST, Route: api/login]
+in APPPATH/Controllers/Auth.php on line 16.
+ 1 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Auth->login()
+ 2 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController()
+ 3 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest()
+ 4 SYSTEMPATH/Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 6 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2026-01-27 09:39:53 --> Error: Class "App\Models\UsuarioModel" not found
+[Method: POST, Route: api/login]
+in APPPATH/Controllers/Auth.php on line 16.
+ 1 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Auth->login()
+ 2 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController()
+ 3 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest()
+ 4 SYSTEMPATH/Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 6 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2026-01-27 09:41:46 --> Error: Class "App\Models\UsuarioModel" not found
+[Method: POST, Route: api/login]
+in APPPATH/Controllers/Auth.php on line 16.
+ 1 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Auth->login()
+ 2 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController()
+ 3 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest()
+ 4 SYSTEMPATH/Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 6 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2026-01-27 09:44:37 --> Error: Class "App\Models\UsuarioModel" not found
+[Method: POST, Route: api/login]
+in APPPATH/Controllers/Auth.php on line 16.
+ 1 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Auth->login()
+ 2 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController()
+ 3 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest()
+ 4 SYSTEMPATH/Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 6 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
