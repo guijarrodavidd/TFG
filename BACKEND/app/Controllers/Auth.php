@@ -6,36 +6,31 @@ use CodeIgniter\Controller;
 class Auth extends Controller {
 
     public function login() {
-        // Para que Angular pueda consultar desde otro puerto/dominio (CORS)
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+        // Headers de seguridad para Angular
+        header("Access-Control-Allow-Origin: http://localhost:4200");
+        header("Access-Control-Allow-Headers: Content-Type");
         header("Access-Control-Allow-Methods: POST, OPTIONS");
 
         if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') { exit; }
 
         $model = new UsuarioModel();
         
-        // Recogemos los datos (vengan de formulario o de un JSON de Angular)
         $json = $this->request->getJSON();
-        $email = $json->email ?? $this->request->getPost('email');
-        $password = $json->password ?? $this->request->getPost('password');
-
-        $user = $model->where('email', $email)->first();
-
-        if ($user && password_verify($password, $user['password'])) {
-            // Aquí quitamos la password antes de enviar los datos
-            unset($user['password']);
-            
+        
+        if (!$json || !isset($json->email) || !isset($json->password)) {
             return $this->response->setJSON([
-                "status" => "success",
-                "message" => "Bienvenido a NEXUS",
-                "data" => $user
+                'status' => 'error', 
+                'message' => 'Faltan datos (email o password)'
             ]);
         }
 
-        return $this->response->setStatusCode(401)->setJSON([
-            "status" => "error",
-            "message" => "Credenciales inválidas"
-        ]);
+        $user = $model->where('email', $json->email)->first();
+
+        if ($user && password_verify($json->password, $user['password'])) {
+            unset($user['password']);
+            return $this->response->setJSON(['status' => 'success', 'data' => $user]);
+        }
+
+        return $this->response->setStatusCode(401)->setJSON(['status' => 'error', 'message' => 'Login fallido']);
     }
 }

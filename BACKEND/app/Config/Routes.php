@@ -7,3 +7,5 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->post('api/login', 'Auth::login');
+$routes->options('api/login', 'Auth::login');
+
