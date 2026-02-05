@@ -1,0 +1,46 @@
+CRITICAL - 2026-02-03 10:36:11 --> CodeIgniter\Database\Exceptions\DataException: There is no data to update.
+[Method: POST, Route: empresa/crear]
+in SYSTEMPATH/BaseModel.php on line 1008.
+ 1 SYSTEMPATH/BaseModel.php(1008): CodeIgniter\Database\Exceptions\DataException::forEmptyDataset()
+ 2 SYSTEMPATH/Model.php(860): CodeIgniter\BaseModel->update()
+ 3 APPPATH/Controllers/Empresa.php(39): CodeIgniter\Model->update()
+ 4 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Empresa->crear()
+ 5 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController()
+ 6 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(79): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2026-02-03 10:36:30 --> CodeIgniter\Database\Exceptions\DataException: There is no data to update.
+[Method: POST, Route: empresa/crear]
+in SYSTEMPATH/BaseModel.php on line 1008.
+ 1 SYSTEMPATH/BaseModel.php(1008): CodeIgniter\Database\Exceptions\DataException::forEmptyDataset()
+ 2 SYSTEMPATH/Model.php(860): CodeIgniter\BaseModel->update()
+ 3 APPPATH/Controllers/Empresa.php(39): CodeIgniter\Model->update()
+ 4 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Empresa->crear()
+ 5 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController()
+ 6 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(79): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2026-02-03 10:53:09 --> Error: Call to undefined method App\Controllers\Auth::respond()
+[Method: POST, Route: auth/registro-empleado]
+in APPPATH/Controllers/Auth.php on line 65.
+ 1 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Auth->registroEmpleado()
+ 2 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController()
+ 3 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest()
+ 4 SYSTEMPATH/Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 6 FCPATH/index.php(79): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2026-02-03 10:56:46 --> Error: Class "App\Controllers\ResourceController" not found
+[Method: POST, Route: auth/registro-empleado]
+in APPPATH/Controllers/Auth.php on line 7.
+ 1 SYSTEMPATH/Autoloader/Autoloader.php(315): include_once()
+ 2 SYSTEMPATH/Autoloader/Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile()
+ 3 SYSTEMPATH/Autoloader/Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace()
+ 4 [internal function]: CodeIgniter\Autoloader\Autoloader->loadClass()
+ 5 SYSTEMPATH/CodeIgniter.php(885): class_exists()
+ 6 SYSTEMPATH/CodeIgniter.php(494): CodeIgniter\CodeIgniter->startController()
+ 7 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest()
+ 8 SYSTEMPATH/Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+10 FCPATH/index.php(79): CodeIgniter\Boot::bootWeb()
