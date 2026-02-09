@@ -28,4 +28,36 @@ class Clientes extends ResourceController {
             'compras' => $ventas
         ]);
     }
+    // Crear nuevo cliente
+    public function create() {
+        $json = $this->request->getJSON();
+        
+        // Validación básica
+        if (!$json || !isset($json->nombre) || !isset($json->empresa_id)) {
+            return $this->fail('Datos incompletos', 400);
+        }
+
+        $clienteModel = new \App\Models\ClienteModel();
+        
+        // AQUÍ ES DONDE FALTABAN LOS CAMPOS NUEVOS 👇
+        $nuevoCliente = [
+            'empresa_id'       => $json->empresa_id,
+            'nombre'           => $json->nombre,
+            'nif'              => $json->nif ?? null,
+            'email'            => $json->email ?? null,
+            'telefono'         => $json->telefono ?? null,
+            'direccion'        => $json->direccion ?? null,
+            'tipo_cliente'     => $json->tipo_cliente ?? 'Residencial',
+            // Añadimos estos dos:
+            'fecha_nacimiento' => $json->fecha_nacimiento ?? null,
+            'nacionalidad'     => $json->nacionalidad ?? 'España'
+        ];
+
+        try {
+            $id = $clienteModel->insert($nuevoCliente);
+            return $this->respondCreated(['id' => $id, 'message' => 'Cliente creado']);
+        } catch (\Exception $e) {
+            return $this->failServerError('Error al guardar: ' . $e->getMessage());
+        }
+    }
 }

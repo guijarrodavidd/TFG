@@ -83,4 +83,36 @@ class Personal extends ResourceController {
             return $this->respond(['status' => 'started', 'entrada' => date('Y-m-d H:i:s')]);
         }
     }
+    // Obtener solicitudes del usuario
+    public function getSolicitudes($usuarioId) {
+        $db = \Config\Database::connect();
+        $builder = $db->table('vacaciones');
+        $solicitudes = $builder->where('usuario_id', $usuarioId)
+                               ->orderBy('fecha_inicio', 'DESC')
+                               ->get()->getResult();
+        return $this->respond($solicitudes);
+    }
+
+    // Guardar nueva solicitud
+    public function solicitarVacaciones() {
+        $json = $this->request->getJSON();
+        
+        if (!isset($json->usuario_id) || !isset($json->fecha_inicio) || !isset($json->fecha_fin)) {
+            return $this->fail('Datos incompletos', 400);
+        }
+
+        $db = \Config\Database::connect();
+        
+        $data = [
+            'usuario_id'   => $json->usuario_id,
+            'fecha_inicio' => $json->fecha_inicio,
+            'fecha_fin'    => $json->fecha_fin,
+            'estado'       => 'solicitado', // Estado inicial (PENDIENTE)
+            'comentarios'  => $json->comentarios ?? ''
+        ];
+
+        $db->table('vacaciones')->insert($data);
+        
+        return $this->respondCreated(['message' => 'Solicitud enviada']);
+    }
 }
