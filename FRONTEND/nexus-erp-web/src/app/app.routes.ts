@@ -13,6 +13,7 @@ import { ProductosComponent } from './components/productos/productos'; // Import
 import { ClientesComponent } from './components/clientes/clientes';
 import { PersonalComponent } from './components/personal/personal';
 import { ProductosCreateComponent } from './components/productos/productos-create/productos-create';
+import { VentasComponent } from './components/ventas/ventas';
 
 export const routes: Routes = [
     // --- RUTAS PÚBLICAS (Sin Sidebar) ---
@@ -37,6 +38,8 @@ export const routes: Routes = [
             { path: 'personal', component: PersonalComponent },
             { path: 'productos', component: ProductosComponent },
             { path: 'productos/crear', component: ProductosCreateComponent },
+            { path: 'productos/editar/:id', component: ProductosCreateComponent },
+            { path: 'ventas', component: VentasComponent },
             
             // Futuras rutas (ejemplo):
             // { path: 'clientes', component: ClientesComponent },

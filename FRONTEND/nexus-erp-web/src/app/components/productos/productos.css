@@ -1,33 +1,61 @@
-.cursor-pointer { cursor: pointer; }
-.hover-text-dark:hover { color: black !important; font-weight: 500; }
+/* Placeholder sutil y transparente */
+.search-bar input::placeholder {
+    color: #adb5bd; /* Gris claro */
+    font-weight: 500;
+}
 
-/* Filtros */
-.color-dot {
-    width: 25px;
-    height: 25px;
+/* Al hacer focus, que no salga el borde azul feo, sino una sombra suave */
+.search-bar input:focus {
+    box-shadow: none;
+    background-color: transparent;
+}
+
+.search-bar:focus-within {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
+    border-color: #dee2e6 !important;
+}
+
+/* Paginación bonita */
+.page-link {
+    background-color: white;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.2s;
 }
-.color-dot:hover { transform: scale(1.2); }
-
-/* Card */
-.product-card {
-    border-radius: 20px;
-    transition: transform 0.2s;
-}
-.product-card:hover {
-    transform: translateY(-5px);
+.page-link:hover:not(.disabled) {
+    background-color: #f8f9fa;
 }
 
-/* Sombra para que el zapato parezca flotar */
-.drop-shadow {
-    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
-    transition: transform 0.3s;
-}
-.product-card:hover .drop-shadow {
-    transform: scale(1.1) rotate(-5deg);
+/* --- AUTOCOMPLETE DROPDOWN --- */
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%; /* Justo debajo del input */
+    left: 0;
+    width: 100%;
+    max-height: 300px; /* Si hay muchos, hacemos scroll */
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 0 0 1rem 1rem; /* Redondeado solo abajo */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    z-index: 1050; /* Por encima de todo */
 }
 
-.search-pill {
-    min-width: 250px;
+.autocomplete-item {
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.autocomplete-item:hover {
+    background-color: #f8f9fa;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+/* Ajuste para que el input no tenga esquinas redondas abajo si el menú está abierto */
+.search-bar.menu-abierto {
+    border-radius: 1.5rem 1.5rem 0 0 !important;
+    border-bottom: none !important;
 }

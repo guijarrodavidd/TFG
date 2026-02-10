@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-productos-create',
@@ -15,18 +15,33 @@ export class ProductosCreateComponent implements OnInit {
   
   http = inject(HttpClient);
   router = inject(Router);
+  route = inject(ActivatedRoute);
   
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
 
   // Listas
   listaCategorias: any[] = [];
 
+  // Variables de Estado y Textos
+  esEdicion: boolean = false;
+  productoId: string | null = null;
+  
+  // TEXTOS DINÁMICOS (Por defecto: modo creación)
+  tituloPagina: string = 'Nuevo Producto';
+  subtituloPagina: string = 'Rellena la información para añadir al catálogo.';
+  textoBoton: string = 'Guardar Producto';
+
+  // Variables para el TOAST (Notificación)
+  toastVisible: boolean = false;
+  toastMensaje: string = '';
+  toastTipo: 'success' | 'error' = 'success';
+
   producto = {
     nombre: '',
     sku: '',
-    categoria_id: null, // Lo vincularemos al ID real
-    precio_venta: 0,    // Este será el PVP
-    impuesto: 21,       // IVA Fijo
+    categoria_id: null, 
+    precio_venta: 0,    
+    impuesto: 21,       
     stock_actual: 0,
     stock_minimo: 5,
     descripcion: '',
@@ -35,13 +50,28 @@ export class ProductosCreateComponent implements OnInit {
 
   imagenSeleccionada: File | null = null;
   imagenPreview: string | null = null;
-  
-  // Variables calculadas
   precioSinIva: number = 0;
 
   ngOnInit() {
     this.cargarCategorias();
-    this.generarSKU(); // Generamos uno por defecto al entrar
+    
+    // DETECTAR SI ESTAMOS EDITANDO
+    this.route.paramMap.subscribe(params => {
+      this.productoId = params.get('id');
+      
+      if (this.productoId) {
+        // --- MODO EDICIÓN ---
+        this.esEdicion = true;
+        this.tituloPagina = 'Editar Producto';
+        this.subtituloPagina = 'Modifica los detalles y guarda los cambios.';
+        this.textoBoton = 'Actualizar Cambios';
+        
+        this.cargarProductoParaEditar(this.productoId);
+      } else {
+        // --- MODO CREAR ---
+        this.generarSKU();
+      }
+    });
   }
 
   cargarCategorias() {
@@ -49,31 +79,33 @@ export class ProductosCreateComponent implements OnInit {
     this.http.get(`http://localhost/TFG/BACKEND/public/index.php/categorias/empresa/${idEmpresa}`)
       .subscribe((res: any) => {
         this.listaCategorias = res;
-        
-        // BUSCAR CATEGORÍA 'GENERAL' PARA PONERLA POR DEFECTO
-        const general = this.listaCategorias.find(c => c.nombre.toLowerCase() === 'general');
-        if (general) {
-          this.producto.categoria_id = general.id;
-        } else if (this.listaCategorias.length > 0) {
-          // Si no existe General, ponemos la primera que haya
-          this.producto.categoria_id = this.listaCategorias[0].id;
+        // Seleccionar "General" por defecto solo si es nuevo
+        if (!this.esEdicion && this.listaCategorias.length > 0) {
+           const general = this.listaCategorias.find(c => c.nombre.toLowerCase() === 'general');
+           this.producto.categoria_id = general ? general.id : this.listaCategorias[0].id;
         }
       });
   }
 
-  // --- CÁLCULOS ---
+  cargarProductoParaEditar(id: string) {
+    this.http.get(`http://localhost/TFG/BACKEND/public/index.php/productos/${id}`)
+      .subscribe({
+        next: (data: any) => {
+          this.producto = data;
+          this.calcularBase();
+          if (data.imagen_url) {
+            this.imagenPreview = 'http://localhost/TFG/BACKEND/public/' + data.imagen_url;
+          }
+        },
+        error: (err) => console.error("Error cargando producto", err)
+      });
+  }
 
-  // Calculamos la base imponible a partir del PVP
+  // --- CÁLCULOS Y HELPERS ---
   calcularBase() {
     const pvp = this.producto.precio_venta;
-    const iva = this.producto.impuesto; // 21
-    
-    if (pvp > 0) {
-      // Fórmula: Precio / 1.21
-      this.precioSinIva = pvp / (1 + (iva / 100));
-    } else {
-      this.precioSinIva = 0;
-    }
+    const iva = this.producto.impuesto || 21;
+    this.precioSinIva = pvp > 0 ? pvp / (1 + (iva / 100)) : 0;
   }
 
   generarSKU() {
@@ -91,34 +123,29 @@ export class ProductosCreateComponent implements OnInit {
     }
   }
 
-  guardarProducto() {
-    console.log("🔵 Intentando guardar producto..."); // 1. Ver si entra a la función
-
-    // Validación simple antes de enviar
-    if (!this.producto.nombre || !this.producto.precio_venta) {
-      alert("Por favor, rellena el nombre y el precio.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('empresa_id', this.usuario.empresa_id || '4'); // Fallback por si acaso
+  // --- FUNCIÓN TOAST ---
+  mostrarToast(mensaje: string, tipo: 'success' | 'error') {
+    this.toastMensaje = mensaje;
+    this.toastTipo = tipo;
+    this.toastVisible = true;
     
-    // Añadimos campos manualmente para asegurar que van bien
-    formData.append('nombre', this.producto.nombre);
-    formData.append('sku', this.producto.sku);
-    formData.append('descripcion', this.producto.descripcion);
-    formData.append('precio_venta', this.producto.precio_venta.toString());
-    formData.append('stock_actual', this.producto.stock_actual.toString());
-    formData.append('stock_minimo', this.producto.stock_minimo.toString());
-    formData.append('estado', this.producto.estado);
+    // Ocultar automáticamente a los 3 segundos
+    setTimeout(() => {
+        this.toastVisible = false;
+    }, 3000);
+  }
 
-    // Enviar el ID de categoría (si es null, enviamos cadena vacía o 0)
-    if (this.producto.categoria_id) {
-        formData.append('categoria_id', this.producto.categoria_id);
-    }
+  // --- GUARDAR ---
+  guardarProducto() {
+    const formData = new FormData();
+    formData.append('empresa_id', this.usuario.empresa_id);
+    
+    Object.keys(this.producto).forEach(key => {
+      let value = (this.producto as any)[key];
+      if (value === null) value = '';
+      formData.append(key, value);
+    });
 
-    // Enviar el Precio Base calculado (Precio Coste)
-    // Si precioSinIva es NaN o 0, enviamos 0
     const coste = this.precioSinIva ? this.precioSinIva.toString() : '0';
     formData.append('precio_coste', coste);
 
@@ -126,22 +153,26 @@ export class ProductosCreateComponent implements OnInit {
       formData.append('imagen', this.imagenSeleccionada);
     }
 
-    // DEBUG: Ver qué estamos enviando
-    console.log("📦 Datos a enviar:", {
-        nombre: this.producto.nombre,
-        cat: this.producto.categoria_id,
-        coste: coste
-    });
+    let url = 'http://localhost/TFG/BACKEND/public/index.php/productos/crear';
+    if (this.esEdicion && this.productoId) {
+       url = `http://localhost/TFG/BACKEND/public/index.php/productos/actualizar/${this.productoId}`;
+    }
 
-    this.http.post('http://localhost/TFG/BACKEND/public/index.php/productos/crear', formData)
+    this.http.post(url, formData)
       .subscribe({
-        next: (res) => {
-          console.log("✅ Respuesta servidor:", res);
-          this.router.navigate(['/dashboard/productos']);
+        next: () => {
+          // 1. Mostrar mensaje de éxito
+          const msg = this.esEdicion ? '¡Producto actualizado correctamente!' : '¡Producto creado con éxito!';
+          this.mostrarToast(msg, 'success');
+
+          // 2. Esperar 1.5 segundos para que el usuario lea el mensaje antes de irse
+          setTimeout(() => {
+              this.router.navigate(['/dashboard/productos']);
+          }, 1500);
         },
         error: (err) => {
-          console.error("❌ Error al guardar:", err);
-          alert('Error al guardar: ' + (err.error?.messages?.error || err.message || 'Desconocido'));
+          console.error(err);
+          this.mostrarToast('Hubo un error al guardar.', 'error');
         }
       });
   }

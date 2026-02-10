@@ -1,0 +1,148 @@
+<div class="container-fluid h-100 p-4 fade-in">
+
+    <div class="row h-100 g-4">
+
+        <div class="col-lg-8 d-flex flex-column">
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h3 class="fw-bold text-dark mb-0">Nueva Venta</h3>
+                    <p class="text-muted small mb-0">Selecciona productos para añadir al carrito.</p>
+                </div>
+                <div class="input-group shadow-sm rounded-pill overflow-hidden bg-white border" style="width: 300px;">
+                    <span class="input-group-text bg-white border-0 ps-3 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-0 ps-2 py-2" placeholder="Buscar por nombre, código..." [(ngModel)]="textoBusqueda">
+                    <button *ngIf="textoBusqueda" (click)="textoBusqueda=''" class="btn bg-white border-0 text-muted"><i class="bi bi-x-circle-fill"></i></button>
+                </div>
+            </div>
+
+            <div *ngIf="cargando" class="text-center py-5 flex-grow-1 d-flex align-items-center justify-content-center">
+                <div class="spinner-border text-primary" role="status"></div>
+            </div>
+
+             <div *ngIf="!cargando && productosFiltrados.length === 0" class="text-center py-5 flex-grow-1 d-flex flex-column align-items-center justify-content-center opacity-50">
+                <i class="bi bi-box-seam fs-1 mb-3"></i>
+                <h6>No se encontraron productos</h6>
+            </div>
+
+            <div *ngIf="!cargando && productosFiltrados.length > 0" class="row g-3 overflow-auto flex-grow-1 p-1 align-content-start" style="max-height: calc(100vh - 180px);">
+                
+                <div *ngFor="let p of productosFiltrados" class="col-6 col-md-4 col-lg-3 col-xl-20">
+                    
+                    <div class="card h-100 border shadow-sm rounded-3 overflow-hidden product-card-pos position-relative" 
+                         [class.out-of-stock]="p.stock_actual <= 0"
+                         (click)="addToCart(p)">
+                        
+                        <div class="position-relative bg-white p-3 d-flex align-items-center justify-content-center overflow-hidden border-bottom" style="height: 135px;">
+                            
+                            <img *ngIf="p.imagen_url" [src]="'http://localhost/TFG/BACKEND/public/' + p.imagen_url" 
+                                 class="w-100 h-100 object-fit-contain" 
+                                 alt="{{ p.nombre }}">
+                            
+                            <i *ngIf="!p.imagen_url" class="bi bi-image fs-2 text-secondary opacity-25"></i>
+                            
+                            <div *ngIf="p.stock_actual <= 0" class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center text-white fw-bold" style="font-size: 0.8rem; letter-spacing: 1px; z-index: 2;">
+                                AGOTADO
+                            </div>
+                        </div>
+
+                        <div class="card-body p-2 d-flex flex-column justify-content-between bg-light bg-opacity-25">
+                            
+                            <div class="mb-2">
+                                <h6 class="fw-bold text-dark mb-0 text-truncate" style="font-size: 0.9rem;" title="{{ p.nombre }}">
+                                    {{ p.nombre }}
+                                </h6>
+                                <small class="text-muted d-block text-truncate" style="font-size: 0.75rem;">{{ p.sku }}</small>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center border-top pt-2">
+                                <span class="fw-bold text-primary" style="font-size: 1.1rem;">{{ p.precio_venta }}€</span>
+                                
+                                <span class="badge border fw-normal text-dark d-flex align-items-center" 
+                                      [ngClass]="p.stock_actual > 5 ? 'bg-success-subtle border-success-subtle text-success-emphasis' : (p.stock_actual > 0 ? 'bg-warning-subtle border-warning-subtle text-warning-emphasis' : 'bg-danger-subtle border-danger-subtle text-danger-emphasis')"
+                                      style="font-size: 0.7rem; padding: 0.35em 0.5em;">
+                                    <i class="bi bi-box-seam me-1 opacity-75"></i>{{ p.stock_actual }}
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden h-100 sticky-cart bg-white">
+                
+                <div class="card-header bg-white border-bottom pt-4 px-4 pb-3">
+                    <h5 class="fw-bold mb-0 d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-cart3 me-2"></i> Carrito actual</span>
+                        <span class="badge bg-primary rounded-pill">{{ carrito.length }} ítems</span>
+                    </h5>
+                </div>
+
+                <div class="card-body p-0 overflow-auto cart-items-container bg-light">
+                    
+                    <div *ngIf="carrito.length === 0" class="text-center py-5 text-muted opacity-50 h-100 d-flex flex-column justify-content-center align-items-center">
+                        <i class="bi bi-cart-x fs-1 mb-2"></i>
+                        <p class="fw-bold mb-0">El carrito está vacío</p>
+                        <small>Haz clic en los productos para añadir</small>
+                    </div>
+
+                    <ul class="list-group list-group-flush">
+                        <li *ngFor="let item of carrito; let i = index" class="list-group-item p-3 border-bottom-0 border-top-0 cart-item-row">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="overflow-hidden me-2">
+                                    <h6 class="fw-bold mb-0 text-dark text-truncate">{{ item.producto.nombre }}</h6>
+                                    <small class="text-muted fw-bold" style="font-size: 0.75rem;">SKU: {{ item.producto.sku }}</small>
+                                </div>
+                                <span class="fw-bold text-dark text-nowrap">{{ (item.producto.precio_venta * item.cantidad) | number:'1.2-2' }}€</span>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center bg-light rounded-3 p-1">
+                                <div class="input-group input-group-sm bg-transparent border-0" style="width: 90px;">
+                                    <button class="btn btn-sm btn-white shadow-sm rounded-2 fw-bold text-primary" (click)="updateQuantity(item, item.cantidad - 1)">-</button>
+                                    <input type="text" class="form-control border-0 text-center fw-bold bg-transparent p-0" [value]="item.cantidad" readonly>
+                                    <button class="btn btn-sm btn-white shadow-sm rounded-2 fw-bold text-primary" (click)="updateQuantity(item, item.cantidad + 1)" [disabled]="item.cantidad >= item.producto.stock_actual">+</button>
+                                </div>
+                                <button class="btn btn-sm btn-outline-danger border-0 rounded-circle" (click)="removeFromCart(i)" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-footer bg-white border-top p-4">
+                    <div class="d-flex justify-content-between mb-1 text-muted small">
+                        <span>Subtotal (Base)</span>
+                        <span>{{ subtotalVenta | number:'1.2-2' }}€</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-muted small">
+                        <span>Impuestos (21%)</span>
+                        <span>{{ impuestoTotal | number:'1.2-2' }}€</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded-3">
+                        <h5 class="fw-bold text-dark mb-0">Total</h5>
+                        <h2 class="fw-bold text-primary mb-0">{{ totalVenta | number:'1.2-2' }}€</h2>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg fw-bold shadow-sm rounded-3 py-3" (click)="procesarVenta()" [disabled]="carrito.length === 0">
+                            <i class="bi bi-credit-card-2-back me-2"></i> Cobrar
+                        </button>
+                        <button class="btn btn-outline-secondary fw-bold rounded-3" (click)="limpiarCarrito()" [disabled]="carrito.length === 0">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
