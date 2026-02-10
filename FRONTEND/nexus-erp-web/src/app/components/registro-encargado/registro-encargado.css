@@ -1,0 +1,179 @@
+/* === ESTRUCTURA GENERAL === */
+:host {
+    /* La fuente 'Inter' es la clave de la profesionalidad */
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #334155; /* Gris azulado oscuro (Slate 700) en vez de negro puro */
+}
+
+.registration-container {
+    min-height: 100vh;
+    background-color: #f1f5f9; /* Slate 100 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* === TARJETA DIVIDIDA (SPLIT CARD) === */
+.split-card {
+    background: white;
+    /* Sombra difusa y elegante estilo SaaS moderno */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-radius: 16px; /* Bordes un poco menos redondos, más serios */
+    overflow: hidden;
+    width: 100%;
+    max-width: 950px; /* Un poco más ancha */
+    display: flex;
+    min-height: 650px;
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+/* === LADO IZQUIERDO (FORMULARIO) === */
+.form-side {
+    flex: 1.2; /* Damos un poco más de espacio al formulario */
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ffffff;
+}
+
+.brand-title {
+    font-weight: 700;
+    letter-spacing: -0.5px; /* Tracking negativo hace que se vea más compacto y pro */
+    color: #0f172a; /* Slate 900 */
+    font-size: 1.75rem;
+}
+
+.text-muted {
+    color: #64748b !important; /* Slate 500 */
+    font-weight: 400;
+}
+
+/* === INPUTS PREMIUM === */
+.form-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.input-group-text {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-right: none;
+    color: #94a3b8;
+}
+
+.custom-input {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1; /* Gris suave pero visible */
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    color: #1e293b;
+    transition: all 0.2s ease-in-out;
+}
+
+.custom-input::placeholder {
+    color: #94a3b8; /* Placeholder más claro */
+}
+
+/* Efecto Focus: Borde azul sólido y sombra sutil */
+.custom-input:focus {
+    background-color: #fff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    outline: none;
+}
+
+.input-group:focus-within .input-group-text {
+    background-color: #fff;
+    border-color: #2563eb;
+}
+
+/* === BOTÓN DE REGISTRO === */
+.btn-register {
+    background-color: #0f172a; /* Casi negro (Corporate Dark) */
+    color: white;
+    border: none;
+    padding: 14px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+.btn-register:hover:not(:disabled) {
+    background-color: #1e293b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+.btn-register:disabled {
+    background-color: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* === LADO DERECHO (BRANDING) === */
+.info-side {
+    flex: 0.8;
+    /* Degradado sutil y profesional (Azul Oscuro Profundo) */
+    background: linear-gradient(160deg, #0f172a 0%, #1e3a8a 100%);
+    color: white;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    text-align: center;
+}
+
+.info-content h2 {
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.info-content p {
+    font-weight: 300;
+    opacity: 0.8;
+    line-height: 1.6;
+    font-size: 1.05rem;
+}
+
+/* Lista de beneficios */
+.benefit-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 50px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: inline-block;
+}
+
+/* Animación barra seguridad */
+.transition-width {
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .split-card {
+        flex-direction: column-reverse;
+        max-width: 500px;
+    }
+    .info-side {
+        padding: 40px 20px;
+    }
+    .form-side {
+        padding: 40px 30px;
+    }
+}

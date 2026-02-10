@@ -1,0 +1,61 @@
+.sidebar {
+    width: 280px;
+    background-color: #343a40; /* Gris oscuro elegante */
+    border-radius: 0 30px 30px 0; /* Curva solo a la derecha */
+    box-shadow: 10px 0 20px rgba(0,0,0,0.05);
+    z-index: 100;
+}
+
+/* Avatar circular */
+.avatar-container {
+    width: 80px;
+    height: 80px;
+    background: #fcd34d; /* Color amarillo/dorado */
+    color: #333;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    border: 4px solid rgba(255,255,255,0.2);
+}
+
+/* Items del menú */
+.nav-item {
+    padding: 12px 20px;
+    border-radius: 12px;
+    color: #adb5bd;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: white;
+}
+
+/* Estilo cuando el link está activo */
+.active-link {
+    background-color: #0d6efd; /* Azul corporativo */
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+}
+
+.btn-logout {
+    background-color: rgba(255,255,255,0.05);
+    color: #adb5bd;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    transition: 0.3s;
+}
+
+.btn-logout:hover {
+    background-color: #dc3545; /* Rojo al salir */
+    color: white;
+}

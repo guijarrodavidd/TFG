@@ -1,0 +1,33 @@
+.cursor-pointer { cursor: pointer; }
+.hover-text-dark:hover { color: black !important; font-weight: 500; }
+
+/* Filtros */
+.color-dot {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.color-dot:hover { transform: scale(1.2); }
+
+/* Card */
+.product-card {
+    border-radius: 20px;
+    transition: transform 0.2s;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Sombra para que el zapato parezca flotar */
+.drop-shadow {
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+    transition: transform 0.3s;
+}
+.product-card:hover .drop-shadow {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.search-pill {
+    min-width: 250px;
+}

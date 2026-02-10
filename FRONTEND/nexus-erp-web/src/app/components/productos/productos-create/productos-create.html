@@ -1,0 +1,136 @@
+<div class="container-fluid p-4 fade-in">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4 sticky-top py-3 z-1" style="background: rgba(248,249,250,0.95); backdrop-filter: blur(5px);">
+    <div>
+      <h2 class="fw-bold text-dark mb-0">Nuevo Producto</h2>
+      <p class="text-muted mb-0 small">Rellena la información para añadir al catálogo.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-light border fw-bold px-4" (click)="router.navigate(['/dashboard/productos'])">Cancelar</button>
+      <button class="btn btn-dark fw-bold px-4 shadow-sm" (click)="guardarProducto()">
+        <i class="bi bi-check-lg me-2"></i> Guardar Producto
+      </button>
+    </div>
+  </div>
+
+  <div class="row g-4 justify-content-center">
+    
+    <div class="col-lg-8 d-flex flex-column gap-4">
+      
+      <div class="card border-0 shadow-sm rounded-4 p-4">
+        <h6 class="fw-bold mb-3 text-secondary text-uppercase small ls-1">Información General</h6>
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-muted">NOMBRE DEL PRODUCTO</label>
+          <input type="text" class="form-control bg-light border-0 py-2 fw-bold" 
+                 [(ngModel)]="producto.nombre" placeholder="Ej: Zapatillas Nike Air">
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-muted">CATEGORÍA</label>
+            <select class="form-select bg-light border-0 py-2 text-capitalize" [(ngModel)]="producto.categoria_id">
+              <option *ngFor="let cat of listaCategorias" [value]="cat.id">
+                {{ cat.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-muted">SKU / CÓDIGO</label>
+            <div class="input-group">
+              <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="producto.sku">
+              <button class="btn btn-outline-secondary border-0 bg-light text-primary fw-bold" type="button" (click)="generarSKU()">Generar</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label fw-bold small text-muted">DESCRIPCIÓN</label>
+          <textarea class="form-control bg-light border-0" rows="3" [(ngModel)]="producto.descripcion" placeholder="Descripción del producto..."></textarea>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm rounded-4 p-4">
+        <h6 class="fw-bold mb-3 text-secondary text-uppercase small ls-1">Precio de Venta</h6>
+        
+        <div class="row g-4 align-items-center">
+          
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-dark">PVP (IVA INCLUIDO)</label>
+            <div class="input-group">
+                <input type="number" class="form-control bg-light border-0 py-3 fw-bold fs-4 text-dark" 
+                       [(ngModel)]="producto.precio_venta" (input)="calcularBase()" placeholder="0.00">
+                <span class="input-group-text bg-light border-0 fw-bold">€</span>
+            </div>
+            <small class="text-muted mt-2 d-block">
+                Introduce el precio final que pagará el cliente.
+            </small>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="p-3 rounded-4 border bg-body-tertiary">
+              <div class="d-flex justify-content-between mb-2 border-bottom pb-2">
+                 <span class="text-muted small fw-bold">Base Imponible:</span>
+                 <span class="fw-bold text-dark">{{ precioSinIva | number:'1.2-2' }}€</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                 <span class="text-muted small fw-bold">IVA (21%):</span>
+                 <span class="fw-bold text-dark">{{ (producto.precio_venta - precioSinIva) | number:'1.2-2' }}€</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <hr class="text-muted opacity-25 my-4">
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted">STOCK INICIAL</label>
+                <input type="number" class="form-control bg-light border-0 py-2" [(ngModel)]="producto.stock_actual">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted">ALERTA STOCK BAJO</label>
+                <input type="number" class="form-control bg-light border-0 py-2" [(ngModel)]="producto.stock_minimo">
+            </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-lg-4 d-flex flex-column gap-4">
+      
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+        <h6 class="fw-bold mb-3 text-secondary text-uppercase small ls-1 text-start">Imagen</h6>
+        
+        <div class="upload-area position-relative bg-light rounded-4 border-2 border-dashed d-flex flex-column align-items-center justify-content-center overflow-hidden" 
+             style="height: 250px; cursor: pointer;"
+             (click)="fileInput.click()">
+          
+          <div *ngIf="!imagenPreview" class="text-muted p-4">
+            <i class="bi bi-cloud-arrow-up fs-1 mb-2 d-block text-secondary"></i>
+            <span class="fw-bold small">Haz clic para subir imagen</span>
+          </div>
+
+          <img *ngIf="imagenPreview" [src]="imagenPreview" class="img-fluid w-100 h-100 object-fit-cover">
+          
+          <input #fileInput type="file" (change)="onFileSelected($event)" class="d-none" accept="image/*">
+        </div>
+        <button *ngIf="imagenPreview" (click)="imagenPreview = null; imagenSeleccionada = null" class="btn btn-sm btn-outline-danger mt-3 w-100">Eliminar imagen</button>
+      </div>
+
+      <div class="card border-0 shadow-sm rounded-4 p-4">
+        <h6 class="fw-bold mb-3 text-secondary text-uppercase small ls-1">Visibilidad</h6>
+        <div class="form-check form-switch p-0 m-0 d-flex justify-content-between align-items-center">
+          <label class="form-check-label fw-bold text-dark" for="flexSwitchCheckChecked">Producto Activo</label>
+          <input class="form-check-input ms-0" type="checkbox" role="switch" id="flexSwitchCheckChecked" 
+                 [checked]="producto.estado === 'activo'"
+                 (change)="producto.estado = producto.estado === 'activo' ? 'inactivo' : 'activo'"
+                 style="width: 3em; height: 1.5em;">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

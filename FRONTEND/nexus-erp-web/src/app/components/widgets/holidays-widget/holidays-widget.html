@@ -1,0 +1,58 @@
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white h-100">
+    
+    <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                <i class="bi bi-calendar2-week me-2 text-danger"></i> 
+                Festivos
+            </h6>
+            
+            <select class="form-select form-select-sm border-primary text-primary fw-bold" 
+                    style="width: auto; max-width: 180px; cursor: pointer;"
+                    [(ngModel)]="comunidadSeleccionada" 
+                    (change)="filtrarFestivos()">
+                <option value="ES-MD">Comunidad de Madrid</option> 
+                <option *ngFor="let c of comunidades" [value]="c.code">{{ c.nombre }}</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="card-body p-3 pt-0">
+        <div class="d-flex flex-column gap-2">
+            
+            <div *ngFor="let festivo of festivosFiltrados" class="d-flex align-items-center p-2 rounded-3 hover-effect transition-all">
+                <div class="date-box bg-danger-subtle text-danger rounded-3 d-flex flex-column align-items-center justify-content-center me-3 shadow-sm" 
+                     style="width: 45px; height: 45px; min-width: 45px;">
+                    <span class="fw-bold h6 mb-0">{{ festivo.date | date:'dd' }}</span>
+                    <span class="small text-uppercase fw-bold" style="font-size: 0.6rem;">{{ festivo.date | date:'MMM' }}</span>
+                </div>
+                
+                <div class="overflow-hidden">
+                    <h6 class="fw-bold text-dark mb-0 text-truncate" style="font-size: 0.85rem;" title="{{ festivo.localName }}">
+                        {{ festivo.localName }}
+                    </h6>
+                    <div class="d-flex align-items-center">
+                        <small class="text-muted me-2" style="font-size: 0.75rem;">
+                            {{ festivo.date | date:'EEEE' }}
+                        </small>
+                        <span *ngIf="festivo.global" class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle" style="font-size: 0.6rem;">Nacional</span>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="cargando" class="text-center py-4">
+                <div class="spinner-border spinner-border-sm text-secondary mb-2" role="status"></div>
+                <small class="d-block text-muted">Cargando...</small>
+            </div>
+
+            <div *ngIf="!cargando && !error && festivosFiltrados.length === 0" class="text-center py-3 text-muted">
+                <small>No hay festivos próximos.</small>
+            </div>
+
+            <div *ngIf="error" class="text-center py-3 text-danger">
+                <small>Sin conexión</small>
+            </div>
+
+        </div>
+    </div>
+</div>

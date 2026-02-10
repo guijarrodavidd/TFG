@@ -1,0 +1,36 @@
+<aside class="sidebar h-100 d-flex flex-column text-white p-4">
+  
+  <div class="text-center mb-5 mt-3">
+    <div class="avatar-container mx-auto mb-3 shadow">
+      <span class="initials">{{ usuario.nombre?.charAt(0) }}</span>
+    </div>
+    <h5 class="fw-bold mb-0">{{ usuario.nombre }}</h5>
+    <small class="text-white-50" *ngIf="usuario.empresa_id">NEXUS ERP</small>
+  </div>
+
+  <nav class="nav flex-column gap-2 flex-grow-1">
+    
+    <a routerLink="/dashboard/inicio" routerLinkActive="active-link" class="nav-item">
+      <i class="bi bi-grid-fill me-3"></i> Dashboard
+    </a>
+
+    <a class="nav-item text-white-50">
+      <i class="bi bi-people-fill me-3"></i> Clientes
+    </a>
+    <a class="nav-item text-white-50">
+      <i class="bi bi-box-seam-fill me-3"></i> Productos
+    </a>
+    <a class="nav-item text-white-50">
+      <i class="bi bi-cart-fill me-3"></i> Ventas
+    </a>
+    <a class="nav-item text-white-50">
+      <i class="bi bi-person-badge-fill me-3"></i> Personal
+    </a>
+
+  </nav>
+
+  <button (click)="logout()" class="btn btn-logout w-100 mt-auto">
+    <i class="bi bi-box-arrow-left me-2"></i> Cerrar Sesión
+  </button>
+
+</aside>

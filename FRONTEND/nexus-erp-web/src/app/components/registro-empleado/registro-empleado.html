@@ -1,0 +1,44 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow p-4">
+        
+        <h2 class="text-center mb-3">Únete al Equipo 🚀</h2>
+        
+        <div *ngIf="mensajeError" class="alert alert-danger">
+          {{ mensajeError }}
+        </div>
+
+        <div *ngIf="!mensajeError">
+          <p class="text-center text-muted">
+            Estás aceptando la invitación para unirte a la empresa con código: 
+            <strong>{{ token }}</strong>
+          </p>
+
+          <form (ngSubmit)="registrarse()">
+            
+            <div class="mb-3">
+              <label class="form-label">Tu Nombre Completo</label>
+              <input type="text" class="form-control" [(ngModel)]="usuario.nombre" name="nombre" required placeholder="Ej: Ana García">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control" [(ngModel)]="usuario.email" name="email" required placeholder="ana@nexus.com">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Contraseña</label>
+              <input type="password" class="form-control" [(ngModel)]="usuario.password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">
+              Confirmar Registro
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

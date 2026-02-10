@@ -1,0 +1,116 @@
+<div class="registration-container">
+  
+  <div class="split-card">
+    
+    <div class="form-side">
+      
+      <div class="mb-5">
+        <h2 class="brand-title">Registro</h2>
+        <p class="text-muted">Crea tu cuenta de empresa en segundos.</p>
+      </div>
+
+      <form (ngSubmit)="registrar()">
+        
+        <div class="mb-3">
+          <label class="form-label">Nombre Completo</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0 border text-muted rounded-start-3">
+                <i class="bi bi-person"></i>
+            </span>
+            <input type="text" class="form-control custom-input border-start-0 ps-0" 
+                   [(ngModel)]="usuario.nombre" name="nombre" required 
+                   placeholder="Ej: Juan Pérez" (keyup)="validarPassword()">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email Corporativo</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0 border text-muted rounded-start-3">
+                <i class="bi bi-envelope"></i>
+            </span>
+            <input type="email" class="form-control custom-input border-start-0 ps-0" 
+                   [(ngModel)]="usuario.email" name="email" required 
+                   placeholder="tu@empresa.com">
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">Contraseña</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0 border text-muted rounded-start-3">
+                <i class="bi bi-lock"></i>
+            </span>
+            <input type="password" class="form-control custom-input border-start-0 ps-0" 
+                   [(ngModel)]="usuario.password" name="password" required 
+                   placeholder="••••••••" (keyup)="validarPassword()">
+          </div>
+        </div>
+
+        <div class="mb-4" *ngIf="usuario.password">
+           <div class="progress" style="height: 6px; border-radius: 3px; background-color: #e2e8f0;">
+              <div class="progress-bar transition-width" 
+                   [ngClass]="fuerza.color" 
+                   role="progressbar" 
+                   [style.width.%]="fuerza.puntuacion">
+              </div>
+           </div>
+           
+           <div class="d-flex justify-content-between mt-2 align-items-center">
+              <small class="fw-bold" [ngClass]="fuerza.color.replace('bg-', 'text-')">
+                 {{ fuerza.texto }}
+              </small>
+              <small class="text-muted" *ngIf="fuerza.puntuacion < 100">
+                 {{ fuerza.puntuacion }}% Seguro
+              </small>
+           </div>
+
+           <div class="mt-2 p-2 bg-light rounded border border-light" *ngIf="fuerza.errores.length > 0">
+              <small class="text-danger d-block mb-1" *ngFor="let error of fuerza.errores">
+                 <i class="bi bi-dot"></i> {{ error }}
+              </small>
+           </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-register w-100 text-white shadow-sm" 
+                [disabled]="fuerza.puntuacion < 100">
+          Registrar Empresa
+        </button>
+
+        <div class="text-center mt-4">
+          <span class="text-muted small">¿Ya tienes cuenta? </span>
+          <a routerLink="/login" class="text-primary fw-bold text-decoration-none small">Inicia sesión</a>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="info-side">
+      <div class="info-content">
+        <div class="mb-4">
+             <div class="bg-white text-dark rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                <i class="bi bi-grid-1x2-fill fs-3"></i>
+             </div>
+        </div>
+        
+        <h2 class="display-6 mb-3">Empieza con Nexus</h2>
+        <p class="mb-5">
+          Únete a más de 4.000 empresas que gestionan sus equipos, ventas y facturación en una sola plataforma unificada.
+        </p>
+
+        <div class="d-flex flex-column gap-2 align-items-center">
+           <div class="benefit-item">
+             <i class="bi bi-shield-lock-fill me-2"></i> Seguridad máxima y cifrado de datos
+           </div>
+           <div class="benefit-item">
+             <i class="bi bi-lightning-charge-fill me-2"></i> Configuración en 2 minutos
+           </div>
+           <div class="benefit-item">
+             <i class="bi bi-graph-up-arrow me-2"></i> Analíticas detalladas
+           </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

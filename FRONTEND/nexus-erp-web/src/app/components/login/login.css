@@ -1,0 +1,152 @@
+/* --- TIPOGRAFÍA GLOBAL --- */
+:host {
+    display: block;
+    height: 100vh;
+    /* Usamos 'Inter' como fuente principal para todo, es limpia y profesional */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #333; /* Un gris oscuro es más elegante que el negro puro para texto */
+}
+
+/* --- LADO IZQUIERDO (BRANDING) --- */
+.left-side {
+    background-color: #0a0a0a !important; /* Negro un poco más suave */
+}
+
+/* Títulos gigantes con Montserrat para impacto */
+h1.display-1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800; /* Extra bold */
+    font-size: 4.5rem; /* Un poco más pequeño para que no sea tan agresivo */
+    line-height: 0.9;
+    letter-spacing: -1px;
+}
+
+.mt-n3 {
+    margin-top: -10px;
+}
+
+/* El texto descriptivo debajo del título */
+.lead {
+    font-weight: 300; /* Ligero */
+    font-size: 1.15rem;
+    opacity: 0.8;
+}
+
+/* --- LADO DERECHO (FORMULARIO) --- */
+.login-form-container {
+    width: 100%;
+    max-width: 420px; /* Ligeramente más estrecho para verlo más compacto */
+}
+
+h2.display-6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #111;
+    letter-spacing: -0.5px;
+}
+
+/* --- INPUTS ESTILO MODERNO --- */
+.form-label {
+    font-weight: 500; /* Un poco más de peso para las etiquetas */
+    text-transform: uppercase; /* Opcional: le da un toque técnico */
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.clean-input {
+    border: none;
+    border-bottom: 2px solid #e0e0e0; /* Línea un poco más gruesa */
+    border-radius: 0;
+    padding-left: 0;
+    padding-bottom: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.clean-input:focus {
+    box-shadow: none;
+    border-bottom-color: #0d6efd;
+}
+
+/* Color del placeholder más suave */
+.clean-input::placeholder {
+    color: #adb5bd;
+    font-weight: 400;
+}
+
+
+/* --- BOTONES Y SOCIAL --- */
+.btn-glow {
+    font-family: 'Montserrat', sans-serif; /* Fuente fuerte para el botón */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-glow:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.5);
+}
+
+.social-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto rebote sutil */
+    background-color: rgba(255,255,255,0.1); /* Fondo semitransparente por defecto */
+}
+
+.social-btn:hover {
+    transform: scale(1.1);
+    color: white;
+}
+/* Colores específicos al hacer hover */
+.social-btn.facebook:hover { background-color: #3b5998; }
+.social-btn.twitter:hover { background-color: #1da1f2; }
+.social-btn.instagram:hover { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
+
+
+/* --- ANIMACIONES DE ENTRADA --- */
+
+/* Definimos la animación: de abajo a arriba y de transparente a opaco */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Clase para aplicar la animación */
+.animate-fade-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* Retraso para el lado derecho, para que aparezca después del izquierdo */
+.delay-1 {
+    animation-delay: 0.3s;
+}
+
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+    .left-side {
+        display: none !important;
+    }
+    /* En móviles, quitamos el retraso para que cargue rápido */
+    .delay-1 {
+        animation-delay: 0s;
+    }
+}

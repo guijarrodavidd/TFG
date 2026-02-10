@@ -1,0 +1,8 @@
+.hover-effect:hover {
+    background-color: #f8fafc;
+    transform: translateX(5px);
+    cursor: default;
+}
+.transition-all {
+    transition: all 0.2s ease-in-out;
+}

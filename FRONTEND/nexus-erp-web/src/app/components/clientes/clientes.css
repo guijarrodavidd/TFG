@@ -1,0 +1,80 @@
+/* Animaciones suaves */
+.animate-fade-in { animation: fadeIn 0.5s ease; }
+.animate-slide-up { animation: slideUp 0.5s ease; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* Estilos Sección Detalle (Barra Gris) */
+.section-header {
+    background-color: #9aaec1; /* El gris azulado de la foto */
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.section-body {
+    border: 1px solid #e0e0e0;
+    border-top: none;
+}
+
+.text-dark-grey {
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+    border: none;
+    border-radius: 0;
+    padding: 10px 20px;
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: white;
+    border-top: 3px solid #3b82f6; /* Línea azul arriba */
+    color: #3b82f6;
+}
+
+/* Tabla Custom */
+.custom-table th {
+    font-size: 0.8rem;
+    background-color: white;
+    border-bottom: 2px solid #e2e8f0;
+    padding: 12px;
+}
+
+.custom-table td {
+    padding: 10px 12px;
+    vertical-align: middle;
+}
+
+.custom-table tr:nth-of-type(odd) {
+    background-color: #f8fafc; /* Zebra striping muy suave */
+}
+
+.cursor-pointer { cursor: pointer; }
+
+/* TOAST ANIMATIONS */
+.toast {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    opacity: 0;
+    transform: translateY(20px);
+    border-radius: 12px;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Bordes rojos para error */
+.border-danger {
+    border: 2px solid #dc3545 !important;
+    background-color: #fff8f8 !important; /* Fondo rojizo suave */
+}

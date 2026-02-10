@@ -1,0 +1,295 @@
+<div class="container-fluid h-100 p-4">
+
+  <div *ngIf="vista === 'lista'" class="animate-fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold text-dark">Gestión de Clientes</h2>
+      <button (click)="mostrarFormulario()" class="btn btn-primary fw-bold shadow-sm">
+        <i class="bi bi-person-plus-fill me-2"></i> Nuevo Cliente
+      </button>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="bg-light">
+            <tr>
+              <th class="ps-4 py-3">Cliente</th>
+              <th>NIF</th>
+              <th>Fecha Nac.</th>
+              <th>Teléfono</th>
+              <th class="text-end pe-4">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of clientes" class="cursor-pointer" (click)="verDetalle(c)">
+              <td class="ps-4 fw-bold text-primary">{{ c.nombre }}</td>
+              <td>{{ c.nif || '--' }}</td>
+              <td>{{ c.fecha_nacimiento ? (c.fecha_nacimiento | date:'dd/MM/yyyy') : '--' }}</td>
+              <td>{{ c.telefono || '--' }}</td>
+              <td class="text-end pe-4">
+                <button class="btn btn-sm btn-light rounded-circle"><i class="bi bi-chevron-right"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div *ngIf="clientes.length === 0" class="text-center py-5 text-muted">
+           <i class="bi bi-people fs-1 d-block mb-2 opacity-25"></i>
+           No hay clientes registrados aún.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="vista === 'detalle'" class="animate-slide-up">
+    
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="fw-bold text-uppercase text-secondary ls-1">Detalle Cliente</h5>
+      <button (click)="volver()" class="btn btn-secondary btn-sm text-white">
+        <i class="bi bi-arrow-left me-2"></i> Volver
+      </button>
+    </div>
+
+    <div *ngIf="clienteSeleccionado.fecha_nacimiento && esMenorDeEdad(clienteSeleccionado.fecha_nacimiento)" 
+         class="alert alert-danger d-flex align-items-center shadow-sm mb-4 border-danger border-2" role="alert">
+      <i class="bi bi-exclamation-triangle-fill fs-3 me-3"></i>
+      <div>
+        <h6 class="fw-bold mb-0">ADVERTENCIA: CLIENTE MENOR DE EDAD</h6>
+        <small>Este cliente tiene menos de 18 años. Se requiere autorización de tutores.</small>
+      </div>
+    </div>
+
+    <div class="info-section mb-4">
+      <div class="section-header text-white fw-bold px-3 py-2" style="background-color: #9aaec1;">INFORMACIÓN GENERAL</div>
+      <div class="section-body bg-white p-4 shadow-sm border border-top-0">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="d-flex justify-content-between mb-2 border-bottom pb-1">
+              <span class="fw-bold text-dark-grey">NIF:</span>
+              <span class="text-muted">{{ clienteSeleccionado.nif || '--' }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="fw-bold text-dark-grey">Cliente:</span>
+              <span class="text-uppercase fw-bold">{{ clienteSeleccionado.nombre }}</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+             <div class="d-flex justify-content-between mb-2 border-bottom pb-1">
+              <span class="fw-bold text-dark-grey">Nacionalidad:</span>
+              <span class="text-muted">{{ clienteSeleccionado.nacionalidad || 'España' }}</span>
+            </div>
+             <div class="d-flex justify-content-between">
+              <span class="fw-bold text-dark-grey">Tipo de cliente:</span>
+              <span class="text-muted">{{ clienteSeleccionado.tipo_cliente }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section mb-4">
+      <div class="section-header text-white fw-bold px-3 py-2" style="background-color: #9aaec1;">DATOS DE CONTACTO</div>
+      <div class="section-body bg-white p-4 shadow-sm border border-top-0">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="d-flex justify-content-between mb-2 border-bottom pb-1">
+              <span class="fw-bold text-dark-grey">Teléfono:</span>
+              <span class="text-muted">{{ clienteSeleccionado.telefono || '--' }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="fw-bold text-dark-grey">Dirección:</span>
+              <span class="text-muted small">{{ clienteSeleccionado.direccion || '--' }}</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex justify-content-between mb-2 border-bottom pb-1">
+              <span class="fw-bold text-dark-grey">Fecha Nacimiento:</span>
+              <span class="text-muted fw-bold">
+                 {{ (clienteSeleccionado.fecha_nacimiento | date:'dd/MM/yyyy') || '--' }}
+              </span>
+            </div>
+             <div class="d-flex justify-content-between">
+              <span class="fw-bold text-dark-grey">Email:</span>
+              <span class="text-muted">{{ clienteSeleccionado.email || '--' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <ul class="nav nav-tabs border-0">
+        <li class="nav-item">
+          <a class="nav-link active fw-bold border-top-3 border-primary" href="#">Compras</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-muted" href="#">Remóviles</a>
+        </li>
+      </ul>
+
+      <div class="bg-white p-0 shadow-sm border-top-0">
+        <table class="table table-striped table-hover mb-0 custom-table small">
+          <thead>
+            <tr>
+              <th class="text-primary">Transacción</th>
+              <th class="text-primary">Producto</th>
+              <th class="text-primary">Cantidad</th>
+              <th class="text-primary">Total</th>
+              <th class="text-primary">Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let v of comprasCliente">
+              <td class="text-primary fw-bold">{{ v.codigo_transaccion }}</td>
+              <td class="text-uppercase text-secondary">{{ v.producto }}</td>
+              <td>{{ v.cantidad }}</td>
+              <td class="fw-bold">{{ v.total }}€</td>
+              <td class="text-muted">{{ v.fecha_venta | date:'dd/MM/yyyy, HH:mm' }}</td>
+            </tr>
+             <tr *ngIf="comprasCliente.length === 0">
+                <td colspan="5" class="text-center py-3 text-muted">No hay compras registradas</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div *ngIf="vista === 'crear'" class="animate-slide-up">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="fw-bold text-dark">Alta de Nuevo Cliente</h4>
+      <button (click)="volver()" class="btn btn-light text-muted">Cancelar</button>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow rounded-4 p-5">
+          
+          <div *ngIf="esMenorDeEdad(nuevoCliente.fecha_nacimiento)" 
+               class="alert alert-warning d-flex align-items-center mb-4 animate-fade-in border-warning">
+             <i class="bi bi-info-circle-fill fs-4 me-3 text-dark"></i>
+             <div class="text-dark">
+               <strong>Aviso:</strong> El cliente es menor de edad. Asegúrate de pedir autorización.
+             </div>
+          </div>
+
+          <form (ngSubmit)="guardarCliente()">
+            
+            <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">Datos Personales</h5>
+            
+            <div class="row g-4 mb-4">
+              <div class="col-md-8">
+                <label class="form-label text-muted small fw-bold">NOMBRE COMPLETO</label>
+                <input type="text" class="form-control bg-light border-0 py-2" 
+                       [(ngModel)]="nuevoCliente.nombre" name="nombre" required placeholder="Ej: Juan Pérez">
+              </div>
+              
+              <div class="col-md-4">
+                <label class="form-label text-muted small fw-bold">NIF / NIE</label>
+                <input type="text" 
+                       class="form-control bg-light py-2"
+                       [class.border-danger]="!dniValido"
+                       [class.border]="!dniValido" 
+                       [(ngModel)]="nuevoCliente.nif" 
+                       (blur)="validarDNI()"
+                       name="nif" 
+                       placeholder="00000000X">
+                <small *ngIf="!dniValido" class="text-danger fw-bold" style="font-size: 0.75rem;">
+                   <i class="bi bi-exclamation-circle"></i> {{ mensajeDni }}
+                </small>
+              </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+              <div class="col-md-6">
+                 <label class="form-label text-muted small fw-bold">FECHA NACIMIENTO</label>
+                 
+                 <input type="date" class="form-control bg-light border-0 py-2" 
+                        [(ngModel)]="nuevoCliente.fecha_nacimiento" name="fecha_nacimiento">
+                 
+                 <small *ngIf="esMenorDeEdad(nuevoCliente.fecha_nacimiento)" class="text-dark fw-bold">
+                    <i class="bi bi-arrow-up text-warning"></i> Cliente menor de edad
+                 </small>
+              </div>
+
+              <div class="col-md-6">
+                 <label class="form-label text-muted small fw-bold">NACIONALIDAD</label>
+                 <select class="form-select bg-light border-0 py-2" [(ngModel)]="nuevoCliente.nacionalidad" name="nacionalidad">
+                    <option value="España">España</option>
+                    <option value="Francia">Francia</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="Italia">Italia</option>
+                    <option value="Alemania">Alemania</option>
+                    <option value="Reino Unido">Reino Unido</option>
+                    <option value="Otro">Otro</option>
+                 </select>
+              </div>
+            </div>
+
+            <h5 class="fw-bold text-primary mb-4 border-bottom pb-2 mt-5">Contacto y Dirección</h5>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                  <label class="form-label text-muted small fw-bold">EMAIL</label>
+                  <input type="email" class="form-control bg-light border-0 py-2" 
+                         [(ngModel)]="nuevoCliente.email" name="email">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label text-muted small fw-bold">TELÉFONO</label>
+                  <input type="tel" class="form-control bg-light border-0 py-2" 
+                         [(ngModel)]="nuevoCliente.telefono" name="telefono">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label text-muted small fw-bold">DIRECCIÓN</label>
+                <textarea class="form-control bg-light border-0" rows="2" [(ngModel)]="nuevoCliente.direccion" name="direccion"></textarea>
+            </div>
+
+             <div class="mb-5">
+              <label class="form-label text-muted small fw-bold">TIPO DE CLIENTE</label>
+              <div class="d-flex gap-4 mt-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="tipo" id="residencial" value="Residencial" [(ngModel)]="nuevoCliente.tipo_cliente">
+                  <label class="form-check-label" for="residencial">Residencial (Particular)</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="tipo" id="empresa" value="Empresa" [(ngModel)]="nuevoCliente.tipo_cliente">
+                  <label class="form-check-label" for="empresa">Empresa</label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-end gap-3 mt-4">
+              <button type="button" (click)="volver()" class="btn btn-light px-4">Cancelar</button>
+              <button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm" [disabled]="!dniValido">
+                 Guardar Cliente
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div> 
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
+  <div class="toast align-items-center border-0 shadow-lg" 
+       [class.show]="toast.visible"
+       [ngClass]="toast.tipo === 'success' ? 'text-bg-success' : 'text-bg-danger'"
+       role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body fw-bold">
+        <i class="bi" [ngClass]="toast.tipo === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+        {{ toast.mensaje }}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="toast.visible = false"></button>
+    </div>
+  </div>
+</div>
