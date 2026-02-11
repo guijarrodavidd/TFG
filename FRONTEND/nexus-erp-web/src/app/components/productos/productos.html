@@ -32,7 +32,7 @@
           </div>
           
           <div class="d-grid">
-            <button type="submit" class="btn btn-primary py-2 fw-bold shadow-sm" [disabled]="!nuevaCategoria.nombre">
+            <button type="submit" (click)="crearCategoria($event)" class="btn btn-primary py-2 fw-bold shadow-sm" [disabled]="!nuevaCategoria.nombre">
               Crear Categoría y Empezar
             </button>
           </div>

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ProductService } from '../../../services/product.service';
+import { environment } from '../../../../environments/environment'; // Importación clave
 
 @Component({
   selector: 'app-productos-create',
@@ -16,6 +18,8 @@ export class ProductosCreateComponent implements OnInit {
   http = inject(HttpClient);
   router = inject(Router);
   route = inject(ActivatedRoute);
+  productService = inject(ProductService);
+  url = environment.apiUrl; // Usamos la URL centralizada del environment
   
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
 
@@ -76,7 +80,7 @@ export class ProductosCreateComponent implements OnInit {
 
   cargarCategorias() {
     const idEmpresa = this.usuario.empresa_id;
-    this.http.get(`http://localhost/TFG/BACKEND/public/index.php/categorias/empresa/${idEmpresa}`)
+    this.productService.getCategorias(idEmpresa)
       .subscribe((res: any) => {
         this.listaCategorias = res;
         // Seleccionar "General" por defecto solo si es nuevo
@@ -88,13 +92,13 @@ export class ProductosCreateComponent implements OnInit {
   }
 
   cargarProductoParaEditar(id: string) {
-    this.http.get(`http://localhost/TFG/BACKEND/public/index.php/productos/${id}`)
+    this.productService.getProductoById(id)
       .subscribe({
         next: (data: any) => {
           this.producto = data;
           this.calcularBase();
           if (data.imagen_url) {
-            this.imagenPreview = 'http://localhost/TFG/BACKEND/public/' + data.imagen_url;
+            this.imagenPreview = this.url + data.imagen_url;
           }
         },
         error: (err) => console.error("Error cargando producto", err)
@@ -153,9 +157,9 @@ export class ProductosCreateComponent implements OnInit {
       formData.append('imagen', this.imagenSeleccionada);
     }
 
-    let url = 'http://localhost/TFG/BACKEND/public/index.php/productos/crear';
+        let url = `${this.url}/productos/crear`;
     if (this.esEdicion && this.productoId) {
-       url = `http://localhost/TFG/BACKEND/public/index.php/productos/actualizar/${this.productoId}`;
+       url = `${this.url}/productos/actualizar/${this.productoId}`;
     }
 
     this.http.post(url, formData)

@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router'; 
 import { FormsModule } from '@angular/forms'; 
-
+import { ProductService } from '../../services/product.service';
+import { environment } from '../../../environments/environment'; // Importación clave
 @Component({
   selector: 'app-productos',
   standalone: true,
@@ -14,7 +15,9 @@ import { FormsModule } from '@angular/forms';
 export class ProductosComponent implements OnInit {
   
   http = inject(HttpClient);
-  router = inject(Router); 
+  router = inject(Router);
+  productService = inject(ProductService);
+  url = environment.apiUrl;
   
   usuario: any = {};
 
@@ -56,7 +59,7 @@ export class ProductosComponent implements OnInit {
     const idEmpresa = this.usuario.empresa_id;
 
     // 1. Cargar Categorías
-    this.http.get(`http://localhost/TFG/BACKEND/public/index.php/categorias/empresa/${idEmpresa}`)
+    this.productService.getCategorias(idEmpresa)
       .subscribe({
         next: (res: any) => {
           this.categorias = res;
@@ -79,7 +82,7 @@ export class ProductosComponent implements OnInit {
   cargarProductos() {
     const idEmpresa = this.usuario.empresa_id;
     
-    this.http.get(`http://localhost/TFG/BACKEND/public/index.php/productos/empresa/${idEmpresa}`)
+    this.productService.getProductoById(idEmpresa)
       .subscribe({
         next: (res: any) => {
           this.productos = res;
@@ -155,11 +158,16 @@ export class ProductosComponent implements OnInit {
     this.router.navigate(['/dashboard/productos/editar', producto.id]);
   }
 
-  crearCategoria() {
+  crearCategoria(event?: Event) {
+    if (event) {
+      event.preventDefault(); // Evita que el formulario se envíe y recargue la página
+      event.stopPropagation(); // Evita que el evento burbujee si el botón está dentro de un formulario
+    }
+
     if (!this.nuevaCategoria.nombre) return;
     const body = { empresa_id: this.usuario.empresa_id, ...this.nuevaCategoria };
 
-    this.http.post('http://localhost/TFG/BACKEND/public/index.php/categorias/crear', body)
+    this.productService.createCategoria(body)
       .subscribe({
         next: () => {
           this.nuevaCategoria.nombre = '';
