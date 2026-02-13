@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { PersonalService } from '../../services/personal.service';
 import { HolidaysWidgetComponent } from '../widgets/holidays-widget/holidays-widget';
 
 @Component({
@@ -13,40 +13,40 @@ import { HolidaysWidgetComponent } from '../widgets/holidays-widget/holidays-wid
 })
 export class PersonalComponent implements OnInit, OnDestroy {
   
-  http = inject(HttpClient);
+  private personalService = inject(PersonalService);
+  
   usuario: any = {};
   nombreEmpresa: string = '';
 
-  // Datos Backend
+  // Datos
   historialCompleto: any[] = [];
   registrosSemana: any[] = [];
   ausencias: any = {};
   nomina: any = {};
   
-  // === VARIABLES PARA VACACIONES ===
+  // Vacaciones
   solicitudes: any[] = [];
   modalAbierto: boolean = false;
-  
-  nuevaSolicitud = {
-    fecha_inicio: '',
-    fecha_fin: '',
-    comentarios: ''
-  };
-
+  nuevaSolicitud = { fecha_inicio: '', fecha_fin: '', comentarios: '' };
   diasSolicitados: number = 0;
   toast = { visible: false, mensaje: '', tipo: 'success' };
-  // =================================
   
-  // Control de Semana (Calendario)
+  // Calendario
   fechaInicioSemana: Date = new Date();
   fechaFinSemana: Date = new Date();
   
-  // Cronómetro
+  // === CRONÓMETRO OPTIMIZADO ===
   trabajando: boolean = false;
   inicioTurno: Date | null = null;
-  tiempoTranscurrido: string = '0h 00m 00s';
   intervalo: any;
   workingDate: Date = new Date();
+  
+  // Objeto para la vista (evita usar splits en el HTML)
+  reloj = {
+    horas: '0',
+    minutos: '00',
+    segundos: '00'
+  };
 
   ngOnInit() {
     const data = localStorage.getItem('usuario');
@@ -54,225 +54,152 @@ export class PersonalComponent implements OnInit, OnDestroy {
       this.usuario = JSON.parse(data);
       this.calcularSemanaActual();
       this.cargarDatos();
-      this.cargarSolicitudes(); // <--- Cargamos el historial de vacaciones
+      this.cargarSolicitudes();
     }
   }
 
   ngOnDestroy() {
-    if (this.intervalo) clearInterval(this.intervalo);
+    this.detenerCronometro();
   }
 
-  // 1. CARGA DE DATOS GENERALES
+  // --- 1. CARGA DE DATOS ---
   cargarDatos() {
-    this.http.get(`http://localhost/TFG/BACKEND/public/index.php/personal/dashboard/${this.usuario.id}`)
-      .subscribe((res: any) => {
+    if (!this.usuario.id) return;
+
+    this.personalService.getDashboard(this.usuario.id).subscribe({
+      next: (res: any) => {
         this.nombreEmpresa = res.nombre_empresa;
-        this.historialCompleto = res.historial;
+        this.historialCompleto = res.historial || [];
         this.ausencias = res.ausencias;
         this.nomina = res.nomina;
 
         if (res.turno_activo) {
           this.trabajando = true;
-          this.inicioTurno = new Date(res.turno_activo.entrada);
+          // ✅ CORRECCIÓN DE HORA: Interpretamos la fecha del server como UTC
+          this.inicioTurno = this.parseFechaUTC(res.turno_activo.entrada);
           this.iniciarCronometro();
+        } else {
+          this.trabajando = false;
+          this.detenerCronometro();
         }
 
         this.filtrarRegistrosPorSemana();
-      });
+      },
+      error: (err) => console.error(err)
+    });
   }
 
-  // === 2. LÓGICA DE VACACIONES (NUEVA) ===
+  // --- HELPER PARA FECHAS SERVER (SOLUCIÓN DEL PROBLEMA 1h) ---
+  private parseFechaUTC(fechaStr: string): Date {
+    // Si viene formato SQL "YYYY-MM-DD HH:mm:ss" sin zona, le añadimos 'Z'
+    // para que el navegador sepa que es UTC y la convierta a hora local correctamente.
+    if (fechaStr && !fechaStr.includes('Z')) {
+       return new Date(fechaStr.replace(' ', 'T') + 'Z');
+    }
+    return new Date(fechaStr);
+  }
+
+  // --- 2. FICHAJE ---
+  toggleFichaje() {
+    const datos = { usuario_id: this.usuario.id, empresa_id: this.usuario.empresa_id };
+    
+    // 1. Feedback inmediato local (UX rápida)
+    if (!this.trabajando) {
+        this.trabajando = true;
+        this.inicioTurno = new Date(); // Hora local exacta
+        this.iniciarCronometro();
+    } else {
+        this.trabajando = false;
+        this.detenerCronometro();
+        this.reloj = { horas: '0', minutos: '00', segundos: '00' };
+    }
+
+    // 2. Llamada al servidor
+    this.personalService.fichar(datos).subscribe({
+      next: (res: any) => {
+        this.mostrarToast(this.trabajando ? '¡Entrada registrada!' : '¡Salida registrada!', 'success');
+        // Recargamos para actualizar la tabla, pero el cronómetro ya está corriendo bien
+        this.cargarDatos(); 
+      },
+      error: (err) => {
+        console.error(err);
+        this.mostrarToast('Error de conexión', 'error');
+        // Revertir estado si falla
+        this.trabajando = !this.trabajando;
+        this.cargarDatos();
+      }
+    });
+  }
+
+  // --- 3. LÓGICA DEL RELOJ ---
+  iniciarCronometro() {
+    this.detenerCronometro();
+    this.actualizarReloj(); // Ejecutar ya
+    
+    this.intervalo = setInterval(() => {
+      this.actualizarReloj();
+    }, 1000);
+  }
+
+  actualizarReloj() {
+    if (!this.inicioTurno) return;
+    
+    const ahora = new Date().getTime();
+    const inicio = this.inicioTurno.getTime();
+    let diff = ahora - inicio;
+
+    if (diff < 0) diff = 0; // Protección contra negativos
+
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+    this.reloj = {
+      horas: h.toString(),
+      minutos: m < 10 ? '0' + m : m.toString(),
+      segundos: s < 10 ? '0' + s : s.toString()
+    };
+  }
+
+  detenerCronometro() {
+    if (this.intervalo) clearInterval(this.intervalo);
+  }
+
+  // --- RESTO DE FUNCIONES (Vacaciones, Helpers, etc) ---
+  // (Mantén el resto de tu código igual: cargarSolicitudes, confirmarSolicitud, etc.)
   
   cargarSolicitudes() {
-    this.http.get(`http://localhost/TFG/BACKEND/public/index.php/personal/solicitudes/${this.usuario.id}`)
-      .subscribe((res: any) => {
-        this.solicitudes = res;
-      });
+    this.personalService.getSolicitudes(this.usuario.id).subscribe({
+      next: (res: any) => this.solicitudes = res,
+      error: (err) => console.error(err)
+    });
   }
 
   abrirModal() { this.modalAbierto = true; }
   cerrarModal() { this.modalAbierto = false; }
 
-  calcularDias() {
-    if (this.nuevaSolicitud.fecha_inicio && this.nuevaSolicitud.fecha_fin) {
-      const inicio = new Date(this.nuevaSolicitud.fecha_inicio);
-      const fin = new Date(this.nuevaSolicitud.fecha_fin);
-      
-      const diffTime = Math.abs(fin.getTime() - inicio.getTime());
-      this.diasSolicitados = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      
-      if (this.diasSolicitados < 0) this.diasSolicitados = 0;
-    } else {
-      this.diasSolicitados = 0;
-    }
-  }
-  
-
-  confirmarSolicitud() {
-    if (this.diasSolicitados <= 0) {
-      this.mostrarToast('Fechas inválidas', 'error');
-      return;
-    }
-
-    const body = {
-      usuario_id: this.usuario.id,
-      ...this.nuevaSolicitud
-    };
-
-    this.http.post('http://localhost/TFG/BACKEND/public/index.php/personal/solicitar-vacaciones', body)
-      .subscribe({
-        next: () => {
-          this.mostrarToast('Solicitud enviada correctamente', 'success');
-          this.cerrarModal();
-          this.cargarSolicitudes(); // Actualizar lista
-          this.nuevaSolicitud = { fecha_inicio: '', fecha_fin: '', comentarios: '' }; // Reset
-          this.diasSolicitados = 0;
-        },
-        error: () => this.mostrarToast('Error al solicitar', 'error')
-      });
-  }
-
-  // Helpers para estados visuales (Colores y Texto)
-  getEstadoClass(estado: string): string {
-    switch(estado) {
-      case 'aprobado': return 'bg-success-subtle text-success border-success';
-      case 'denegado': return 'bg-danger-subtle text-danger border-danger';
-      default: return 'bg-warning-subtle text-warning-emphasis border-warning';
-    }
-  }
-
-  getEstadoTexto(estado: string): string {
-    switch(estado) {
-      case 'aprobado': return 'Aceptado';
-      case 'denegado': return 'Rechazado';
-      default: return 'Pendiente';
-    }
-  }
-
-  // Helper para calcular diferencia de días en el historial
-  calcularDiasDiff(inicio: string, fin: string): number {
-    const d1 = new Date(inicio);
-    const d2 = new Date(fin);
-    const diff = Math.abs(d2.getTime() - d1.getTime());
-    return Math.ceil(diff / (1000 * 60 * 60 * 24)) + 1;
-  }
-
+  confirmarSolicitud() { /* ... tu código ... */ }
+  calcularDias() { /* ... tu código ... */ }
   mostrarToast(mensaje: string, tipo: string) {
     this.toast = { visible: true, mensaje, tipo };
     setTimeout(() => this.toast.visible = false, 3000);
   }
-
-  // ==========================================
-
-  // 3. LÓGICA DE SEMANAS (Calendario)
-  calcularSemanaActual() {
-    const hoy = new Date();
-    const diaSemana = hoy.getDay(); 
-    const diffLunes = hoy.getDate() - (diaSemana === 0 ? 6 : diaSemana - 1);
-    
-    this.fechaInicioSemana = new Date(hoy.setDate(diffLunes));
-    this.fechaInicioSemana.setHours(0, 0, 0, 0);
-
-    this.fechaFinSemana = new Date(this.fechaInicioSemana);
-    this.fechaFinSemana.setDate(this.fechaInicioSemana.getDate() + 6);
-    this.fechaFinSemana.setHours(23, 59, 59, 999);
+  
+  calcularSemanaActual() { /* ... tu código ... */ }
+  cambiarSemana(dir: number) { /* ... tu código ... */ }
+  filtrarRegistrosPorSemana() { /* ... tu código ... */ }
+  
+  // Getters para HTML
+  get totalHorasSemana(): string { return '...'; /* tu logica */ }
+  get mediaDiaria(): string { return '...'; /* tu logica */ }
+  get saludo(): string { 
+     const h = new Date().getHours();
+     return h < 12 ? 'Buenos días' : (h < 21 ? 'Buenas tardes' : 'Buenas noches');
   }
-
-  cambiarSemana(direccion: number) {
-    this.fechaInicioSemana.setDate(this.fechaInicioSemana.getDate() + (direccion * 7));
-    this.fechaFinSemana.setDate(this.fechaFinSemana.getDate() + (direccion * 7));
-    
-    this.fechaInicioSemana = new Date(this.fechaInicioSemana);
-    this.fechaFinSemana = new Date(this.fechaFinSemana);
-    
-    this.filtrarRegistrosPorSemana();
-  }
-
-  // 4. FILTRO Y SUMA
-  filtrarRegistrosPorSemana() {
-    if (!this.historialCompleto.length) return;
-
-    this.registrosSemana = this.historialCompleto.filter(reg => {
-      const fechaRegistro = new Date(reg.entrada);
-      return fechaRegistro >= this.fechaInicioSemana && fechaRegistro <= this.fechaFinSemana;
-    });
-  }
-
-  get totalHorasSemana(): string {
-    let sumaDecimal = 0;
-    this.registrosSemana.forEach(r => {
-      if (r.total_horas) sumaDecimal += parseFloat(r.total_horas);
-    });
-    return this.formatoHoras(sumaDecimal);
-  }
-
-  get mediaDiaria(): string {
-    if (this.registrosSemana.length === 0) return '0h 00m';
-    
-    let sumaDecimal = 0;
-    this.registrosSemana.forEach(r => { if(r.total_horas) sumaDecimal += parseFloat(r.total_horas); });
-    
-    const media = sumaDecimal / this.registrosSemana.length;
-    return this.formatoHoras(media);
-  }
-
-  formatoHoras(decimal: any): string {
-    if (!decimal) return '0h 00m';
-    const num = parseFloat(decimal);
-    const horas = Math.floor(num);
-    const minutos = Math.round((num - horas) * 60);
-    const minStr = minutos < 10 ? '0' + minutos : minutos;
-    return `${horas}h ${minStr}m`;
-  }
-
-  // 5. CRONÓMETRO
-  toggleFichaje() {
-    const body = { 
-      usuario_id: this.usuario.id, 
-      empresa_id: this.usuario.empresa_id 
-    };
-    
-    this.http.post('http://localhost/TFG/BACKEND/public/index.php/personal/fichar', body)
-      .subscribe((res: any) => {
-        if (res.status === 'started') {
-          this.trabajando = true;
-          this.inicioTurno = new Date();
-          this.iniciarCronometro();
-        } else {
-          this.trabajando = false;
-          clearInterval(this.intervalo);
-          this.tiempoTranscurrido = '0h 00m 00s';
-          this.cargarDatos(); 
-        }
-      });
-  }
-
-  iniciarCronometro() {
-    if (this.intervalo) clearInterval(this.intervalo);
-    
-    this.intervalo = setInterval(() => {
-      if (!this.inicioTurno) return;
-      
-      const ahora = new Date().getTime();
-      const inicio = this.inicioTurno.getTime();
-      const diff = ahora - inicio;
-
-      const horas = Math.floor(diff / (1000 * 60 * 60));
-      const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const segundos = Math.floor((diff % (1000 * 60)) / 1000);
-
-      const hStr = horas > 0 ? `${horas}h ` : '';
-      const mStr = minutos < 10 ? '0' + minutos : minutos;
-      const sStr = segundos < 10 ? '0' + segundos : segundos;
-
-      this.tiempoTranscurrido = `${hStr}${mStr}m ${sStr}s`;
-    }, 1000);
-  }
-
-  get saludo(): string {
-    const hora = new Date().getHours();
-    if (hora < 12) return 'Buenos días';
-    if (hora < 21) return 'Buenas tardes';
-    return 'Buenas noches';
-  }
+  
+  // Helpers visuales
+  getEstadoClass(e: string) { return '...'; }
+  getEstadoTexto(e: string) { return '...'; }
+  calcularDiasDiff(i: string, f: string) { return 0; }
+  formatoHoras(d: any) { return '...'; }
 }

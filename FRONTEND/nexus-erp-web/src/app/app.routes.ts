@@ -1,52 +1,49 @@
 import { Routes } from '@angular/router';
 
-// Asegúrate de que las rutas de importación coincidan con tus archivos. 
-// Angular suele añadir '.component' al nombre del archivo y de la clase.
-
-import { Login } from './components/login/login';
-import { Dashboard } from './components/dashboard/dashboard'; // El Layout con Sidebar
-import { CrearEmpresa } from './components/crear-empresa/crear-empresa';
-import { Inicio } from './components/inicio/inicio'; // El contenido de gráficos
-import { RegistroEmpleado } from './components/registro-empleado/registro-empleado';
+// 1. CORREGIR LOS IMPORTS (Añadir 'Component' al final)
+import { LoginComponent } from './components/login/login'; 
 import { RegistroEncargado } from './components/registro-encargado/registro-encargado';
-import { ProductosComponent } from './components/productos/productos'; // Importar
-import { ClientesComponent } from './components/clientes/clientes';
-import { PersonalComponent } from './components/personal/personal';
-import { ProductosCreateComponent } from './components/productos/productos-create/productos-create';
+import { CrearEmpresaComponent } from './components/crear-empresa/crear-empresa';
+import { RegistroEmpleado } from './components/registro-empleado/registro-empleado';
+
+// Import del Dashboard y sus hijos
+import { Dashboard } from './components/dashboard/dashboard';
+import { Inicio } from './components/inicio/inicio';
 import { VentasComponent } from './components/ventas/ventas';
+import { ProductosComponent } from './components/productos/productos';
+import { ProductosCreateComponent } from './components/productos/productos-create/productos-create';
+import { PersonalComponent } from './components/personal/personal';
+import { ClientesComponent } from './components/clientes/clientes';
+
+// (Asegúrate de que AuthGuard esté importado si lo usas)
+// import { AuthGuard } from './guards/auth.guard'; 
 
 export const routes: Routes = [
-    // --- RUTAS PÚBLICAS (Sin Sidebar) ---
     { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'login', component: Login },
-    { path: 'registro', component: RegistroEmpleado },
-    { path: 'registro-jefe', component: RegistroEncargado },
-    { path: 'crear-empresa', component: CrearEmpresa }, // Asistente inicial, sin sidebar aún
+    
+    // 2. ACTUALIZAR LOS COMPONENTES EN LAS RUTAS
+    { path: 'login', component: LoginComponent },
+    { path: 'registro-encargado', component: RegistroEncargado }, // Este parece que se llamaba así (sin Component) en tu código anterior
+    { path: 'registro-empleado', component: RegistroEmpleado },
+    { path: 'crear-empresa', component: CrearEmpresaComponent },
 
-    // --- RUTAS PRIVADAS (Layout Dashboard con Sidebar) ---
+    // Rutas del Dashboard
     { 
         path: 'dashboard', 
-        component: Dashboard, // Este componente tiene el <app-sidebar> y el <router-outlet>
+        component: Dashboard,
+        // canActivate: [AuthGuard], // Recomendado descomentar cuando tengas el Guard
         children: [
-            // Cuando entras a /dashboard, te manda a /dashboard/inicio automáticamente
-            { path: '', redirectTo: 'inicio', pathMatch: 'full' },
-            
-            // Aquí se carga el componente Inicio dentro del hueco derecho del Dashboard
-            { path: 'inicio', component: Inicio },
-            { path: 'productos', component: ProductosComponent },
-            { path: 'clientes', component: ClientesComponent },
-            { path: 'personal', component: PersonalComponent },
-            { path: 'productos', component: ProductosComponent },
-            { path: 'productos/crear', component: ProductosCreateComponent },
-            { path: 'productos/editar/:id', component: ProductosCreateComponent },
+            { path: '', redirectTo: 'home', pathMatch: 'full' },
+            { path: 'home', component: Inicio },
             { path: 'ventas', component: VentasComponent },
             
-            // Futuras rutas (ejemplo):
-            // { path: 'clientes', component: ClientesComponent },
-            // { path: 'ventas', component: VentasComponent },
+            // Rutas de Productos
+            { path: 'productos', component: ProductosComponent },
+            { path: 'productos/nuevo', component: ProductosCreateComponent },
+            { path: 'productos/editar/:id', component: ProductosCreateComponent },
+
+            { path: 'personal', component: PersonalComponent },
+            { path: 'clientes', component: ClientesComponent }
         ]
-    },
-    
-    // Ruta comodín (opcional): si ponen una URL rara, volver al login
-    { path: '**', redirectTo: 'login' }
+    }
 ];

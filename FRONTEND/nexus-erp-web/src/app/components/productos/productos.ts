@@ -1,215 +1,194 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router'; 
-import { FormsModule } from '@angular/forms'; 
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
-import { environment } from '../../../environments/environment'; // Importación clave
+
 @Component({
   selector: 'app-productos',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './productos.html', 
+  imports: [CommonModule, RouterModule, FormsModule], 
+  templateUrl: './productos.html',
   styleUrls: ['./productos.css']
 })
 export class ProductosComponent implements OnInit {
   
-  http = inject(HttpClient);
-  router = inject(Router);
-  productService = inject(ProductService);
-  url = environment.apiUrl;
+  private productService = inject(ProductService);
   
-  usuario: any = {};
-
-  // Estados de la interfaz
+  // --- DATOS DE SESIÓN ---
+  usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
+  
+  // --- DATOS PRINCIPALES ---
+  productos: any[] = [];
+  categorias: any[] = [];
+  
+  // --- ESTADOS DE VISTA ---
   cargando: boolean = true;
-  modoBienvenida: boolean = false; 
+  modoBienvenida: boolean = false; // Se activa si no hay categorías
   modalCategoriaAbierto: boolean = false;
 
-  resultadosAutocomplete: any[] = [];
+  // --- FILTROS Y BÚSQUEDA ---
+  categoriaSeleccionada: number | null = null;
+  textoBusqueda: string = '';
   mostrarAutocomplete: boolean = false;
-
-  // Datos
-  categorias: any[] = [];
-  productos: any[] = [];
+  resultadosAutocomplete: any[] = [];
   
-  // === VARIABLES PARA FILTRO Y PAGINACIÓN ===
-  categoriaSeleccionada: any = null; // null significa "Todos"
-  textoBusqueda: string = '';        // Lo que escribe el usuario
+  // --- PAGINACIÓN ---
+  productosFiltradosGlobal: any[] = []; // Lista completa ya filtrada (antes de paginar)
+  productosPaginados: any[] = [];       // Lo que se ve en pantalla (12 items)
   paginaActual: number = 1;
-  itemsPorPagina: number = 8;        // 8 productos por página
+  itemsPorPagina: number = 12;
+  totalPaginas: number = 1;
 
-  // Modelo para el formulario de nueva categoría
+  // --- MODELO FORMULARIO CATEGORÍA ---
   nuevaCategoria = {
-    nombre: '',
-    descripcion: ''
+    nombre: ''
   };
 
   ngOnInit() {
-    const data = localStorage.getItem('usuario');
-    if (data) {
-      this.usuario = JSON.parse(data);
-      this.cargarDatos();
-    }
+    this.cargarDatos();
   }
 
-  // --- CARGA DE DATOS ---
+  // 1. CARGA INICIAL (Cadena de llamadas)
   cargarDatos() {
+    if (!this.usuario.empresa_id) return;
     this.cargando = true;
-    const idEmpresa = this.usuario.empresa_id;
 
-    // 1. Cargar Categorías
-    this.productService.getCategorias(idEmpresa)
-      .subscribe({
-        next: (res: any) => {
-          this.categorias = res;
+    // Primero cargamos categorías
+    this.productService.getCategorias(this.usuario.empresa_id).subscribe({
+      next: (cats: any) => {
+        this.categorias = cats;
 
-          if (this.categorias.length === 0) {
-            this.modoBienvenida = true;
-            this.cargando = false; 
-          } else {
-            this.modoBienvenida = false;
-            this.cargarProductos();
-          }
-        },
-        error: (err) => {
-          console.error('Error cargando categorías', err);
+        // Si no hay categorías, activamos modo bienvenida
+        if (this.categorias.length === 0) {
+          this.modoBienvenida = true;
           this.cargando = false;
+        } else {
+          this.modoBienvenida = false;
+          // Si hay categorías, cargamos productos
+          this.cargarProductos();
         }
-      });
+      },
+      error: (err) => {
+        console.error('Error cargando categorías', err);
+        this.cargando = false;
+      }
+    });
   }
 
   cargarProductos() {
-    const idEmpresa = this.usuario.empresa_id;
-    
-    this.productService.getProductoById(idEmpresa)
-      .subscribe({
-        next: (res: any) => {
-          this.productos = res;
-          this.cargando = false;
-        },
-        error: (err) => {
-          console.error("Error al cargar productos:", err);
-          this.cargando = false;
-          this.productos = []; 
-        }
-      });
+    this.productService.getProductosPorEmpresa(this.usuario.empresa_id).subscribe({
+      next: (prods: any) => {
+        this.productos = prods;
+        this.aplicarFiltros(); // Inicializa la lista filtrada
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error cargando productos', err);
+        this.cargando = false;
+      }
+    });
   }
-  
-  // --- LÓGICA DE FILTRADO UNIFICADA ---
 
-  // 1. Getter Maestro: Aplica Categoría Y Búsqueda a la vez
-  get productosFiltradosGlobal() {
-    // A. Filtro por Categoría (Si no es null, filtramos)
-    let lista = this.categoriaSeleccionada === null 
-      ? this.productos 
-      : this.productos.filter(p => p.categoria_id == this.categoriaSeleccionada);
+  // 2. LÓGICA DE FILTRADO Y BÚSQUEDA
+  aplicarFiltros() {
+    let resultado = this.productos;
 
-    // B. Filtro por Texto (Nombre o SKU)
+    // A. Filtro por Categoría
+    if (this.categoriaSeleccionada !== null) {
+      resultado = resultado.filter(p => p.categoria_id == this.categoriaSeleccionada);
+    }
+
+    // B. Filtro por Texto (Buscador)
     if (this.textoBusqueda.trim()) {
-      const termino = this.textoBusqueda.toLowerCase().trim();
-      lista = lista.filter(p => 
+      const termino = this.textoBusqueda.toLowerCase();
+      resultado = resultado.filter(p => 
         p.nombre.toLowerCase().includes(termino) || 
         (p.sku && p.sku.toLowerCase().includes(termino))
       );
     }
-    
-    return lista;
+
+    this.productosFiltradosGlobal = resultado;
+    this.paginaActual = 1; // Resetear a página 1 al filtrar
+    this.actualizarPaginacion();
   }
 
-  // 2. Paginación: Recorta la lista filtrada
-  get productosPaginados() {
-    const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
-    const fin = inicio + this.itemsPorPagina;
-    return this.productosFiltradosGlobal.slice(inicio, fin);
-  }
-
-  // 3. Total de páginas
-  get totalPaginas() {
-    return Math.ceil(this.productosFiltradosGlobal.length / this.itemsPorPagina);
-  }
-  // Esta es la función que te falta
-  resetearPaginacion() {
-    this.paginaActual = 1;
-  }
-
-  // --- INTERACCIÓN DEL USUARIO ---
-
-  // NUEVO: Función para cambiar categoría y resetear página
-  seleccionarCategoria(idCategoria: any) {
-    this.categoriaSeleccionada = idCategoria;
-    this.paginaActual = 1;       // Importante: Volver a la pág 1 al cambiar de categoría
-    this.textoBusqueda = '';     // Opcional: ¿Quieres limpiar el buscador al cambiar de categoría? (Yo lo dejaría así para limpiar)
-  }
-
-  cambiarPagina(pag: number) {
-    if (pag >= 1 && pag <= this.totalPaginas) {
-      this.paginaActual = pag;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  // --- CRUD Y MODALES ---
-
-  irACrearProducto() {
-    this.router.navigate(['/dashboard/productos/crear']);
-  }
-  editarProducto(producto: any) {
-    this.router.navigate(['/dashboard/productos/editar', producto.id]);
-  }
-
-  crearCategoria(event?: Event) {
-    if (event) {
-      event.preventDefault(); // Evita que el formulario se envíe y recargue la página
-      event.stopPropagation(); // Evita que el evento burbujee si el botón está dentro de un formulario
-    }
-
-    if (!this.nuevaCategoria.nombre) return;
-    const body = { empresa_id: this.usuario.empresa_id, ...this.nuevaCategoria };
-
-    this.productService.createCategoria(body)
-      .subscribe({
-        next: () => {
-          this.nuevaCategoria.nombre = '';
-          this.cerrarModalCategoria();
-          this.cargarDatos(); 
-        },
-        error: (err) => console.error(err)
-      });
-  }
   onBusquedaChange() {
-    this.resetearPaginacion(); // Mantenemos lo de antes
-
-    // Lógica del Autocomplete
-    const termino = this.textoBusqueda.trim().toLowerCase();
-    
-    if (termino.length > 0) {
+    // Lógica para el autocomplete
+    if (this.textoBusqueda.length > 1) {
       this.mostrarAutocomplete = true;
-      // Filtramos sobre TODOS los productos (ignorando categoría seleccionada si quieres búsqueda global)
       this.resultadosAutocomplete = this.productos.filter(p => 
-        p.nombre.toLowerCase().includes(termino) || 
-        (p.sku && p.sku.toLowerCase().includes(termino))
-      ).slice(0, 5); // Mostramos máximo 5 sugerencias para no saturar
+        p.nombre.toLowerCase().includes(this.textoBusqueda.toLowerCase())
+      ).slice(0, 5); // Solo mostrar 5 sugerencias
     } else {
       this.mostrarAutocomplete = false;
-      this.resultadosAutocomplete = [];
     }
+    
+    this.aplicarFiltros();
   }
 
-  irAlProducto(producto: any) {
-    this.textoBusqueda = ''; 
-    this.mostrarAutocomplete = false;
-    this.editarProducto(producto); // Reutilizamos la función
-  }
-
-  // Cerrar menú si hacemos clic fuera (opcional, para UX)
   cerrarAutocomplete() {
-    // Pequeño delay para permitir que el clic en el item se registre antes de cerrar
+    // Timeout pequeño para permitir que el click en la sugerencia ocurra antes de cerrar
     setTimeout(() => {
       this.mostrarAutocomplete = false;
     }, 200);
   }
-  
-  abrirModalCategoria() { this.modalCategoriaAbierto = true; }
-  cerrarModalCategoria() { this.modalCategoriaAbierto = false; }
+
+  seleccionarCategoria(catId: number | null) {
+    this.categoriaSeleccionada = catId;
+    this.aplicarFiltros();
+  }
+
+  // 3. LÓGICA DE PAGINACIÓN
+  actualizarPaginacion() {
+    this.totalPaginas = Math.ceil(this.productosFiltradosGlobal.length / this.itemsPorPagina);
+    
+    const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
+    const fin = inicio + this.itemsPorPagina;
+    
+    this.productosPaginados = this.productosFiltradosGlobal.slice(inicio, fin);
+  }
+
+  cambiarPagina(nuevaPagina: number) {
+    if (nuevaPagina >= 1 && nuevaPagina <= this.totalPaginas) {
+      this.paginaActual = nuevaPagina;
+      this.actualizarPaginacion();
+      // Scroll suave arriba (opcional)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  // 4. GESTIÓN DE CATEGORÍAS (MODAL)
+  abrirModalCategoria() {
+    this.modalCategoriaAbierto = true;
+  }
+
+  cerrarModalCategoria() {
+    this.modalCategoriaAbierto = false;
+    this.nuevaCategoria.nombre = '';
+  }
+
+  crearCategoria(event?: Event) {
+    // Prevenir submit si viene de un form
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    if (!this.nuevaCategoria.nombre.trim()) return;
+
+    const datos = {
+      nombre: this.nuevaCategoria.nombre,
+      empresa_id: this.usuario.empresa_id
+    };
+
+    this.productService.createCategoria(datos).subscribe({
+      next: () => {
+        // Recargar datos para que aparezca la nueva categoría
+        this.cerrarModalCategoria();
+        this.cargarDatos(); 
+      },
+      error: (err) => console.error('Error al crear categoría', err)
+    });
+  }
 }

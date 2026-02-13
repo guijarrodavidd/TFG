@@ -1,13 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-
-// Definimos la estructura de un ítem del carrito
-interface CartItem {
-  producto: any;
-  cantidad: number;
-}
+import { ProductService } from '../../services/product.service';
+import { VentaService } from '../../services/venta.service';
+import { ClienteService } from '../../services/cliente.service';
 
 @Component({
   selector: 'app-ventas',
@@ -18,113 +14,212 @@ interface CartItem {
 })
 export class VentasComponent implements OnInit {
   
-  http = inject(HttpClient);
+  // Servicios
+  private productService = inject(ProductService);
+  private ventaService = inject(VentaService);
+  private clienteService = inject(ClienteService);
+
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
 
-  // Datos del Catálogo
+  // --- DATOS PRINCIPALES ---
   productos: any[] = [];
-  cargando: boolean = true;
-  textoBusqueda: string = '';
+  categorias: any[] = [];
+  listaClientes: any[] = [];
 
-  // Datos del Carrito
-  carrito: CartItem[] = [];
+  // --- CARRITO ---
+  carrito: any[] = [];
   totalVenta: number = 0;
-  impuestoTotal: number = 0;
-  subtotalVenta: number = 0;
+  clienteSeleccionadoId: string = '';
+
+  // --- FILTROS Y PAGINACIÓN (Igual que en Productos) ---
+  productosFiltrados: any[] = [];
+  productosPaginados: any[] = [];
+  
+  textoBusqueda: string = '';
+  categoriaSeleccionada: number | null = null;
+  
+  paginaActual: number = 1;
+  itemsPorPagina: number = 9; // Mostramos 9 para que quepan bien con el carrito al lado
+  totalPaginas: number = 1;
+
+  // --- FEEDBACK ---
+  mensajeToast: string = '';
+  tipoToast: 'success' | 'error' = 'success';
 
   ngOnInit() {
-    this.cargarProductos();
+    this.cargarDatos();
   }
 
-  // --- CARGA DEL CATÁLOGO (Reutilizamos lógica) ---
-  cargarProductos() {
-    this.cargando = true;
-    const idEmpresa = this.usuario.empresa_id;
-    this.http.get(`http://localhost/TFG/BACKEND/public/index.php/productos/empresa/${idEmpresa}`)
-      .subscribe({
-        next: (res: any) => {
-          // Solo mostramos productos ACTIVO
-          this.productos = res.filter((p: any) => p.estado === 'activo');
-          this.cargando = false;
-        },
-        error: (err) => {
-          console.error("Error al cargar productos:", err);
-          this.cargando = false;
-        }
-      });
+  cargarDatos() {
+    if (!this.usuario.empresa_id) return;
+
+    // 1. Cargar Categorías
+    this.productService.getCategorias(this.usuario.empresa_id).subscribe(data => {
+      this.categorias = data;
+    });
+
+    // 2. Cargar Clientes
+    this.clienteService.getClientesPorEmpresa(this.usuario.empresa_id).subscribe(data => {
+      this.listaClientes = data;
+    });
+
+    // 3. Cargar Productos
+    this.productService.getProductosPorEmpresa(this.usuario.empresa_id).subscribe(data => {
+      // Solo productos activos
+      this.productos = data.filter((p: any) => p.estado === 'activo');
+      this.aplicarFiltros();
+    });
   }
 
-  // --- LÓGICA DEL CARRITO ---
+  // --- LÓGICA DE FILTRADO ---
+  aplicarFiltros() {
+    let resultado = this.productos;
 
-  addToCart(producto: any) {
+    // Filtro por Categoría
+    if (this.categoriaSeleccionada !== null) {
+      resultado = resultado.filter(p => p.categoria_id == this.categoriaSeleccionada);
+    }
+
+    // Filtro por Texto
+    if (this.textoBusqueda.trim()) {
+      const termino = this.textoBusqueda.toLowerCase();
+      resultado = resultado.filter(p => 
+        p.nombre.toLowerCase().includes(termino) || 
+        p.sku.toLowerCase().includes(termino)
+      );
+    }
+
+    this.productosFiltrados = resultado;
+    this.paginaActual = 1;
+    this.actualizarPaginacion();
+  }
+
+  actualizarPaginacion() {
+    this.totalPaginas = Math.ceil(this.productosFiltrados.length / this.itemsPorPagina);
+    const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
+    this.productosPaginados = this.productosFiltrados.slice(inicio, inicio + this.itemsPorPagina);
+  }
+
+  cambiarPagina(pag: number) {
+    if (pag >= 1 && pag <= this.totalPaginas) {
+      this.paginaActual = pag;
+      this.actualizarPaginacion();
+    }
+  }
+
+  seleccionarCategoria(catId: number | null) {
+    this.categoriaSeleccionada = catId;
+    this.aplicarFiltros();
+  }
+
+  // --- LÓGICA DEL CARRITO (Con Validación de Stock) ---
+  
+  agregarAlCarrito(producto: any) {
+    // 1. Verificar stock base
     if (producto.stock_actual <= 0) {
-        alert("No hay stock disponible");
-        return;
+      this.mostrarToast(`¡El producto ${producto.nombre} está agotado!`, 'error');
+      return;
     }
 
-    // 1. Buscamos si el producto ya está en el carrito
-    const existingItem = this.carrito.find(item => item.producto.id === producto.id);
+    // 2. Buscar si ya existe en el carrito
+    const itemExistente = this.carrito.find(item => item.producto.id === producto.id);
+    
+    // 3. Calcular cantidad futura
+    const cantidadEnCarrito = itemExistente ? itemExistente.cantidad : 0;
+    
+    // 4. VALIDACIÓN DE STOCK ESTRICTA
+    if (cantidadEnCarrito + 1 > producto.stock_actual) {
+      this.mostrarToast(`No puedes añadir más. Solo quedan ${producto.stock_actual} unidades.`, 'error');
+      return;
+    }
 
-    if (existingItem) {
-      // Si existe y hay stock, aumentamos cantidad
-      if (existingItem.cantidad < producto.stock_actual) {
-          existingItem.cantidad++;
-      } else {
-          alert("No puedes añadir más unidades de las que hay en stock.");
-      }
+    // 5. Añadir o Incrementar
+    if (itemExistente) {
+      itemExistente.cantidad++;
+      itemExistente.subtotal = itemExistente.cantidad * itemExistente.precio_unitario;
     } else {
-      // Si no existe, lo añadimos nuevo
-      this.carrito.push({ producto: producto, cantidad: 1 });
+      this.carrito.push({
+        producto: producto,
+        cantidad: 1,
+        precio_unitario: parseFloat(producto.precio_venta),
+        subtotal: parseFloat(producto.precio_venta)
+      });
     }
-    this.calcularTotales();
+
+    this.calcularTotal();
   }
 
-  removeFromCart(index: number) {
+  // Modificar cantidad desde el carrito (+ / -)
+  modificarCantidad(index: number, cambio: number) {
+    const item = this.carrito[index];
+    const nuevaCantidad = item.cantidad + cambio;
+
+    // Eliminar si es 0
+    if (nuevaCantidad <= 0) {
+      this.eliminarDelCarrito(index);
+      return;
+    }
+
+    // Validar Stock al incrementar
+    if (cambio > 0 && nuevaCantidad > item.producto.stock_actual) {
+      this.mostrarToast(`Stock insuficiente. Máximo: ${item.producto.stock_actual}`, 'error');
+      return;
+    }
+
+    item.cantidad = nuevaCantidad;
+    item.subtotal = item.cantidad * item.precio_unitario;
+    this.calcularTotal();
+  }
+
+  eliminarDelCarrito(index: number) {
     this.carrito.splice(index, 1);
-    this.calcularTotales();
+    this.calcularTotal();
   }
 
-  updateQuantity(item: CartItem, nuevaCantidad: number) {
-    if (nuevaCantidad > 0 && nuevaCantidad <= item.producto.stock_actual) {
-        item.cantidad = nuevaCantidad;
-    } else if (nuevaCantidad <= 0) {
-        // Si baja a 0, lo quitamos (opcional, o dejarlo en 1)
-        item.cantidad = 1; 
-    }
-    this.calcularTotales();
-  }
-
-  calcularTotales() {
-    this.totalVenta = this.carrito.reduce((sum, item) => {
-        return sum + (Number(item.producto.precio_venta) * item.cantidad);
-    }, 0);
-
-    // Cálculo aproximado de base e IVA (asumiendo 21% general para este ejemplo)
-    this.subtotalVenta = this.totalVenta / 1.21;
-    this.impuestoTotal = this.totalVenta - this.subtotalVenta;
+  calcularTotal() {
+    this.totalVenta = this.carrito.reduce((acc, item) => acc + item.subtotal, 0);
   }
 
   limpiarCarrito() {
     this.carrito = [];
-    this.calcularTotales();
+    this.totalVenta = 0;
   }
 
+  // --- FINALIZAR VENTA ---
   procesarVenta() {
     if (this.carrito.length === 0) return;
-    
-    // Aquí irá la lógica para enviar al backend
-    console.log("Procesando venta...", this.carrito);
-    alert(`Venta realizada por ${this.totalVenta.toFixed(2)}€. (Funcionalidad de guardar pendiente de implementar)`);
-    this.limpiarCarrito();
+
+    const datosVenta = {
+      empresa_id: this.usuario.empresa_id,
+      usuario_id: this.usuario.id,
+      cliente_id: this.clienteSeleccionadoId || null,
+      total: this.totalVenta,
+      detalles: this.carrito.map(item => ({
+        producto_id: item.producto.id,
+        cantidad: item.cantidad,
+        precio_unitario: item.precio_unitario,
+        subtotal: item.subtotal
+      }))
+    };
+
+    this.ventaService.crearVenta(datosVenta).subscribe({
+      next: () => {
+        this.mostrarToast('¡Venta realizada con éxito!', 'success');
+        this.limpiarCarrito();
+        // Recargar productos para actualizar el stock visualmente
+        this.cargarDatos(); 
+      },
+      error: (err) => {
+        console.error(err);
+        this.mostrarToast('Error al procesar la venta.', 'error');
+      }
+    });
   }
 
-  // --- FILTRO VISUAL ---
-  get productosFiltrados() {
-    if (!this.textoBusqueda.trim()) return this.productos;
-    const termino = this.textoBusqueda.toLowerCase().trim();
-    return this.productos.filter(p => 
-      p.nombre.toLowerCase().includes(termino) || 
-      (p.sku && p.sku.toLowerCase().includes(termino))
-    );
+  // Helper Toast
+  mostrarToast(msg: string, tipo: 'success' | 'error') {
+    this.mensajeToast = msg;
+    this.tipoToast = tipo;
+    setTimeout(() => this.mensajeToast = '', 3000);
   }
 }

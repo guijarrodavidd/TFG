@@ -13,7 +13,7 @@
   <div class="row g-4 h-100">
     
     <div class="col-lg-5 d-flex flex-column gap-4">
-      
+  
       <div class="card border-0 shadow-sm rounded-4 p-4 card-fichaje position-relative overflow-hidden">
         <div class="d-flex justify-content-between align-items-center position-relative z-1">
           <div>
@@ -24,6 +24,7 @@
             <p class="text-muted mb-4 small">
               {{ trabajando ? 'Tu turno está activo' : 'No estás trabajando' }}
             </p>
+            
             <button (click)="toggleFichaje()" 
                     class="btn btn-lg rounded-pill px-4 fw-bold d-flex align-items-center gap-2 shadow-sm transition-transform"
                     [ngClass]="trabajando ? 'btn-danger' : 'btn-dark'">
@@ -31,12 +32,18 @@
               {{ trabajando ? 'Detener' : 'Fichar' }}
             </button>
           </div>
+
           <div class="text-end">
-            <div class="timer-display font-monospace fw-bold text-dark">
-              {{ tiempoTranscurrido.split(' ')[0] }}<span class="timer-seconds text-muted">{{ tiempoTranscurrido.split(' ')[1] }}</span>
+            <div class="timer-display font-monospace fw-bold text-dark fs-1">
+              <span *ngIf="reloj.horas !== '0'">{{ reloj.horas }}<span class="fs-6 text-muted">h</span> </span>
+              
+              {{ reloj.minutos }}<span class="fs-6 text-muted">m</span> 
+              
+              <span class="text-primary">{{ reloj.segundos }}<span class="fs-6 text-muted">s</span></span>
             </div>
             <small class="text-muted d-block mt-2">{{ workingDate | date:'dd MMM yyyy' }}</small>
           </div>
+
         </div>
       </div>
 
