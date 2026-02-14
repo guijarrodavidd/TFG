@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClienteService } from '../../services/cliente.service';
 
-// Declaramos bootstrap para poder cerrar el modal manualmente si fuera necesario
 declare var bootstrap: any;
 
 @Component({
@@ -17,22 +16,24 @@ export class ClientesComponent implements OnInit {
   
   private clienteService = inject(ClienteService);
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
-  
   clientes: any[] = [];
   
-  // Variables de estado
+  // Estado
   toast = { visible: false, mensaje: '', tipo: 'success' as 'success' | 'error' | 'warning' };
   modoEdicion: boolean = false;
-  dniValido: boolean = true; 
+  
+  // Validación NIF
+  nifValido: boolean = false; // ANTES: dniValido
+  mensajeErrorNif: string = '';
 
-  // Datos para los modales
+  // Datos
   clienteSeleccionado: any = null;
   
-  // Inicialización ROBUSTA (Evita el error 'undefined reading length')
+  // Modelo (Cambiado dni por nif)
   datosCliente = {
     id: null as number | null,
     nombre: '',
-    dni: '',
+    nif: '', // ✅ CAMBIADO
     email: '',
     telefono: '',
     direccion: ''
@@ -46,53 +47,77 @@ export class ClientesComponent implements OnInit {
     if(!this.usuario.empresa_id) return;
     this.clienteService.getClientesPorEmpresa(this.usuario.empresa_id).subscribe({
       next: (data: any) => this.clientes = data,
-      error: (err) => this.mostrarToast('Error al cargar clientes', 'error')
+      error: () => this.mostrarToast('Error de conexión', 'error')
     });
   }
 
-  // --- GESTIÓN DE MODALES ---
-
-  // 1. Ver detalles
+  // --- MODALES ---
   abrirModalVer(cliente: any) {
     this.clienteSeleccionado = { ...cliente };
   }
 
-  // 2. Crear (Reset limpio)
   abrirModalCrear() {
     this.modoEdicion = false;
     this.datosCliente = { 
         id: null, 
         nombre: '', 
-        dni: '', // IMPORTANTE: String vacío, nunca null
+        nif: '', // ✅ Resetear nif
         email: '', 
         telefono: '', 
         direccion: '' 
     };
-    this.dniValido = false; 
+    this.nifValido = false; 
+    this.mensajeErrorNif = '';
   }
 
-  // 3. Editar (Cargar datos)
   abrirModalEditar(cliente: any) {
     this.modoEdicion = true;
-    // Usamos spread operator (...) para copiar los datos
-    // Y aseguramos que si algún campo viene null de la BD, se convierta en string vacío
+    // Mapeamos el campo de la BD (nif) al formulario
     this.datosCliente = { 
-      ...cliente,
-      dni: cliente.dni || '',
-      email: cliente.email || '',
-      telefono: cliente.telefono || '',
-      direccion: cliente.direccion || ''
-    }; 
-    this.dniValido = true; // Al editar, asumimos válido si ya existía
+        ...cliente, 
+        nif: cliente.nif || '' // ✅ Usamos cliente.nif
+    };
+    this.validarNif(); // ✅ Validar al abrir
   }
 
-  // --- GUARDAR / ACTUALIZAR ---
+  // --- VALIDACIÓN NIF (Antes validarDni) ---
+  validarNif() {
+    const nif = this.datosCliente.nif;
+    this.mensajeErrorNif = '';
+
+    if (!nif) {
+        this.nifValido = false;
+        return;
+    }
+
+    // Normalizar
+    const str = nif.toUpperCase().replace(/\s/g, '').replace(/-/g, '');
+    this.datosCliente.nif = str; 
+
+    // Formato básico (DNI, NIE, CIF básico)
+    // Aceptamos X,Y,Z para NIE y letras de CIF
+    const regex = /^([ABCDEFGHJKLMNPQRSUVWXYZ]\d{7,8}|\d{8}|[XYZ]\d{7,8})([A-Z0-9])$/;
+    
+    if (!regex.test(str)) {
+        this.nifValido = false;
+        if(str.length > 0) this.mensajeErrorNif = 'Formato inválido';
+        return;
+    }
+
+    // Nota: Aquí podrías mantener el algoritmo del módulo 23 si es solo para DNI/NIE.
+    // Si aceptas CIF (empresas), el algoritmo es más complejo.
+    // Para simplificar y que no te falle con empresas, validaremos solo formato y longitud por ahora.
+    
+    this.nifValido = true; // Asumimos válido si pasa el regex
+  }
+
   guardarCliente() {
     if (!this.datosCliente.nombre) {
-      this.mostrarToast("El nombre es obligatorio", "warning");
+      this.mostrarToast("Faltan datos obligatorios", "warning");
       return;
     }
 
+    // El objeto ya lleva la propiedad 'nif' correcta
     const body = { ...this.datosCliente, empresa_id: this.usuario.empresa_id };
 
     const peticion = (this.modoEdicion && this.datosCliente.id) 
@@ -101,21 +126,14 @@ export class ClientesComponent implements OnInit {
 
     peticion.subscribe({
         next: () => {
-            this.mostrarToast(this.modoEdicion ? "Cliente actualizado" : "Cliente creado", "success");
-            this.cargarClientes();
+            this.mostrarToast("Guardado correctamente", "success");
+            this.cargarClientes(); 
         },
         error: (err) => {
             console.error(err);
-            this.mostrarToast("Error en la operación", "error");
+            this.mostrarToast("Error al guardar", "error");
         }
     });
-  }
-
-  // --- VALIDACIÓN SEGURA ---
-  validarDni() {
-    const dni = this.datosCliente.dni;
-    // Validación segura: si existe y tiene longitud
-    this.dniValido = dni ? dni.length >= 8 : false;
   }
 
   mostrarToast(mensaje: string, tipo: 'success' | 'error' | 'warning') {

@@ -1,0 +1,70 @@
+ERROR - 2026-02-14 00:23:04 --> mysqli_sql_exception: Unknown column 'dni' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('UPDATE `cliente...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `cliente...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `cliente...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `cliente...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\BaseModel.php(1025): CodeIgniter\Model->doUpdate(Array, Array)
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(860): CodeIgniter\BaseModel->update(Array, Array)
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Clientes.php(42): CodeIgniter\Model->update('1', Array)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Clientes->update('1')
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Clientes))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+CRITICAL - 2026-02-14 00:23:04 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'dni' in 'field list'
+[Method: POST, Route: api/clientes/actualizar/1]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `clientes` SET `empresa_id` = :empresa_id:, `nombre` = :nombre:, `email` = :email:, `telefono` = :telefono:, `direccion` = :direccion:, `dni` = :dni:
+WHERE `clientes`.`id` IN :clientes.id:', [...], false)
+ 2 SYSTEMPATH\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+ 3 SYSTEMPATH\BaseModel.php(1025): CodeIgniter\Model->doUpdate([...], [...])
+ 4 SYSTEMPATH\Model.php(860): CodeIgniter\BaseModel->update([...], [...])
+ 5 APPPATH\Controllers\Clientes.php(42): CodeIgniter\Model->update('1', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Clientes->update('1')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Clientes))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-14 00:23:04 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'dni' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `clientes` SET `empresa_id` = \'4\', `nombre` = \'DAVID GUIJARRO CANO\', `email` = \'davidquelmo@gmail.com\', `telefono` = \'628086490\', `direccion` = \'Edificio San Edesio 2 B 11 2 2 11 - 46940, Manises (Valencia)\', `dni` = \'49601120X\'
+WHERE `clientes`.`id` IN (\'1\')')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `clientes` SET `empresa_id` = \'4\', `nombre` = \'DAVID GUIJARRO CANO\', `email` = \'davidquelmo@gmail.com\', `telefono` = \'628086490\', `direccion` = \'Edificio San Edesio 2 B 11 2 2 11 - 46940, Manises (Valencia)\', `dni` = \'49601120X\'
+WHERE `clientes`.`id` IN (\'1\')')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `clientes` SET `empresa_id` = :empresa_id:, `nombre` = :nombre:, `email` = :email:, `telefono` = :telefono:, `direccion` = :direccion:, `dni` = :dni:
+WHERE `clientes`.`id` IN :clientes.id:', [...], false)
+ 4 SYSTEMPATH\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+ 5 SYSTEMPATH\BaseModel.php(1025): CodeIgniter\Model->doUpdate([...], [...])
+ 6 SYSTEMPATH\Model.php(860): CodeIgniter\BaseModel->update([...], [...])
+ 7 APPPATH\Controllers\Clientes.php(42): CodeIgniter\Model->update('1', [...])
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Clientes->update('1')
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Clientes))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-14 00:23:04 --> [Caused by] mysqli_sql_exception: Unknown column 'dni' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('UPDATE `clientes` SET `empresa_id` = \'4\', `nombre` = \'DAVID GUIJARRO CANO\', `email` = \'davidquelmo@gmail.com\', `telefono` = \'628086490\', `direccion` = \'Edificio San Edesio 2 B 11 2 2 11 - 46940, Manises (Valencia)\', `dni` = \'49601120X\'
+WHERE `clientes`.`id` IN (\'1\')', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `clientes` SET `empresa_id` = \'4\', `nombre` = \'DAVID GUIJARRO CANO\', `email` = \'davidquelmo@gmail.com\', `telefono` = \'628086490\', `direccion` = \'Edificio San Edesio 2 B 11 2 2 11 - 46940, Manises (Valencia)\', `dni` = \'49601120X\'
+WHERE `clientes`.`id` IN (\'1\')')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `clientes` SET `empresa_id` = \'4\', `nombre` = \'DAVID GUIJARRO CANO\', `email` = \'davidquelmo@gmail.com\', `telefono` = \'628086490\', `direccion` = \'Edificio San Edesio 2 B 11 2 2 11 - 46940, Manises (Valencia)\', `dni` = \'49601120X\'
+WHERE `clientes`.`id` IN (\'1\')')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `clientes` SET `empresa_id` = :empresa_id:, `nombre` = :nombre:, `email` = :email:, `telefono` = :telefono:, `direccion` = :direccion:, `dni` = :dni:
+WHERE `clientes`.`id` IN :clientes.id:', [...], false)
+ 5 SYSTEMPATH\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+ 6 SYSTEMPATH\BaseModel.php(1025): CodeIgniter\Model->doUpdate([...], [...])
+ 7 SYSTEMPATH\Model.php(860): CodeIgniter\BaseModel->update([...], [...])
+ 8 APPPATH\Controllers\Clientes.php(42): CodeIgniter\Model->update('1', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Clientes->update('1')
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Clientes))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

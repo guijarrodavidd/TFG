@@ -19,7 +19,7 @@ class Clientes extends ResourceController
     // Crear cliente
     public function create()
     {
-        $data = $this->request->getJSON(true); // Obtener datos como array
+        $data = $this->request->getJSON(true); // Forzamos array asociativo
         
         if ($this->model->insert($data)) {
             return $this->respondCreated(['status' => 'success', 'id' => $this->model->getInsertID()]);
@@ -28,19 +28,19 @@ class Clientes extends ResourceController
         }
     }
 
-    // ✅ MÉTODO DE ACTUALIZAR (FALTABA ESTO)
+    // Actualizar cliente
     public function update($id = null)
     {
-        $data = $this->request->getJSON(true);
+        $data = $this->request->getJSON(true); // ✅ Usamos getJSON para leer lo que manda Angular
 
-        // Verificamos que el cliente exista
+        // Verificar existencia
         if (!$this->model->find($id)) {
             return $this->failNotFound('Cliente no encontrado');
         }
 
-        // Actualizamos
+        // Actualizar
         if ($this->model->update($id, $data)) {
-            return $this->respond(['status' => 'success', 'message' => 'Cliente actualizado']);
+            return $this->respond(['status' => 'success', 'message' => 'Cliente actualizado correctamente']);
         } else {
             return $this->fail($this->model->errors());
         }
