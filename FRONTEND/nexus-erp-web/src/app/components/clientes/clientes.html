@@ -1,34 +1,39 @@
-<div class="container-fluid p-4">
+<div class="container-fluid p-4 fade-in">
     
-    <div class="d-flex justify-content-between align-items-center mb-4 animate-fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold mb-0">Gestión de Clientes</h2>
-            <p class="text-muted small">Administra tu cartera de clientes y contactos.</p>
+            <h2 class="fw-bold mb-0 text-dark">Cartera de Clientes</h2>
+            <p class="text-muted small">Gestiona tus contactos y empresas asociadas.</p>
         </div>
-        <button class="btn btn-primary d-flex align-items-center gap-2 shadow-sm" 
+        <button class="btn btn-primary d-flex align-items-center gap-2 shadow-sm rounded-pill px-4" 
                 data-bs-toggle="modal" 
-                data-bs-target="#modalNuevoCliente">
+                data-bs-target="#modalFormCliente"
+                (click)="abrirModalCrear()">
             <i class="bi bi-person-plus-fill"></i>
             <span>Nuevo Cliente</span>
         </button>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden animate-fade-up">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th class="border-0 ps-4 py-3 text-secondary small text-uppercase">Nombre / DNI</th>
-                            <th class="border-0 py-3 text-secondary small text-uppercase">Contacto</th>
-                            <th class="border-0 py-3 text-secondary small text-uppercase">Ubicación</th>
-                            <th class="border-0 py-3 text-secondary small text-uppercase text-end pe-4">Acciones</th>
+                            <th class="ps-4 py-3 text-secondary small text-uppercase">Cliente</th>
+                            <th class="py-3 text-secondary small text-uppercase">Contacto</th>
+                            <th class="py-3 text-secondary small text-uppercase">Ubicación</th>
+                            <th class="text-end pe-4 py-3 text-secondary small text-uppercase">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let cliente of clientes" class="border-bottom border-light">
                             <td class="ps-4 py-3">
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center" style="cursor: pointer;"
+                                     data-bs-toggle="modal" 
+                                     data-bs-target="#modalVerCliente"
+                                     (click)="abrirModalVer(cliente)">
+                                    
                                     <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-3 rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px;">
                                         {{ cliente.nombre.charAt(0) | uppercase }}
                                     </div>
@@ -40,29 +45,30 @@
                             </td>
                             <td class="py-3">
                                 <div class="d-flex flex-column">
-                                    <span class="text-dark mb-1"><i class="bi bi-envelope me-1 text-muted"></i> {{ cliente.email }}</span>
-                                    <span class="text-muted small"><i class="bi bi-telephone me-1"></i> {{ cliente.telefono }}</span>
+                                    <span class="text-dark mb-1"><i class="bi bi-envelope me-2 text-muted"></i>{{ cliente.email }}</span>
+                                    <span class="text-muted small"><i class="bi bi-telephone me-2"></i>{{ cliente.telefono }}</span>
                                 </div>
                             </td>
                             <td class="py-3">
-                                <span class="text-muted"><i class="bi bi-geo-alt me-1"></i> {{ cliente.direccion || 'Sin dirección' }}</span>
+                                <span class="text-muted"><i class="bi bi-geo-alt me-2"></i>{{ cliente.direccion || '---' }}</span>
                             </td>
                             <td class="text-end pe-4 py-3">
-                                <button class="btn btn-sm btn-light text-primary me-1" title="Ver detalles">
-                                    <i class="bi bi-eye"></i>
+                                <button class="btn btn-sm btn-light text-primary me-1 rounded-circle" 
+                                        style="width: 32px; height: 32px;"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modalVerCliente"
+                                        (click)="abrirModalVer(cliente)"
+                                        title="Ver Ficha">
+                                    <i class="bi bi-eye-fill"></i>
                                 </button>
-                                <button class="btn btn-sm btn-light text-secondary" title="Editar">
-                                    <i class="bi bi-pencil"></i>
+                                <button class="btn btn-sm btn-light text-secondary rounded-circle" 
+                                        style="width: 32px; height: 32px;"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modalFormCliente"
+                                        (click)="abrirModalEditar(cliente)"
+                                        title="Editar">
+                                    <i class="bi bi-pencil-fill"></i>
                                 </button>
-                            </td>
-                        </tr>
-
-                        <tr *ngIf="clientes.length === 0">
-                            <td colspan="4" class="text-center py-5">
-                                <div class="text-muted">
-                                    <i class="bi bi-people display-4 mb-3 d-block opacity-25"></i>
-                                    <p class="mb-0">No tienes clientes registrados aún.</p>
-                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -72,98 +78,132 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalNuevoCliente" tabindex="-1" aria-labelledby="modalNuevoClienteLabel" aria-hidden="true">
+<div class="modal fade" id="modalVerCliente" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden" *ngIf="clienteSeleccionado">
             
-            <div class="modal-header border-0 pb-0 ps-4 pe-4 pt-4">
-                <h5 class="modal-title fw-bold" id="modalNuevoClienteLabel">Añadir Nuevo Cliente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="bg-primary p-4 text-center position-relative">
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"></button>
+                
+                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center text-primary fw-bold display-4 shadow-sm mb-3" 
+                     style="width: 80px; height: 80px;">
+                    {{ clienteSeleccionado.nombre.charAt(0) | uppercase }}
+                </div>
+                <h4 class="text-white fw-bold mb-0">{{ clienteSeleccionado.nombre }}</h4>
+                <p class="text-white-50 mb-0 small">{{ clienteSeleccionado.dni }}</p>
             </div>
 
             <div class="modal-body p-4">
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label small text-muted text-uppercase fw-bold">Nombre Completo</label>
-                        <input type="text" class="form-control bg-light border-0 py-2" 
-                               [(ngModel)]="nuevoCliente.nombre" name="nombre" 
-                               placeholder="Ej: Juan Pérez S.L.">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small text-muted text-uppercase fw-bold">DNI / NIF</label>
-                        <input type="text" class="form-control bg-light border-0 py-2" 
-                               [(ngModel)]="nuevoCliente.dni" name="dni" 
-                               (keyup)="validarDni()"
-                               [ngClass]="{'is-valid': dniValido && nuevoCliente.dni.length > 0}"
-                               placeholder="Documento de identidad">
-                        <div class="form-text text-danger" *ngIf="nuevoCliente.dni.length > 0 && !dniValido">
-                            Mínimo 8 caracteres requeridos.
+                <div class="row g-4">
+                    <div class="col-6">
+                        <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Email de Contacto</small>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-envelope text-primary me-2"></i>
+                            <span class="text-dark fw-bold text-break">{{ clienteSeleccionado.email || 'No disponible' }}</span>
                         </div>
                     </div>
-
-                    <div class="row g-2">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label small text-muted text-uppercase fw-bold">Email</label>
-                            <input type="email" class="form-control bg-light border-0 py-2" 
-                                   [(ngModel)]="nuevoCliente.email" name="email" 
-                                   placeholder="cliente@email.com">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label small text-muted text-uppercase fw-bold">Teléfono</label>
-                            <input type="tel" class="form-control bg-light border-0 py-2" 
-                                   [(ngModel)]="nuevoCliente.telefono" name="telefono" 
-                                   placeholder="+34 600 000 000">
+                    <div class="col-6">
+                        <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Teléfono</small>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-telephone text-primary me-2"></i>
+                            <span class="text-dark fw-bold">{{ clienteSeleccionado.telefono || 'No disponible' }}</span>
                         </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small text-muted text-uppercase fw-bold">Dirección</label>
-                        <textarea class="form-control bg-light border-0" rows="2" 
-                                  [(ngModel)]="nuevoCliente.direccion" name="direccion"
-                                  placeholder="Calle Principal, 123..."></textarea>
+                    <div class="col-12">
+                        <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Dirección Física</small>
+                        <div class="d-flex align-items-start bg-light p-3 rounded-3 border-start border-4 border-primary">
+                            <i class="bi bi-geo-alt-fill text-primary me-2 mt-1"></i>
+                            <span class="text-dark">{{ clienteSeleccionado.direccion || 'Sin dirección registrada' }}</span>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
 
-            <div class="modal-footer border-0 pt-0 pe-4 pb-4">
-                <button type="button" class="btn btn-light rounded-pill px-4 text-muted" data-bs-dismiss="modal">Cancelar</button>
-                
-                <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold" 
-                        (click)="guardarCliente()" 
-                        [disabled]="!dniValido"
-                        data-bs-dismiss="modal">
-                    Guardar Cliente
+            <div class="modal-footer border-0 bg-light p-3 justify-content-center">
+                <button class="btn btn-outline-primary rounded-pill px-4 fw-bold" 
+                        data-bs-target="#modalFormCliente" 
+                        data-bs-toggle="modal" 
+                        (click)="abrirModalEditar(clienteSeleccionado)">
+                    <i class="bi bi-pencil-square me-2"></i> Editar Datos
                 </button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
-    <div class="toast show align-items-center text-white border-0 shadow-lg" 
-         *ngIf="toast.visible"
-         [ngClass]="{
-            'bg-success': toast.tipo === 'success',
-            'bg-danger': toast.tipo === 'error',
-            'bg-warning text-dark': toast.tipo === 'warning'
-         }"
-         role="alert" aria-live="assertive" aria-atomic="true">
-        
+<div class="modal fade" id="modalFormCliente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            
+            <div class="modal-header border-0 pb-0 ps-4 pe-4 pt-4">
+                <h5 class="modal-title fw-bold text-dark">
+                    {{ modoEdicion ? 'Editar Cliente' : 'Registrar Nuevo Cliente' }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label small text-muted fw-bold">NOMBRE EMPRESA / CLIENTE</label>
+                        <input type="text" class="form-control bg-light border-0 py-2" 
+                               [(ngModel)]="datosCliente.nombre" name="nombre" placeholder="Ej: Tech Solutions S.L.">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small text-muted fw-bold">DOCUMENTO (DNI/NIF)</label>
+                        <input type="text" class="form-control bg-light border-0 py-2" 
+                               [(ngModel)]="datosCliente.dni" name="dni" 
+                               (keyup)="validarDni()"
+                               [ngClass]="{
+                                   'is-valid': dniValido && datosCliente.dni?.length > 0, 
+                                   'is-invalid': !dniValido && datosCliente.dni?.length > 0
+                               }"
+                               placeholder="12345678X">
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small text-muted fw-bold">EMAIL</label>
+                            <input type="email" class="form-control bg-light border-0 py-2" 
+                                   [(ngModel)]="datosCliente.email" name="email" placeholder="@email.com">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small text-muted fw-bold">TELÉFONO</label>
+                            <input type="tel" class="form-control bg-light border-0 py-2" 
+                                   [(ngModel)]="datosCliente.telefono" name="telefono" placeholder="+34...">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small text-muted fw-bold">DIRECCIÓN</label>
+                        <textarea class="form-control bg-light border-0" rows="2" 
+                                  [(ngModel)]="datosCliente.direccion" name="direccion" placeholder="Calle..."></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer border-0 pt-0 pe-4 pb-4">
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                
+                <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" 
+                        (click)="guardarCliente()" 
+                        data-bs-dismiss="modal">
+                    {{ modoEdicion ? 'Guardar Cambios' : 'Crear Cliente' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1060">
+    <div class="toast align-items-center border-0 shadow-lg" [class.show]="toast.visible" 
+         [ngClass]="toast.tipo === 'success' ? 'text-bg-success' : 'text-bg-danger'">
         <div class="d-flex">
-            <div class="toast-body d-flex align-items-center gap-2">
-                <i class="bi" 
-                   [ngClass]="{
-                      'bi-check-circle-fill': toast.tipo === 'success',
-                      'bi-x-circle-fill': toast.tipo === 'error',
-                      'bi-exclamation-triangle-fill': toast.tipo === 'warning'
-                   }"></i>
+            <div class="toast-body fw-bold d-flex align-items-center">
+                <i class="bi me-2 fs-5" [ngClass]="toast.tipo === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
                 {{ toast.mensaje }}
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" 
-                    data-bs-dismiss="toast" aria-label="Close"
-                    (click)="toast.visible = false">
-            </button>
         </div>
     </div>
 </div>

@@ -10,18 +10,18 @@ export class ClienteService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  // Obtener clientes por empresa
+  // Listar
   getClientesPorEmpresa(empresaId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/clientes/empresa/${empresaId}`);
   }
 
-  // Obtener detalle de un cliente
-  getDetalleCliente(clienteId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/clientes/detalle/${clienteId}`);
-  }
-
-  // Crear cliente
+  // Crear
   crearCliente(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/clientes/crear`, datos);
+  }
+
+  // ✅ NUEVO: Actualizar Cliente
+  actualizarCliente(id: number, datos: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/clientes/actualizar/${id}`, datos);
   }
 }

@@ -9,7 +9,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 
 // GRUPO DE RUTAS API
-$routes->group('api', function($routes) {
+$routes->group('api', ['filter' => 'cors'], function($routes) {
 
     // --- AUTENTICACIÓN ---
     $routes->post('login', 'Auth::login');
@@ -35,6 +35,7 @@ $routes->group('api', function($routes) {
     // --- CLIENTES ---
     $routes->get('clientes/empresa/(:num)', 'Clientes::getByEmpresa/$1');
     $routes->get('clientes/detalle/(:num)', 'Clientes::getDetalle/$1');
+    $routes->post('clientes/actualizar/(:num)', 'Clientes::update/$1');
     $routes->post('clientes/crear', 'Clientes::create');
 
     // --- PERSONAL / RRHH ---
@@ -45,4 +46,6 @@ $routes->group('api', function($routes) {
 
     // --- OTROS ---
     $routes->get('dashboard', 'Dashboard::index');
+    // Manejar todas las peticiones OPTIONS automáticamente
+    $routes->options('(:any)', function() {});
 });

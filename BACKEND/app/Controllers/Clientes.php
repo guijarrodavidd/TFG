@@ -1,63 +1,48 @@
-<?php namespace App\Controllers;
+<?php
+
+namespace App\Controllers;
+
 use CodeIgniter\RESTful\ResourceController;
-use App\Models\ClienteModel;
-use App\Models\VentaModel;
 
-class Clientes extends ResourceController {
-    protected $format = 'json';
+class Clientes extends ResourceController
+{
+    protected $modelName = 'App\Models\ClienteModel';
+    protected $format    = 'json';
 
-    // Lista de clientes
-    public function getByEmpresa($empresaId = null) {
-        $model = new ClienteModel();
-        return $this->respond($model->where('empresa_id', $empresaId)->findAll());
+    // Obtener clientes por empresa
+    public function getByEmpresa($empresaId = null)
+    {
+        $data = $this->model->where('empresa_id', $empresaId)->findAll();
+        return $this->respond($data);
     }
 
-    // Detalle de UN cliente + sus ventas
-    public function getDetalle($id = null) {
-        $clienteModel = new ClienteModel();
-        $ventaModel = new VentaModel();
-
-        $cliente = $clienteModel->find($id);
-        if (!$cliente) return $this->failNotFound('Cliente no encontrado');
-
-        // Buscamos sus compras
-        $ventas = $ventaModel->where('cliente_id', $id)->orderBy('fecha_venta', 'DESC')->findAll();
-
-        return $this->respond([
-            'cliente' => $cliente,
-            'compras' => $ventas
-        ]);
-    }
-    // Crear nuevo cliente
-    public function create() {
-        $json = $this->request->getJSON();
+    // Crear cliente
+    public function create()
+    {
+        $data = $this->request->getJSON(true); // Obtener datos como array
         
-        // Validación básica
-        if (!$json || !isset($json->nombre) || !isset($json->empresa_id)) {
-            return $this->fail('Datos incompletos', 400);
+        if ($this->model->insert($data)) {
+            return $this->respondCreated(['status' => 'success', 'id' => $this->model->getInsertID()]);
+        } else {
+            return $this->fail($this->model->errors());
+        }
+    }
+
+    // ✅ MÉTODO DE ACTUALIZAR (FALTABA ESTO)
+    public function update($id = null)
+    {
+        $data = $this->request->getJSON(true);
+
+        // Verificamos que el cliente exista
+        if (!$this->model->find($id)) {
+            return $this->failNotFound('Cliente no encontrado');
         }
 
-        $clienteModel = new \App\Models\ClienteModel();
-        
-        // AQUÍ ES DONDE FALTABAN LOS CAMPOS NUEVOS 👇
-        $nuevoCliente = [
-            'empresa_id'       => $json->empresa_id,
-            'nombre'           => $json->nombre,
-            'nif'              => $json->nif ?? null,
-            'email'            => $json->email ?? null,
-            'telefono'         => $json->telefono ?? null,
-            'direccion'        => $json->direccion ?? null,
-            'tipo_cliente'     => $json->tipo_cliente ?? 'Residencial',
-            // Añadimos estos dos:
-            'fecha_nacimiento' => $json->fecha_nacimiento ?? null,
-            'nacionalidad'     => $json->nacionalidad ?? 'España'
-        ];
-
-        try {
-            $id = $clienteModel->insert($nuevoCliente);
-            return $this->respondCreated(['id' => $id, 'message' => 'Cliente creado']);
-        } catch (\Exception $e) {
-            return $this->failServerError('Error al guardar: ' . $e->getMessage());
+        // Actualizamos
+        if ($this->model->update($id, $data)) {
+            return $this->respond(['status' => 'success', 'message' => 'Cliente actualizado']);
+        } else {
+            return $this->fail($this->model->errors());
         }
     }
 }
