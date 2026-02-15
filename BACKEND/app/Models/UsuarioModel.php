@@ -19,7 +19,8 @@ class UsuarioModel extends Model
         'rol_id', 
         'empresa_id', 
         'token_sesion', // <--- IMPORTANTE: Si esto falta, el login da Error 500
-        'created_at'
+        'created_at',
+        'dias_disponibles'
     ];
 
     protected $useTimestamps = true;

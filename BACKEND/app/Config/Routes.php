@@ -61,6 +61,7 @@ $routes->group('api', ['filter' => 'cors'], function($routes) {
     $routes->get('rrhh/empleados/(:num)', 'RRHH::getEmpleadosResumen/$1'); // Listado para gestión
     $routes->post('rrhh/subir-nomina', 'RRHH::subirNomina');
     $routes->post('rrhh/gestionar-ausencia', 'RRHH::gestionarAusencia'); // Aprobar/Rechazar
+    $routes->post('rrhh/actualizar-dias', 'RRHH::actualizarDias');
     
     // Manejar todas las peticiones OPTIONS automáticamente (CORS Preflight)
     $routes->options('(:any)', function() {});

@@ -1,118 +1,109 @@
-<?php namespace App\Controllers;
+<?php
+namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
+use CodeIgniter\I18n\Time;
 
 class Personal extends ResourceController {
     
     protected $format = 'json';
-    protected $db;
 
-    public function __construct() {
-        $this->db = \Config\Database::connect();
-    }
-
-    // OBTIENE EL ESTADO ACTUAL (¿Está trabajando? ¿Historial?)
-    public function getDashboard($usuarioId = null) {
+    // -------------------------------------------------------------------------
+    // 1. DASHBOARD COMPLETO (Usuario + Nóminas + Solicitudes)
+    // -------------------------------------------------------------------------
+    public function getDashboard($userId = null) {
         $db = \Config\Database::connect();
-        
-        // 1. Obtener Usuario + Nombre Empresa
+
+        // 1. Usuario
         $usuario = $db->table('usuarios')
-                      ->select('usuarios.*, empresas.nombre as nombre_empresa')
-                      ->join('empresas', 'empresas.id = usuarios.empresa_id', 'left')
-                      ->where('usuarios.id', $usuarioId)
-                      ->get()->getRow();
+                      ->select('id, nombre, email, dias_disponibles')
+                      ->where('id', $userId)
+                      ->get()->getRowArray();
 
-        // 2. Turno Activo
-        $fichajeModel = $db->table('fichajes');
-        $turnoActual = $fichajeModel->where('usuario_id', $usuarioId)
-                                    ->where('salida', NULL)
-                                    ->get()->getRow();
+        // 2. Historial de Fichajes
+        $fichajes = $db->table('fichajes')
+                       ->where('usuario_id', $userId)
+                       ->orderBy('entrada', 'DESC')
+                       ->limit(10)
+                       ->get()->getResultArray();
 
-        // 3. Historial (AMPLIADO a 100 para permitir navegación entre semanas)
-        $historial = $fichajeModel->where('usuario_id', $usuarioId)
-                                  ->orderBy('entrada', 'DESC')
-                                  ->limit(100) // Traemos suficientes para navegar
-                                  ->get()->getResult();
+        // 3. Estado actual (CRÍTICO PARA EL CRONÓMETRO)
+        // Buscamos la fila completa, NO un booleano
+        $fichajeActivo = $db->table('fichajes')
+                            ->where('usuario_id', $userId)
+                            ->where('salida', null)
+                            ->orderBy('entrada', 'DESC')
+                            ->get()->getRowArray();
 
-        // 4. Ausencias y Nómina
-        $ausencias = $db->table('ausencias')->where('usuario_id', $usuarioId)->get()->getRow();
-        $nomina = $db->table('nominas')->where('usuario_id', $usuarioId)->orderBy('id', 'DESC')->get()->getRow();
+        // 4. Nóminas y Solicitudes
+        $nominas = $db->table('nominas')->where('usuario_id', $userId)->orderBy('created_at', 'DESC')->get()->getResultArray();
+        foreach ($nominas as &$n) $n['url_descarga'] = base_url($n['archivo']);
+
+        $solicitudes = $db->table('solicitudes_ausencia')->where('usuario_id', $userId)->orderBy('created_at', 'DESC')->get()->getResultArray();
 
         return $this->respond([
-            'nombre_empresa' => $usuario->nombre_empresa, // <--- NUEVO
-            'turno_activo' => $turnoActual,
-            'historial' => $historial,
-            'ausencias' => $ausencias,
-            'nomina' => $nomina
+            'usuario' => $usuario,
+            'fichajes' => $fichajes,
+            'fichaje_activo' => $fichajeActivo, // <--- ¡AQUÍ ESTÁ LA CLAVE! Tiene que ser la variable, no true/false
+            'nominas' => $nominas,
+            'solicitudes' => $solicitudes
         ]);
     }
 
-    // ACCIÓN DE FICHAR (PLAY / STOP)
+    // -------------------------------------------------------------------------
+    // 2. FICHAR (ENTRADA / SALIDA) - RECUPERADO
+    // -------------------------------------------------------------------------
     public function fichar() {
-        $json = $this->request->getJSON();
-        $usuarioId = $json->usuario_id;
-        $empresaId = $json->empresa_id;
+        $data = $this->request->getJSON(true);
+        $usuarioId = $data['usuario_id'];
+        $db = \Config\Database::connect();
+        $builder = $db->table('fichajes');
 
-        $fichajeModel = $this->db->table('fichajes');
-
-        // Buscamos si ya tiene uno abierto
-        $abierto = $fichajeModel->where('usuario_id', $usuarioId)->where('salida', NULL)->get()->getRow();
+        // Buscar turno abierto
+        $abierto = $builder->where('usuario_id', $usuarioId)->where('salida', null)->get()->getRowArray();
 
         if ($abierto) {
-            // == STOP: CERRAR TURNO ==
-            $salida = date('Y-m-d H:i:s');
-            
-            // Calculamos horas trabajadas
-            $entrada = strtotime($abierto->entrada);
-            $fin = strtotime($salida);
-            $horas = round(abs($fin - $entrada) / 3600, 2);
-
-            $fichajeModel->where('id', $abierto->id)->update([
-                'salida' => $salida,
-                'total_horas' => $horas
-            ]);
-            
-            return $this->respond(['status' => 'stopped', 'message' => 'Turno cerrado']);
+            // CERRAR
+            $builder->where('id', $abierto['id'])->update(['salida' => date('Y-m-d H:i:s')]);
+            return $this->respond(['status' => 'success', 'tipo' => 'salida']);
         } else {
-            // == PLAY: ABRIR TURNO ==
-            $fichajeModel->insert([
-                'usuario_id' => $usuarioId,
-                'empresa_id' => $empresaId,
+            // ABRIR
+            $builder->insert([
+                'usuario_id' => $usuarioId, 
+                'empresa_id' => $data['empresa_id'], 
                 'entrada' => date('Y-m-d H:i:s')
             ]);
-            
-            return $this->respond(['status' => 'started', 'entrada' => date('Y-m-d H:i:s')]);
+            return $this->respond(['status' => 'success', 'tipo' => 'entrada']);
         }
     }
-    // Obtener solicitudes del usuario
-    public function getSolicitudes($usuarioId) {
-        $db = \Config\Database::connect();
-        $builder = $db->table('vacaciones');
-        $solicitudes = $builder->where('usuario_id', $usuarioId)
-                               ->orderBy('fecha_inicio', 'DESC')
-                               ->get()->getResult();
-        return $this->respond($solicitudes);
-    }
 
-    // Guardar nueva solicitud
+    // -------------------------------------------------------------------------
+    // 3. SOLICITAR VACACIONES
+    // -------------------------------------------------------------------------
     public function solicitarVacaciones() {
-        $json = $this->request->getJSON();
-        
-        if (!isset($json->usuario_id) || !isset($json->fecha_inicio) || !isset($json->fecha_fin)) {
-            return $this->fail('Datos incompletos', 400);
-        }
-
+        $data = $this->request->getJSON(true);
         $db = \Config\Database::connect();
-        
-        $data = [
-            'usuario_id'   => $json->usuario_id,
-            'fecha_inicio' => $json->fecha_inicio,
-            'fecha_fin'    => $json->fecha_fin,
-            'estado'       => 'solicitado', // Estado inicial (PENDIENTE)
-            'comentarios'  => $json->comentarios ?? ''
-        ];
-
-        $db->table('vacaciones')->insert($data);
-        
+        $db->table('solicitudes_ausencia')->insert([
+            'usuario_id' => $data['usuario_id'],
+            'empresa_id' => $data['empresa_id'],
+            'fecha_inicio' => $data['fecha_inicio'],
+            'fecha_fin' => $data['fecha_fin'],
+            'tipo' => $data['tipo'],
+            'comentarios' => $data['comentarios'],
+            'estado' => 'pendiente'
+        ]);
         return $this->respondCreated(['message' => 'Solicitud enviada']);
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. GET SOLICITUDES (Legacy / Opcional)
+    // -------------------------------------------------------------------------
+    public function getSolicitudes($userId = null) {
+        $db = \Config\Database::connect();
+        $data = $db->table('solicitudes_ausencia')
+                   ->where('usuario_id', $userId)
+                   ->orderBy('created_at', 'DESC')
+                   ->get()
+                   ->getResultArray();
+        return $this->respond($data);
     }
 }

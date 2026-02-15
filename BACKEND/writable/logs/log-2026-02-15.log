@@ -52,3 +52,1275 @@ Stack trace:
 #12 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 #13 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 #14 {main}
+CRITICAL - 2026-02-15 18:02:36 --> CodeIgniter\Database\Exceptions\DataException: There is no data to update.
+[Method: POST, Route: api/rrhh/actualizar-dias]
+in SYSTEMPATH\BaseModel.php on line 1008.
+ 1 SYSTEMPATH\BaseModel.php(1008): CodeIgniter\Database\Exceptions\DataException::forEmptyDataset('update')
+ 2 SYSTEMPATH\Model.php(860): CodeIgniter\BaseModel->update([...], [])
+ 3 APPPATH\Controllers\RRHH.php(42): CodeIgniter\Model->update('11', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RRHH->actualizarDias()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:03:00 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `no...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `no...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `no...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `no...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\RRHH.php(97): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\RRHH->subirNomina()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+CRITICAL - 2026-02-15 18:03:00 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: POST, Route: api/rrhh/subir-nomina]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `nominas` (`usuario_id`, `mes`, `archivo`, `created_at`) VALUES (:usuario_id:, :mes:, :archivo:, :created_at:)', [...], false)
+ 2 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+ 3 SYSTEMPATH\BaseModel.php(838): CodeIgniter\Model->doInsert([...])
+ 4 SYSTEMPATH\Model.php(797): CodeIgniter\BaseModel->insert([...], true)
+ 5 APPPATH\Controllers\RRHH.php(97): CodeIgniter\Model->insert([...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RRHH->subirNomina()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:03:00 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `nominas` (`usuario_id`, `mes`, `archivo`, `created_at`) VALUES (\'11\', \'2026-02\', \'uploads/nominas/1771178580_005806e92fccaf3bb26d.pdf\', \'2026-02-15 18:03:00\')')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `nominas` (`usuario_id`, `mes`, `archivo`, `created_at`) VALUES (\'11\', \'2026-02\', \'uploads/nominas/1771178580_005806e92fccaf3bb26d.pdf\', \'2026-02-15 18:03:00\')')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `nominas` (`usuario_id`, `mes`, `archivo`, `created_at`) VALUES (:usuario_id:, :mes:, :archivo:, :created_at:)', [...], false)
+ 4 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+ 5 SYSTEMPATH\BaseModel.php(838): CodeIgniter\Model->doInsert([...])
+ 6 SYSTEMPATH\Model.php(797): CodeIgniter\BaseModel->insert([...], true)
+ 7 APPPATH\Controllers\RRHH.php(97): CodeIgniter\Model->insert([...])
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RRHH->subirNomina()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:03:00 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `nominas` (`usuario_id`, `mes`, `archivo`, `created_at`) VALUES (\'11\', \'2026-02\', \'uploads/nominas/1771178580_005806e92fccaf3bb26d.pdf\', \'2026-02-15 18:03:00\')', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `nominas` (`usuario_id`, `mes`, `archivo`, `created_at`) VALUES (\'11\', \'2026-02\', \'uploads/nominas/1771178580_005806e92fccaf3bb26d.pdf\', \'2026-02-15 18:03:00\')')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `nominas` (`usuario_id`, `mes`, `archivo`, `created_at`) VALUES (\'11\', \'2026-02\', \'uploads/nominas/1771178580_005806e92fccaf3bb26d.pdf\', \'2026-02-15 18:03:00\')')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `nominas` (`usuario_id`, `mes`, `archivo`, `created_at`) VALUES (:usuario_id:, :mes:, :archivo:, :created_at:)', [...], false)
+ 5 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(838): CodeIgniter\Model->doInsert([...])
+ 7 SYSTEMPATH\Model.php(797): CodeIgniter\BaseModel->insert([...], true)
+ 8 APPPATH\Controllers\RRHH.php(97): CodeIgniter\Model->insert([...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RRHH->subirNomina()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:06:40 --> mysqli_sql_exception: Unknown column 'updated_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('UPDATE `usuario...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `usuario...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `usuario...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `usuario...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\BaseModel.php(1025): CodeIgniter\Model->doUpdate(Array, Array)
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(860): CodeIgniter\BaseModel->update(Array, Array)
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\RRHH.php(42): CodeIgniter\Model->update('11', Array)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\RRHH->actualizarDias()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+CRITICAL - 2026-02-15 18:06:40 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'updated_at' in 'field list'
+[Method: POST, Route: api/rrhh/actualizar-dias]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `usuarios` SET `dias_disponibles` = :dias_disponibles:, `updated_at` = :updated_at:
+WHERE `usuarios`.`id` IN :usuarios.id:', [...], false)
+ 2 SYSTEMPATH\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+ 3 SYSTEMPATH\BaseModel.php(1025): CodeIgniter\Model->doUpdate([...], [...])
+ 4 SYSTEMPATH\Model.php(860): CodeIgniter\BaseModel->update([...], [...])
+ 5 APPPATH\Controllers\RRHH.php(42): CodeIgniter\Model->update('11', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RRHH->actualizarDias()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:06:40 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'updated_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `usuarios` SET `dias_disponibles` = 33, `updated_at` = \'2026-02-15 18:06:40\'
+WHERE `usuarios`.`id` IN (\'11\')')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `usuarios` SET `dias_disponibles` = 33, `updated_at` = \'2026-02-15 18:06:40\'
+WHERE `usuarios`.`id` IN (\'11\')')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `usuarios` SET `dias_disponibles` = :dias_disponibles:, `updated_at` = :updated_at:
+WHERE `usuarios`.`id` IN :usuarios.id:', [...], false)
+ 4 SYSTEMPATH\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+ 5 SYSTEMPATH\BaseModel.php(1025): CodeIgniter\Model->doUpdate([...], [...])
+ 6 SYSTEMPATH\Model.php(860): CodeIgniter\BaseModel->update([...], [...])
+ 7 APPPATH\Controllers\RRHH.php(42): CodeIgniter\Model->update('11', [...])
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RRHH->actualizarDias()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:06:40 --> [Caused by] mysqli_sql_exception: Unknown column 'updated_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('UPDATE `usuarios` SET `dias_disponibles` = 33, `updated_at` = \'2026-02-15 18:06:40\'
+WHERE `usuarios`.`id` IN (\'11\')', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `usuarios` SET `dias_disponibles` = 33, `updated_at` = \'2026-02-15 18:06:40\'
+WHERE `usuarios`.`id` IN (\'11\')')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `usuarios` SET `dias_disponibles` = 33, `updated_at` = \'2026-02-15 18:06:40\'
+WHERE `usuarios`.`id` IN (\'11\')')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `usuarios` SET `dias_disponibles` = :dias_disponibles:, `updated_at` = :updated_at:
+WHERE `usuarios`.`id` IN :usuarios.id:', [...], false)
+ 5 SYSTEMPATH\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+ 6 SYSTEMPATH\BaseModel.php(1025): CodeIgniter\Model->doUpdate([...], [...])
+ 7 SYSTEMPATH\Model.php(860): CodeIgniter\BaseModel->update([...], [...])
+ 8 APPPATH\Controllers\RRHH.php(42): CodeIgniter\Model->update('11', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RRHH->actualizarDias()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:06:49 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `no...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `no...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `no...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `no...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\RRHH.php(113): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\RRHH->subirNomina()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+ERROR - 2026-02-15 18:14:17 --> mysqli_sql_exception: Unknown column 'updated_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('UPDATE `usuario...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `usuario...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `usuario...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `usuario...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\BaseModel.php(1025): CodeIgniter\Model->doUpdate(Array, Array)
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(860): CodeIgniter\BaseModel->update(Array, Array)
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\RRHH.php(42): CodeIgniter\Model->update('11', Array)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\RRHH->actualizarDias()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+CRITICAL - 2026-02-15 18:14:17 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'updated_at' in 'field list'
+[Method: POST, Route: api/rrhh/actualizar-dias]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `usuarios` SET `dias_disponibles` = :dias_disponibles:, `updated_at` = :updated_at:
+WHERE `usuarios`.`id` IN :usuarios.id:', [...], false)
+ 2 SYSTEMPATH\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+ 3 SYSTEMPATH\BaseModel.php(1025): CodeIgniter\Model->doUpdate([...], [...])
+ 4 SYSTEMPATH\Model.php(860): CodeIgniter\BaseModel->update([...], [...])
+ 5 APPPATH\Controllers\RRHH.php(42): CodeIgniter\Model->update('11', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RRHH->actualizarDias()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:14:17 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'updated_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `usuarios` SET `dias_disponibles` = 35, `updated_at` = \'2026-02-15 18:14:17\'
+WHERE `usuarios`.`id` IN (\'11\')')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `usuarios` SET `dias_disponibles` = 35, `updated_at` = \'2026-02-15 18:14:17\'
+WHERE `usuarios`.`id` IN (\'11\')')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `usuarios` SET `dias_disponibles` = :dias_disponibles:, `updated_at` = :updated_at:
+WHERE `usuarios`.`id` IN :usuarios.id:', [...], false)
+ 4 SYSTEMPATH\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+ 5 SYSTEMPATH\BaseModel.php(1025): CodeIgniter\Model->doUpdate([...], [...])
+ 6 SYSTEMPATH\Model.php(860): CodeIgniter\BaseModel->update([...], [...])
+ 7 APPPATH\Controllers\RRHH.php(42): CodeIgniter\Model->update('11', [...])
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RRHH->actualizarDias()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:14:17 --> [Caused by] mysqli_sql_exception: Unknown column 'updated_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('UPDATE `usuarios` SET `dias_disponibles` = 35, `updated_at` = \'2026-02-15 18:14:17\'
+WHERE `usuarios`.`id` IN (\'11\')', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `usuarios` SET `dias_disponibles` = 35, `updated_at` = \'2026-02-15 18:14:17\'
+WHERE `usuarios`.`id` IN (\'11\')')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `usuarios` SET `dias_disponibles` = 35, `updated_at` = \'2026-02-15 18:14:17\'
+WHERE `usuarios`.`id` IN (\'11\')')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `usuarios` SET `dias_disponibles` = :dias_disponibles:, `updated_at` = :updated_at:
+WHERE `usuarios`.`id` IN :usuarios.id:', [...], false)
+ 5 SYSTEMPATH\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+ 6 SYSTEMPATH\BaseModel.php(1025): CodeIgniter\Model->doUpdate([...], [...])
+ 7 SYSTEMPATH\Model.php(860): CodeIgniter\BaseModel->update([...], [...])
+ 8 APPPATH\Controllers\RRHH.php(42): CodeIgniter\Model->update('11', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RRHH->actualizarDias()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:14:27 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `no...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `no...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `no...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `no...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\RRHH.php(109): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\RRHH->subirNomina()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+ERROR - 2026-02-15 18:21:06 --> mysqli_sql_exception: Unknown column 'updated_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('UPDATE `usuario...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `usuario...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `usuario...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `usuario...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\BaseModel.php(1025): CodeIgniter\Model->doUpdate(Array, Array)
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(860): CodeIgniter\BaseModel->update(Array, Array)
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\RRHH.php(61): CodeIgniter\Model->update('11', Array)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\RRHH->actualizarDias()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+ERROR - 2026-02-15 18:21:14 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `no...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `no...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `no...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `no...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\RRHH.php(147): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\RRHH->subirNomina()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RRHH))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+ERROR - 2026-02-15 18:29:42 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:29:42 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:29:42 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:29:42 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:31:46 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:31:46 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:31:46 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:31:46 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:32:22 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:32:22 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:32:22 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:32:22 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(16): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:35:04 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:35:04 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:35:04 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:35:04 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:35:26 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:35:26 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:35:26 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:35:26 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:39:07 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:39:07 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:39:07 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:39:07 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:39:17 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:39:17 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:39:17 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:39:17 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:39:19 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:39:19 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:39:19 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:39:19 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:50:08 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:50:08 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:08 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:08 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:50:19 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:50:19 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:19 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:19 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:50:23 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:50:23 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:23 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:23 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:50:29 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:50:29 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:29 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:29 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:50:32 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:50:32 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:32 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:32 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:50:49 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:50:49 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:49 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:49 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 18:50:55 --> mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `n...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `n...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `n...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `n...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-15 18:50:55 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+[Method: GET, Route: api/personal/dashboard/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 2 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:55 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 4 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 18:50:55 --> [Caused by] mysqli_sql_exception: Unknown column 'created_at' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = \'11\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `nombre`, `email`, `dias_disponibles`, `created_at`
+FROM `usuarios`
+WHERE `id` = :id:', [...], false)
+ 5 APPPATH\Controllers\Personal.php(20): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Personal->getDashboard('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Personal))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
