@@ -42,7 +42,7 @@ class Personal extends ResourceController {
             // Parche de seguridad para la URL
             $rutaBase = str_replace('index.php', '', base_url());
             if (strpos($rutaBase, 'BACKEND') === false) {
-                $rutaBase = 'http://localhost/TFG/TFG/BACKEND/public/';
+                $rutaBase = 'https://davidguijarro.com.es/tfg/BACKEND/public/';
             }
             $n['url_descarga'] = $rutaBase . $n['archivo'];
         }
