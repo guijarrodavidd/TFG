@@ -28,11 +28,19 @@ export class RegistroEmpleado implements OnInit {
   };
 
   ngOnInit() {
+    // Verificamos si hay usuario logueado (Jefe registrando)
+    const usuarioLogueado = JSON.parse(localStorage.getItem('usuario') || '{}');
+    const esJefe = usuarioLogueado.rol === 'admin';
+
     this.route.queryParams.subscribe(params => {
       this.token = params['token'];
       
-      if (!this.token) {
+      // Si no hay token Y NO es el jefe logueado -> Error
+      if (!this.token && !esJefe) {
         this.mensajeError = "¡Error! Enlace de invitación no válido.";
+      } else if (esJefe) {
+        // Si es jefe, usamos su ID de empresa como token "automático"
+        this.token = usuarioLogueado.empresa_id; 
       }
     });
   }

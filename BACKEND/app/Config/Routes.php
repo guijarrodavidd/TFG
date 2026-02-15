@@ -11,12 +11,16 @@ $routes->get('/', 'Home::index');
 // GRUPO DE RUTAS API
 $routes->group('api', ['filter' => 'cors'], function($routes) {
 
-    // --- AUTENTICACIÓN ---
-    $routes->post('login', 'Auth::login');
-    $routes->options('login', 'Auth::login'); // Para CORS
-    $routes->post('registro-encargado', 'Auth::registroEncargado');
-    $routes->post('registro-empleado', 'Auth::registroEmpleado');
-    $routes->options('registro-empleado', 'Auth::registroEmpleado');
+    // --- AUTENTICACIÓN (Corregido: Añadido 'auth/') ---
+    // El frontend pide /api/auth/login, así que lo ponemos igual aquí:
+    $routes->post('auth/login', 'Auth::login');
+    $routes->options('auth/login', 'Auth::login'); 
+    
+    // Aquí estaba el error: antes era 'registro-encargado', ahora es 'auth/registro-encargado'
+    $routes->post('auth/registro-encargado', 'Auth::registroEncargado');
+    
+    $routes->post('auth/registro-empleado', 'Auth::registroEmpleado');
+    $routes->options('auth/registro-empleado', 'Auth::registroEmpleado');
 
     // --- EMPRESAS ---
     $routes->post('empresas/crear', 'Empresa::crear');
@@ -46,6 +50,18 @@ $routes->group('api', ['filter' => 'cors'], function($routes) {
 
     // --- OTROS ---
     $routes->get('dashboard', 'Dashboard::index');
-    // Manejar todas las peticiones OPTIONS automáticamente
+
+    // --- GESTIÓN USUARIOS (CRUD Encargado) ---
+    $routes->get('usuarios/empresa/(:num)', 'Usuarios::getByEmpresa/$1');
+    $routes->post('usuarios/crear', 'Usuarios::create');
+    $routes->post('usuarios/actualizar/(:num)', 'Usuarios::update/$1');
+    $routes->delete('usuarios/eliminar/(:num)', 'Usuarios::delete/$1');
+
+    // --- GESTIÓN RRHH (Admin) ---
+    $routes->get('rrhh/empleados/(:num)', 'RRHH::getEmpleadosResumen/$1'); // Listado para gestión
+    $routes->post('rrhh/subir-nomina', 'RRHH::subirNomina');
+    $routes->post('rrhh/gestionar-ausencia', 'RRHH::gestionarAusencia'); // Aprobar/Rechazar
+    
+    // Manejar todas las peticiones OPTIONS automáticamente (CORS Preflight)
     $routes->options('(:any)', function() {});
 });

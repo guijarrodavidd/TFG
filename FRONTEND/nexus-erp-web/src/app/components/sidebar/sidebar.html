@@ -2,7 +2,7 @@
   
   <div class="text-center mb-5 mt-3">
     <div class="avatar-container mx-auto mb-3 shadow">
-      <span class="initials">{{ usuario.nombre?.charAt(0) }}</span>
+      <span class="initials">{{ usuario.nombre?.charAt(0) | uppercase }}</span>
     </div>
     <h5 class="fw-bold mb-0">{{ usuario.nombre }}</h5>
     <small class="text-white-50" *ngIf="usuario.empresa_id">NEXUS ERP</small>
@@ -17,14 +17,36 @@
     <a routerLink="/dashboard/clientes" routerLinkActive="active-link" class="nav-item text-white-50">
       <i class="bi bi-people-fill me-3"></i> Clientes
     </a>
+    
     <a routerLink="/dashboard/productos" routerLinkActive="active-link" class="nav-item text-white-50">
       <i class="bi bi-box-seam-fill me-3"></i> Productos
     </a>
+    
     <a routerLink="/dashboard/ventas" routerLinkActive="active-link" class="nav-item text-white-50">
       <i class="bi bi-cart-fill me-3"></i> Ventas
     </a>
+    
     <a routerLink="/dashboard/personal" routerLinkActive="active-link" class="nav-item text-white-50">
-      <i class="bi bi-person-badge-fill me-3"></i> Personal
+      <i class="bi bi-person-badge-fill me-3"></i> Mi Personal
+    </a>
+
+    <div *ngIf="usuario.rol === 'admin'" class="mt-4 mb-2 small text-uppercase text-white-50 ps-3 ls-1 fw-bold" style="font-size: 0.75rem;">
+        Administración
+    </div>
+
+    <a *ngIf="usuario.rol === 'admin'" routerLink="/dashboard/usuarios" routerLinkActive="active-link" class="nav-item text-white-50">
+      <i class="bi bi-people-fill me-3"></i> Usuarios
+    </a>
+
+    <a *ngIf="usuario.rol === 'admin'" routerLink="/dashboard/rrhh" routerLinkActive="active-link" class="nav-item text-white-50">
+      <i class="bi bi-file-earmark-person-fill me-3"></i> Gestión RRHH
+    </a>
+
+    <a *ngIf="usuario.rol === 'admin'" 
+       routerLink="/dashboard/invitar" 
+       routerLinkActive="active-link"
+       class="nav-item text-white-50 mt-4 border-top pt-3">
+      <i class="bi bi-person-plus-fill me-3 text-success"></i> Invitar Trabajador
     </a>
 
   </nav>

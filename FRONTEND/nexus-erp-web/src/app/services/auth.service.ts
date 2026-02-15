@@ -10,9 +10,11 @@ export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl; 
 
-  // Login de usuarios
+  // --- LOGIN ---
   login(credenciales: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credenciales);
+    // ✅ CORRECCIÓN ARQUITECTÓNICA: 
+    // Añadimos '/auth' para coincidir con el grupo de rutas del Backend.
+    return this.http.post(`${this.apiUrl}/auth/login`, credenciales);
   }
 
   // Registro de Encargado (Jefe)

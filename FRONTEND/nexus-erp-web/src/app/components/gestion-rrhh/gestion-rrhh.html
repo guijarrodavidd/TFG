@@ -1,0 +1,73 @@
+<div class="container-fluid p-4 fade-in">
+    
+    <div class="mb-4">
+        <h2 class="fw-bold mb-0 text-dark">Gestión de RRHH</h2>
+        <p class="text-muted small">Sube y gestiona las nóminas de tu equipo.</p>
+    </div>
+
+    <div class="row g-4">
+        
+        <div class="col-md-6 col-xl-4" *ngFor="let emp of empleados">
+            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-white">
+                
+                <div class="card-body p-4 text-center">
+                    
+                    <div class="avatar-circle mb-3 mx-auto bg-primary bg-opacity-10 text-primary fw-bold display-6 d-flex align-items-center justify-content-center" 
+                         style="width: 70px; height: 70px; border-radius: 50%;">
+                        {{ emp.nombre.charAt(0) | uppercase }}
+                    </div>
+                    
+                    <h5 class="fw-bold mb-1">{{ emp.nombre }}</h5>
+                    <p class="text-muted small mb-4">{{ emp.email }}</p>
+
+                    <hr class="border-light-subtle my-4">
+
+                    <div class="text-start">
+                        <label class="form-label small fw-bold text-muted text-uppercase mb-2">
+                            <i class="bi bi-cloud-arrow-up-fill me-1 text-primary"></i> Subir Nómina
+                        </label>
+
+                        <div class="bg-light p-3 rounded-3 border border-dashed">
+                            <div class="mb-2">
+                                <label class="small text-muted mb-1">Mes de referencia</label>
+                                <input type="month" class="form-control form-control-sm border-0 bg-white" #mesInput>
+                            </div>
+
+                            <div>
+                                <label class="small text-muted mb-1">Archivo PDF</label>
+                                <input type="file" 
+                                       class="form-control form-control-sm border-0 bg-white" 
+                                       accept="application/pdf"
+                                       (change)="onFileSelected($event, emp.id, mesInput.value)">
+                            </div>
+                        </div>
+                        <div class="form-text small mt-2 text-center text-muted">
+                            <i class="bi bi-info-circle"></i> Selecciona el mes antes de subir el archivo.
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="card-footer bg-light border-0 py-3 text-center">
+                    <button class="btn btn-sm btn-link text-decoration-none text-primary fw-bold">
+                        Ver Historial Nóminas <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12" *ngIf="empleados.length === 0">
+            <div class="text-center py-5">
+                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                    <i class="bi bi-people text-muted fs-1"></i>
+                </div>
+                <h4 class="fw-bold text-dark">No hay empleados</h4>
+                <p class="text-muted">Invita a trabajadores para gestionar sus nóminas.</p>
+                <a routerLink="/dashboard/invitar" class="btn btn-primary rounded-pill px-4 fw-bold">
+                    Invitar Ahora
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,115 @@
+<div class="container-fluid p-4 fade-in">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">Gestión de Usuarios</h2>
+            <p class="text-muted small">Administra los accesos y empleados de tu empresa.</p>
+        </div>
+        <button class="btn btn-primary d-flex align-items-center gap-2 shadow-sm rounded-pill px-4" 
+                (click)="abrirModal()">
+            <i class="bi bi-person-plus-fill"></i>
+            <span>Nuevo Usuario</span>
+        </button>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4 py-3 text-secondary small text-uppercase">Usuario</th>
+                        <th class="py-3 text-secondary small text-uppercase">Email / Acceso</th>
+                        <th class="py-3 text-secondary small text-uppercase">Rol</th>
+                        <th class="text-end pe-4 py-3 text-secondary small text-uppercase">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let emp of empleados" class="border-bottom border-light">
+                        <td class="ps-4 py-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 text-primary me-3 rounded-circle d-flex align-items-center justify-content-center fw-bold" 
+                                     style="width: 40px; height: 40px;">
+                                    {{ emp.nombre.charAt(0) | uppercase }}
+                                </div>
+                                <span class="fw-bold text-dark">{{ emp.nombre }}</span>
+                            </div>
+                        </td>
+                        <td class="py-3 text-muted">
+                            {{ emp.email }}
+                        </td>
+                        <td class="py-3">
+                            <span class="badge rounded-pill px-3 py-2 border" 
+                                  [ngClass]="emp.rol_id == 2 ? 'bg-primary-subtle text-primary border-primary-subtle' : 'bg-light text-dark'">
+                                {{ emp.rol_id == 2 ? 'ENCARGADO' : 'EMPLEADO' }}
+                            </span>
+                        </td>
+                        <td class="text-end pe-4 py-3">
+                            <button class="btn btn-sm btn-light text-secondary me-2 rounded-circle shadow-sm" 
+                                    (click)="abrirModal(emp)" title="Editar">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            <button class="btn btn-sm btn-light text-danger rounded-circle shadow-sm" 
+                                    (click)="eliminar(emp.id)" title="Eliminar">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    
+                    <tr *ngIf="empleados.length === 0">
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bi bi-people display-4 d-block mb-3 opacity-25"></i>
+                            No hay usuarios registrados aparte de ti.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalUsuario" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            
+            <div class="modal-header border-0 pb-0 ps-4 pe-4 pt-4">
+                <h5 class="modal-title fw-bold">
+                    {{ esEdicion ? 'Editar Usuario' : 'Crear Nuevo Usuario' }}
+                </h5>
+                <button type="button" class="btn-close" id="btnCerrarModal" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <form (ngSubmit)="guardar()">
+                    
+                    <div class="mb-3">
+                        <label class="form-label small text-muted fw-bold">NOMBRE COMPLETO</label>
+                        <input type="text" class="form-control bg-light border-0 py-2" 
+                               [(ngModel)]="empleadoForm.nombre" name="nombre" required placeholder="Ej: Juan Nadie">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small text-muted fw-bold">EMAIL DE ACCESO</label>
+                        <input type="email" class="form-control bg-light border-0 py-2" 
+                               [(ngModel)]="empleadoForm.email" name="email" required placeholder="juan@nexus.com">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small text-muted fw-bold">CONTRASEÑA</label>
+                        <input type="password" class="form-control bg-light border-0 py-2" 
+                               [(ngModel)]="empleadoForm.password" name="password" 
+                               placeholder="{{ esEdicion ? '(Dejar en blanco para no cambiar)' : 'Mínimo 6 caracteres' }}">
+                    </div>
+                    
+                    <div class="d-grid pt-2">
+                        <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold shadow-sm" 
+                                [disabled]="!empleadoForm.nombre || !empleadoForm.email">
+                            {{ esEdicion ? 'Guardar Cambios' : 'Crear Usuario' }}
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -25,17 +25,52 @@ export class LoginComponent {
   conectar() {
     this.cargando = true;
 
-    // USAR SERVICIO
     this.authService.login(this.usuario).subscribe({
         next: (res: any) => {
-          const usuarioData = res.data || res;
-          localStorage.setItem('usuario', JSON.stringify(usuarioData));
+          const datosBackend = res.data || res;
+          
+          console.group("🔍 DEBUG LOGIN");
+          console.log("Rol ID recibido:", datosBackend.rol_id);
+          
+          // --- ADAPTADOR DE ROLES (BASE DE DATOS -> FRONTEND) ---
+          let rolEstimado = 'empleado'; // Por defecto (rol_id 3)
 
-          if (usuarioData.empresa_id) {
+          // Convertimos a número para asegurar la comparación
+          const rolID = Number(datosBackend.rol_id);
+
+          switch (rolID) {
+              case 1:
+                  rolEstimado = 'superadmin'; // Administrador Global (si existe)
+                  break;
+              case 2:
+                  rolEstimado = 'admin'; // ✅ EL ENCARGADO ES EL 'ADMIN' EN EL FRONTEND
+                  break;
+              case 3:
+                  rolEstimado = 'empleado'; // Empleado normal
+                  break;
+              default:
+                  // Si no tiene rol pero no tiene empresa, asumimos que es un jefe registrándose
+                  if (datosBackend.empresa_id === null) {
+                      rolEstimado = 'admin';
+                  }
+                  break;
+          }
+          console.log("Rol Asignado al Frontend:", rolEstimado);
+          console.groupEnd();
+          // ------------------------------------------------------
+
+          const usuarioFinal = {
+            ...datosBackend,
+            rol: rolEstimado 
+          };
+          
+          localStorage.setItem('usuario', JSON.stringify(usuarioFinal));
+
+          if (usuarioFinal.empresa_id) {
             this.router.navigate(['/dashboard']);
           } else {
-            this.mostrarToast('Primero debes crear tu empresa para continuar.', 'warning');
-            setTimeout(() => this.router.navigate(['/crear-empresa']), 1500);
+            this.mostrarToast('Bienvenido. Vamos a crear tu empresa.', 'success');
+            setTimeout(() => this.router.navigate(['/crear-empresa']), 1000);
           }
           this.cargando = false;
         },

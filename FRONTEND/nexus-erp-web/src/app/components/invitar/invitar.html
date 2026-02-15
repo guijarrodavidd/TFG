@@ -1,0 +1,73 @@
+<div class="container-fluid p-4 fade-in">
+    
+    <div class="mb-4">
+        <h2 class="fw-bold text-dark">Invitar al Equipo</h2>
+        <p class="text-muted">Genera un enlace único para que tus empleados se unan a {{ usuario.nombre_empresa || 'tu empresa' }}.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                
+                <div class="mb-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-link-45deg fs-1"></i>
+                    </div>
+                    <h4 class="fw-bold">Enlace de Invitación</h4>
+                    <p class="text-muted mx-auto" style="max-width: 500px;">
+                        Comparte este enlace con tus trabajadores. Al hacer clic, podrán registrarse automáticamente vinculados a tu empresa.
+                    </p>
+                </div>
+
+                <div class="position-relative mx-auto" style="max-width: 600px;">
+                    <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden border">
+                        <span class="input-group-text bg-white border-0 ps-4 text-muted">
+                            <i class="bi bi-globe"></i>
+                        </span>
+                        <input type="text" class="form-control border-0 bg-white text-dark fw-bold" 
+                               [value]="enlaceInvitacion" readonly>
+                        <button class="btn btn-primary px-4 fw-bold" (click)="copiarEnlace()">
+                            <i class="bi" [ngClass]="copiado ? 'bi-check-lg' : 'bi-clipboard'"></i>
+                            {{ copiado ? '¡Copiado!' : 'Copiar' }}
+                        </button>
+                    </div>
+                    <div class="form-text mt-2 text-muted small">
+                        <i class="bi bi-shield-lock me-1"></i> Este enlace contiene el identificador seguro de tu empresa.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-primary text-white h-100">
+                <h5 class="fw-bold mb-4"><i class="bi bi-info-circle me-2"></i> Cómo funciona</h5>
+                
+                <div class="d-flex flex-column gap-4">
+                    <div class="d-flex gap-3">
+                        <div class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold" style="width: 32px; height: 32px;">1</div>
+                        <div>
+                            <span class="fw-bold d-block">Copia el enlace</span>
+                            <span class="text-white-50 small">Usa el botón de copiar para obtener la URL única.</span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold" style="width: 32px; height: 32px;">2</div>
+                        <div>
+                            <span class="fw-bold d-block">Envíalo al empleado</span>
+                            <span class="text-white-50 small">Mándalo por WhatsApp, Email o Slack.</span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold" style="width: 32px; height: 32px;">3</div>
+                        <div>
+                            <span class="fw-bold d-block">Registro automático</span>
+                            <span class="text-white-50 small">El empleado rellenará sus datos y aparecerá en tu lista de "Personal".</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

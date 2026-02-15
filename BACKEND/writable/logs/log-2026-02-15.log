@@ -1,0 +1,54 @@
+CRITICAL - 2026-02-15 15:06:28 --> ErrorException: Cannot redeclare App\Controllers\Auth::registroEmpleado()
+[Method: POST, Route: api/auth/registro-empleado]
+in APPPATH\Controllers\Auth.php on line 131.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-02-15 15:06:36 --> ErrorException: Cannot redeclare App\Controllers\Auth::registroEmpleado()
+[Method: POST, Route: api/auth/registro-empleado]
+in APPPATH\Controllers\Auth.php on line 131.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-02-15 15:09:08 --> CodeIgniter\Database\Exceptions\DataException: There is no data to update.
+[Method: POST, Route: api/auth/login]
+in SYSTEMPATH\BaseModel.php on line 1008.
+ 1 SYSTEMPATH\BaseModel.php(1008): CodeIgniter\Database\Exceptions\DataException::forEmptyDataset('update')
+ 2 SYSTEMPATH\Model.php(860): CodeIgniter\BaseModel->update([...], [])
+ 3 APPPATH\Controllers\Auth.php(27): CodeIgniter\Model->update('11', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->login()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-15 17:27:51 --> mysqli_sql_exception: Unknown column 'updated_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('UPDATE `usuario...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `usuario...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `usuario...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `usuario...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\BaseModel.php(1025): CodeIgniter\Model->doUpdate(Array, Array)
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(860): CodeIgniter\BaseModel->update(Array, Array)
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Auth.php(34): CodeIgniter\Model->update('11', Array)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+ERROR - 2026-02-15 17:50:12 --> mysqli_sql_exception: Unknown column 'updated_at' in 'field list' in C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\MySQLi\Connection.php(327): mysqli->query('UPDATE `usuario...', 0)
+#1 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('UPDATE `usuario...')
+#2 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE `usuario...')
+#3 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Database\BaseBuilder.php(2521): CodeIgniter\Database\BaseConnection->query('UPDATE `usuario...', Array, false)
+#4 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(461): CodeIgniter\Database\BaseBuilder->update()
+#5 C:\xampp\htdocs\TFG\TFG\BACKEND\system\BaseModel.php(1025): CodeIgniter\Model->doUpdate(Array, Array)
+#6 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Model.php(860): CodeIgniter\BaseModel->update(Array, Array)
+#7 C:\xampp\htdocs\TFG\TFG\BACKEND\app\Controllers\Auth.php(34): CodeIgniter\Model->update('10', Array)
+#8 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#10 C:\xampp\htdocs\TFG\TFG\BACKEND\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
