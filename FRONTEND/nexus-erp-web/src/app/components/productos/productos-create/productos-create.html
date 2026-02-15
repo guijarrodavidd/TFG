@@ -1,165 +1,104 @@
-<div class="container-fluid p-4 fade-in">
-  
-  <div class="d-flex justify-content-between align-items-center mb-4 sticky-top py-3 z-1" style="background: rgba(248,249,250,0.95); backdrop-filter: blur(5px);">
-    <div>
-      <h2 class="fw-bold text-dark mb-0">{{ tituloPagina }}</h2>
-      <p class="text-muted mb-0 small">{{ subtituloPagina }}</p>
-    </div>
-    <div class="d-flex gap-2">
-      <button class="btn btn-light border fw-bold px-4" (click)="router.navigate(['/dashboard/productos'])">Cancelar</button>
-      
-      <button class="btn btn-dark fw-bold px-4 shadow-sm" (click)="guardarProducto()">
-        <i class="bi bi-check-lg me-2"></i> {{ textoBoton }}
-      </button>
-    </div>
+<div class="container py-4 fade-in">
+  <div class="d-flex align-items-center mb-4">
+    <button class="btn btn-light rounded-circle me-3" routerLink="/dashboard/productos">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <h3 class="fw-bold mb-0">{{ editMode ? 'Editar' : 'Nuevo' }} Producto</h3>
   </div>
 
-  <div class="row g-4 justify-content-center">
-    
-    <div class="col-lg-8 d-flex flex-column gap-4">
-      
-      <div class="card border-0 shadow-sm rounded-4 p-4">
-        <h6 class="fw-bold mb-3 text-secondary text-uppercase small ls-1">Información General</h6>
-        
-        <div class="mb-3">
-          <label class="form-label fw-bold small text-muted">NOMBRE DEL PRODUCTO</label>
-          <input type="text" class="form-control bg-light border-0 py-2 fw-bold" 
-                 [(ngModel)]="producto.nombre" placeholder="Ej: Zapatillas Nike Air">
-        </div>
+  <form (ngSubmit)="guardar()" class="row g-4">
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-body p-4 text-center">
+          <label class="fw-bold text-muted small mb-3 d-block">IMAGEN DEL PRODUCTO</label>
+          
+          <div class="image-upload-container bg-light rounded-4 mb-3 d-flex align-items-center justify-content-center position-relative" 
+               style="height: 250px; border: 2px dashed #dee2e6;">
+            
+            <img *ngIf="imagePreview" [src]="imagePreview" class="w-100 h-100 object-fit-contain p-2">
+            
+            <div *ngIf="!imagePreview" class="text-muted">
+              <i class="bi bi-cloud-arrow-up fs-1"></i>
+              <p class="small mb-0">Sube una foto</p>
+            </div>
 
-        <div class="row g-3 mb-3">
+            <input type="file" (change)="onFileSelected($event)" 
+                   class="position-absolute w-100 h-100 top-0 start-0 opacity-0 cursor-pointer" 
+                   accept="image/*">
+          </div>
+          
+          <small class="text-muted">Formatos aceptados: JPG, PNG. Máx 2MB.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm rounded-4 p-4">
+        <div class="row g-3">
+          <div class="col-md-12">
+            <label class="form-label fw-bold small text-muted">NOMBRE</label>
+            <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="producto.nombre" name="nombre" required>
+          </div>
+          
           <div class="col-md-6">
             <label class="form-label fw-bold small text-muted">CATEGORÍA</label>
-            <select class="form-select bg-light border-0 py-2 text-capitalize" [(ngModel)]="producto.categoria_id">
-              <option *ngFor="let cat of listaCategorias" [value]="cat.id">
-                {{ cat.nombre }}
-              </option>
+            <select class="form-select bg-light border-0 py-2" [(ngModel)]="producto.categoria_id" name="cat" required>
+              <option value="" disabled>Selecciona...</option>
+              <option *ngFor="let c of categorias" [value]="c.id">{{ c.nombre }}</option>
             </select>
           </div>
 
           <div class="col-md-6">
-            <label class="form-label fw-bold small text-muted">SKU / CÓDIGO</label>
-            <div class="input-group">
-              <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="producto.sku">
-              <button class="btn btn-outline-secondary border-0 bg-light text-primary fw-bold" type="button" (click)="generarSKU()">Generar</button>
-            </div>
+            <label class="form-label fw-bold small text-muted">PRECIO VENTA (€)</label>
+            <input type="number" class="form-control bg-light border-0 py-2" [(ngModel)]="producto.precio_venta" name="precio" step="0.01">
           </div>
-        </div>
 
-        <div>
-          <label class="form-label fw-bold small text-muted">DESCRIPCIÓN</label>
-          <textarea class="form-control bg-light border-0" rows="3" [(ngModel)]="producto.descripcion" placeholder="Descripción del producto..."></textarea>
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-muted">STOCK ACTUAL</label>
+            <input type="number" class="form-control bg-light border-0 py-2" [(ngModel)]="producto.stock_actual" name="stock">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-muted">STOCK MÍNIMO</label>
+            <input type="number" class="form-control bg-light border-0 py-2" [(ngModel)]="producto.stock_minimo" name="minimo">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label fw-bold small text-muted">DESCRIPCIÓN</label>
+            <textarea class="form-control bg-light border-0" rows="3" [(ngModel)]="producto.descripcion" name="desc"></textarea>
+          </div>
+
+          <div class="col-12 mt-4 d-flex gap-3">
+            <button type="submit" class="btn btn-primary flex-grow-1 py-2 fw-bold rounded-pill shadow-sm">
+              {{ editMode ? 'Actualizar Producto' : 'Crear Producto' }}
+            </button>
+            
+            <button *ngIf="editMode" type="button" class="btn btn-outline-danger py-2 px-4 rounded-pill fw-bold" (click)="confirmarBorrado()">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
         </div>
       </div>
-
-      <div class="card border-0 shadow-sm rounded-4 p-4">
-        <h6 class="fw-bold mb-3 text-secondary text-uppercase small ls-1">Precio de Venta</h6>
-        
-        <div class="row g-4 align-items-center">
-          
-          <div class="col-md-6">
-            <label class="form-label fw-bold small text-dark">PVP (IVA INCLUIDO)</label>
-            <div class="input-group">
-                <input type="number" class="form-control bg-light border-0 py-3 fw-bold fs-4 text-dark" 
-                       [(ngModel)]="producto.precio_venta" (input)="calcularBase()" placeholder="0.00">
-                <span class="input-group-text bg-light border-0 fw-bold">€</span>
-            </div>
-            <small class="text-muted mt-2 d-block">
-                Introduce el precio final que pagará el cliente.
-            </small>
-          </div>
-          
-          <div class="col-md-6">
-            <div class="p-3 rounded-4 border bg-body-tertiary">
-              <div class="d-flex justify-content-between mb-2 border-bottom pb-2">
-                 <span class="text-muted small fw-bold">Base Imponible:</span>
-                 <span class="fw-bold text-dark">{{ precioSinIva | number:'1.2-2' }}€</span>
-              </div>
-              <div class="d-flex justify-content-between align-items-center">
-                 <span class="text-muted small fw-bold">IVA (21%):</span>
-                 <span class="fw-bold text-dark">{{ (producto.precio_venta - precioSinIva) | number:'1.2-2' }}€</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <hr class="text-muted opacity-25 my-4">
-
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label class="form-label fw-bold small text-muted">STOCK INICIAL</label>
-                <input type="number" class="form-control bg-light border-0 py-2" [(ngModel)]="producto.stock_actual">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label fw-bold small text-muted">ALERTA STOCK BAJO</label>
-                <input type="number" class="form-control bg-light border-0 py-2" [(ngModel)]="producto.stock_minimo">
-            </div>
-        </div>
-      </div>
-
     </div>
-
-    <div class="col-lg-4 d-flex flex-column gap-4">
-      
-      <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
-        <h6 class="fw-bold mb-3 text-secondary text-uppercase small ls-1 text-start">Imagen</h6>
-        
-        <div class="upload-area position-relative bg-light rounded-4 border-2 border-dashed d-flex flex-column align-items-center justify-content-center overflow-hidden" 
-             style="height: 250px; cursor: pointer;"
-             (click)="fileInput.click()">
-          
-          <div *ngIf="!imagenPreview" class="text-muted p-4">
-            <i class="bi bi-cloud-arrow-up fs-1 mb-2 d-block text-secondary"></i>
-            <span class="fw-bold small">Haz clic para subir imagen</span>
-          </div>
-
-          <img *ngIf="imagenPreview" [src]="imagenPreview" class="img-fluid w-100 h-100 object-fit-cover">
-          
-          <input #fileInput type="file" (change)="onFileSelected($event)" class="d-none" accept="image/*">
-        </div>
-        <button *ngIf="imagenPreview" (click)="imagenPreview = null; imagenSeleccionada = null" class="btn btn-sm btn-outline-danger mt-3 w-100">Eliminar imagen</button>
-      </div>
-
-      <div class="card border-0 shadow-sm rounded-4 p-4">
-        <h6 class="fw-bold mb-3 text-secondary text-uppercase small ls-1">Visibilidad</h6>
-        <div class="form-check form-switch p-0 m-0 d-flex justify-content-between align-items-center">
-          <label class="form-check-label fw-bold text-dark" for="flexSwitchCheckChecked">Producto Activo</label>
-          <input class="form-check-input ms-0" type="checkbox" role="switch" id="flexSwitchCheckChecked" 
-                 [checked]="producto.estado === 'activo'"
-                 (change)="producto.estado = producto.estado === 'activo' ? 'inactivo' : 'activo'"
-                 style="width: 3em; height: 1.5em;">
-        </div>
-      </div>
-      <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
-  <div class="toast show border-0 shadow-lg rounded-4 overflow-hidden" 
-       *ngIf="toastVisible" 
-       role="alert" 
-       aria-live="assertive" 
-       aria-atomic="true">
-       
-      <div class="d-flex align-items-stretch">
-          <div [ngClass]="toastTipo === 'success' ? 'bg-success' : 'bg-danger'" style="width: 10px;"></div>
-          
-          <div class="toast-body p-3 d-flex align-items-center bg-white flex-grow-1">
-              <div class="rounded-circle p-2 me-3 d-flex align-items-center justify-content-center"
-                   [ngClass]="toastTipo === 'success' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'"
-                   style="width: 40px; height: 40px;">
-                  <i class="bi" [ngClass]="toastTipo === 'success' ? 'bi-check-lg' : 'bi-exclamation-triangle-fill'"></i>
-              </div>
-              
-              <div>
-                  <h6 class="fw-bold mb-0 text-dark" *ngIf="toastTipo === 'success'">¡Operación Exitosa!</h6>
-                  <h6 class="fw-bold mb-0 text-dark" *ngIf="toastTipo === 'error'">¡Error!</h6>
-                  <small class="text-muted">{{ toastMensaje }}</small>
-              </div>
-          </div>
-          
-          <button type="button" class="btn-close me-2 m-auto" (click)="toastVisible=false" aria-label="Close"></button>
-      </div>
-  </div>
+  </form>
 </div>
 
+<div class="modal-backdrop fade show" *ngIf="modalBorrarVisible" style="z-index: 1060"></div>
+<div class="modal fade show d-block" *ngIf="modalBorrarVisible" tabindex="-1" style="z-index: 1070">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content rounded-4 border-0 shadow-lg">
+      <div class="modal-body p-4 text-center">
+        <div class="text-danger mb-3">
+          <i class="bi bi-exclamation-octagon-fill fs-1"></i>
+        </div>
+        <h5 class="fw-bold">¿Eliminar producto?</h5>
+        <p class="text-muted small">Esta acción quitará el producto del inventario de forma permanente.</p>
+        
+        <div class="d-grid gap-2">
+          <button type="button" class="btn btn-danger rounded-pill fw-bold" (click)="ejecutarBorrado()">Eliminar definitivamente</button>
+          <button type="button" class="btn btn-light rounded-pill fw-bold" (click)="modalBorrarVisible = false">Cancelar</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

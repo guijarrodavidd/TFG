@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { VentaService } from '../../services/venta.service';
 import { ClienteService } from '../../services/cliente.service';
+import { environment } from '../../../environments/environment'; // ✅ Importamos el entorno
 
 @Component({
   selector: 'app-ventas',
@@ -19,6 +20,9 @@ export class VentasComponent implements OnInit {
   private ventaService = inject(VentaService);
   private clienteService = inject(ClienteService);
 
+  // ✅ URL Base para imágenes
+  mediaUrl = environment.mediaUrl;
+
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
 
   // --- DATOS PRINCIPALES ---
@@ -31,7 +35,7 @@ export class VentasComponent implements OnInit {
   totalVenta: number = 0;
   clienteSeleccionadoId: string = '';
 
-  // --- FILTROS Y PAGINACIÓN (Igual que en Productos) ---
+  // --- FILTROS Y PAGINACIÓN ---
   productosFiltrados: any[] = [];
   productosPaginados: any[] = [];
   
@@ -39,7 +43,7 @@ export class VentasComponent implements OnInit {
   categoriaSeleccionada: number | null = null;
   
   paginaActual: number = 1;
-  itemsPorPagina: number = 9; // Mostramos 9 para que quepan bien con el carrito al lado
+  itemsPorPagina: number = 9; 
   totalPaginas: number = 1;
 
   // --- FEEDBACK ---
@@ -53,39 +57,32 @@ export class VentasComponent implements OnInit {
   cargarDatos() {
     if (!this.usuario.empresa_id) return;
 
-    // 1. Cargar Categorías
     this.productService.getCategorias(this.usuario.empresa_id).subscribe(data => {
       this.categorias = data;
     });
 
-    // 2. Cargar Clientes
     this.clienteService.getClientesPorEmpresa(this.usuario.empresa_id).subscribe(data => {
       this.listaClientes = data;
     });
 
-    // 3. Cargar Productos
     this.productService.getProductosPorEmpresa(this.usuario.empresa_id).subscribe(data => {
-      // Solo productos activos
       this.productos = data.filter((p: any) => p.estado === 'activo');
       this.aplicarFiltros();
     });
   }
 
-  // --- LÓGICA DE FILTRADO ---
   aplicarFiltros() {
     let resultado = this.productos;
 
-    // Filtro por Categoría
     if (this.categoriaSeleccionada !== null) {
       resultado = resultado.filter(p => p.categoria_id == this.categoriaSeleccionada);
     }
 
-    // Filtro por Texto
     if (this.textoBusqueda.trim()) {
       const termino = this.textoBusqueda.toLowerCase();
       resultado = resultado.filter(p => 
         p.nombre.toLowerCase().includes(termino) || 
-        p.sku.toLowerCase().includes(termino)
+        (p.sku && p.sku.toLowerCase().includes(termino))
       );
     }
 
@@ -112,28 +109,20 @@ export class VentasComponent implements OnInit {
     this.aplicarFiltros();
   }
 
-  // --- LÓGICA DEL CARRITO (Con Validación de Stock) ---
-  
   agregarAlCarrito(producto: any) {
-    // 1. Verificar stock base
     if (producto.stock_actual <= 0) {
       this.mostrarToast(`¡El producto ${producto.nombre} está agotado!`, 'error');
       return;
     }
 
-    // 2. Buscar si ya existe en el carrito
     const itemExistente = this.carrito.find(item => item.producto.id === producto.id);
-    
-    // 3. Calcular cantidad futura
     const cantidadEnCarrito = itemExistente ? itemExistente.cantidad : 0;
     
-    // 4. VALIDACIÓN DE STOCK ESTRICTA
     if (cantidadEnCarrito + 1 > producto.stock_actual) {
       this.mostrarToast(`No puedes añadir más. Solo quedan ${producto.stock_actual} unidades.`, 'error');
       return;
     }
 
-    // 5. Añadir o Incrementar
     if (itemExistente) {
       itemExistente.cantidad++;
       itemExistente.subtotal = itemExistente.cantidad * itemExistente.precio_unitario;
@@ -149,18 +138,15 @@ export class VentasComponent implements OnInit {
     this.calcularTotal();
   }
 
-  // Modificar cantidad desde el carrito (+ / -)
   modificarCantidad(index: number, cambio: number) {
     const item = this.carrito[index];
     const nuevaCantidad = item.cantidad + cambio;
 
-    // Eliminar si es 0
     if (nuevaCantidad <= 0) {
       this.eliminarDelCarrito(index);
       return;
     }
 
-    // Validar Stock al incrementar
     if (cambio > 0 && nuevaCantidad > item.producto.stock_actual) {
       this.mostrarToast(`Stock insuficiente. Máximo: ${item.producto.stock_actual}`, 'error');
       return;
@@ -185,7 +171,6 @@ export class VentasComponent implements OnInit {
     this.totalVenta = 0;
   }
 
-  // --- FINALIZAR VENTA ---
   procesarVenta() {
     if (this.carrito.length === 0) return;
 
@@ -206,7 +191,6 @@ export class VentasComponent implements OnInit {
       next: () => {
         this.mostrarToast('¡Venta realizada con éxito!', 'success');
         this.limpiarCarrito();
-        // Recargar productos para actualizar el stock visualmente
         this.cargarDatos(); 
       },
       error: (err) => {
@@ -216,7 +200,6 @@ export class VentasComponent implements OnInit {
     });
   }
 
-  // Helper Toast
   mostrarToast(msg: string, tipo: 'success' | 'error') {
     this.mensajeToast = msg;
     this.tipoToast = tipo;

@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { EmpresaService } from '../../services/empresa.service'; // <--- Service
+import { EmpresaService } from '../../services/empresa.service';
 
 @Component({
   selector: 'app-crear-empresa',
@@ -10,46 +10,79 @@ import { EmpresaService } from '../../services/empresa.service'; // <--- Service
   imports: [CommonModule, FormsModule],
   templateUrl: './crear-empresa.html'
 })
-export class CrearEmpresaComponent {
-  
-  private empresaService = inject(EmpresaService); // <--- Inyectar
-  router = inject(Router);
+export class CrearEmpresaComponent implements OnInit {
+  private empresaService = inject(EmpresaService);
+  private router = inject(Router);
 
-  usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
+  usuarioLogueado = JSON.parse(localStorage.getItem('usuario') || '{}');
   
-  empresa = {
-    nombre: '',
-    cif: '',
-    direccion: '',
-    telefono: ''
-  };
+  empresa = { nombre: '', cif: '', telefono: '', direccion: '', usuario_id: 0 };
+  
+  // Estados de UI y Validación
+  cargando = false;
+  cifInvalido = false;
+  telfInvalido = false;
+  
+  toastVisible = false;
+  toastMensaje = '';
+  toastTipo: 'success' | 'error' | 'warning' = 'success';
 
-  guardarEmpresa() {
-    if (!this.usuario.id) {
-        alert("Error de sesión. Vuelve a registrarte.");
-        this.router.navigate(['/registro-encargado']);
-        return;
+  ngOnInit() {
+    if (!this.usuarioLogueado.id) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.empresa.usuario_id = this.usuarioLogueado.id;
+  }
+
+  mostrarToast(mensaje: string, tipo: 'success' | 'error' | 'warning') {
+    this.toastMensaje = mensaje;
+    this.toastTipo = tipo;
+    this.toastVisible = true;
+    setTimeout(() => this.toastVisible = false, 3000);
+  }
+
+  validarDatosLocales() {
+    // Validar CIF: B + 8 dígitos
+    const regexCIF = /^B[0-9]{8}$/;
+    this.cifInvalido = this.empresa.cif.length > 0 && !regexCIF.test(this.empresa.cif);
+
+    // Validar Teléfono: Exactamente 9 dígitos
+    const regexTelf = /^[0-9]{9}$/;
+    this.telfInvalido = this.empresa.telefono.length > 0 && !regexTelf.test(this.empresa.telefono);
+  }
+
+  registrarEmpresa() {
+    // Validaciones finales antes de enviar
+    if (!this.empresa.nombre || !this.empresa.cif) {
+      this.mostrarToast('Nombre y CIF son obligatorios', 'warning');
+      return;
     }
 
-    const datos = {
-        ...this.empresa,
-        usuario_id: this.usuario.id
-    };
+    if (this.cifInvalido || this.telfInvalido) {
+      this.mostrarToast('Por favor, corrige los errores del formulario', 'error');
+      return;
+    }
 
-    // USAR SERVICIO
-    this.empresaService.crearEmpresa(datos).subscribe({
-        next: (res: any) => {
-            // Actualizar usuario en local storage con el nuevo ID de empresa
-            this.usuario.empresa_id = res.id;
-            localStorage.setItem('usuario', JSON.stringify(this.usuario));
-            
-            alert('¡Empresa creada con éxito!');
-            this.router.navigate(['/dashboard']);
-        },
-        error: (err) => {
-            console.error(err);
-            alert("Error al crear la empresa.");
-        }
+    this.cargando = true;
+    this.empresaService.crearEmpresa(this.empresa).subscribe({
+      next: (res: any) => {
+        // Actualizamos empresa_id en la sesión local
+        this.usuarioLogueado.empresa_id = res.empresa_id;
+        this.usuarioLogueado.empresa_nombre = this.empresa.nombre;
+        localStorage.setItem('usuario', JSON.stringify(this.usuarioLogueado));
+
+        this.mostrarToast('¡Empresa registrada correctamente!', 'success');
+        
+        setTimeout(() => {
+          this.router.navigate(['/dashboard/home']);
+        }, 1500);
+      },
+      error: (err) => {
+        this.cargando = false;
+        const msg = err.error?.messages?.error || 'No se pudo crear la empresa';
+        this.mostrarToast(msg, 'error');
+      }
     });
   }
 }

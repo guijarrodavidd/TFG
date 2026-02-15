@@ -10,7 +10,7 @@ class Cors extends BaseConfig
      * Configuración CORS para permitir conexión con Angular
      */
     public array $default = [
-        'allowedOrigins'         => ['http://localhost:4200'], // Tu frontend
+        'allowedOrigins'         => ['http://davidguijarro.com.es/'], // Tu frontend
         'allowedOriginsPatterns' => [],
         'supportsCredentials'    => true,
         'allowedHeaders'         => ['*'], // Permitir todos los headers

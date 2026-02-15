@@ -7,21 +7,17 @@
 
   <div *ngIf="!cargando && modoBienvenida" class="row h-100 align-items-center justify-content-center">
     <div class="col-lg-6 text-center">
-      
       <div class="bg-primary-subtle text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
            style="width: 120px; height: 120px;">
         <i class="bi bi-box-seam fs-1"></i>
       </div>
-
       <h2 class="fw-bold text-dark mb-3">¡Bienvenido a tu Inventario!</h2>
       <p class="text-muted mb-5 fs-5">
         Parece que es tu primera vez aquí. <br>
         Para empezar a vender, necesitamos organizar tus productos en <strong>categorías</strong>.
       </p>
-
       <div class="card border-0 shadow-lg rounded-4 p-5 text-start mx-auto" style="max-width: 450px;">
         <h5 class="fw-bold mb-4">✨ Vamos a crear la primera</h5>
-        
         <form (ngSubmit)="crearCategoria()">
           <div class="mb-3">
             <label class="form-label small fw-bold text-muted">NOMBRE DE LA CATEGORÍA</label>
@@ -29,7 +25,6 @@
                    [(ngModel)]="nuevaCategoria.nombre" name="catName" 
                    placeholder="Ej: Camisetas, Bebidas, Servicios..." autofocus>
           </div>
-          
           <div class="d-grid">
             <button type="submit" class="btn btn-primary py-2 fw-bold shadow-sm" [disabled]="!nuevaCategoria.nombre">
               Crear Categoría y Empezar
@@ -37,7 +32,6 @@
           </div>
         </form>
       </div>
-
     </div>
   </div>
 
@@ -48,34 +42,28 @@
         <h3 class="fw-bold text-dark mb-0">Productos</h3>
         <p class="text-muted small mb-0">Gestiona tu catálogo e inventario</p>
       </div>
-      
       <a routerLink="/dashboard/productos/nuevo" class="btn btn-dark fw-bold px-4 shadow-sm rounded-pill">
         <i class="bi bi-plus-lg me-2"></i> Nuevo Producto
       </a>
     </div>
 
     <div class="row g-4 h-100">
-      
       <div class="col-lg-3">
         <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
           <div class="card-body p-0 d-flex flex-column">
-            
             <div class="p-4 border-bottom">
               <h6 class="fw-bold text-dark mb-3">Categorías</h6>
               <button (click)="abrirModalCategoria()" class="btn btn-outline-primary w-100 btn-sm fw-bold border-2 rounded-3">
                 <i class="bi bi-plus"></i> Nueva Categoría
               </button>
             </div>
-
             <div class="list-group list-group-flush overflow-auto flex-grow-1">
-              
               <button class="list-group-item list-group-item-action border-0 py-3 px-4 d-flex justify-content-between align-items-center"
                       [class.active]="categoriaSeleccionada === null"
                       (click)="seleccionarCategoria(null)">
                 <span class="fw-bold"><i class="bi bi-grid me-2"></i> Todos</span>
                 <span class="badge bg-light text-dark border">{{ productos.length }}</span>
               </button>
-
               <div *ngFor="let cat of categorias">
                  <button class="list-group-item list-group-item-action border-0 py-3 px-4 d-flex justify-content-between align-items-center"
                         [class.active]="categoriaSeleccionada === cat.id"
@@ -84,47 +72,34 @@
                   <i class="bi bi-chevron-right small opacity-50"></i>
                 </button>
               </div>
-
             </div>
           </div>
         </div>
       </div>
 
       <div class="col-lg-9">
-        
         <div class="d-flex justify-content-between align-items-center mb-4">
-            
             <div class="position-relative" style="max-width: 400px; width: 100%;">
-                
                 <div class="input-group search-bar shadow-sm overflow-hidden bg-white border"
                      [class.rounded-pill]="!mostrarAutocomplete"
                      [class.menu-abierto]="mostrarAutocomplete">
-                    
                     <span class="input-group-text bg-white border-0 ps-3 text-muted">
                         <i class="bi bi-search"></i>
                     </span>
-                    
-                    <input type="text" 
-                           class="form-control border-0 ps-2 py-2" 
-                           placeholder="Buscar..." 
-                           [(ngModel)]="textoBusqueda"
-                           (input)="onBusquedaChange()"
-                           (blur)="cerrarAutocomplete()"
-                           autocomplete="off"> 
-                    
+                    <input type="text" class="form-control border-0 ps-2 py-2" placeholder="Buscar..." 
+                           [(ngModel)]="textoBusqueda" (input)="onBusquedaChange()" (blur)="cerrarAutocomplete()" autocomplete="off"> 
                     <button *ngIf="textoBusqueda" (click)="textoBusqueda=''; onBusquedaChange()" class="btn bg-white border-0 text-muted pe-3">
                         <i class="bi bi-x-circle-fill"></i>
                     </button>
                 </div>
 
                 <div *ngIf="mostrarAutocomplete && resultadosAutocomplete.length > 0" class="autocomplete-dropdown fade-in">
-                    
                     <div *ngFor="let item of resultadosAutocomplete" 
                          [routerLink]="['/dashboard/productos/editar', item.id]"
                          class="autocomplete-item p-2 d-flex align-items-center gap-3">
                         
                         <div class="rounded overflow-hidden bg-light flex-shrink-0" style="width: 40px; height: 40px;">
-                            <img *ngIf="item.imagen_url" [src]="'http://localhost/TFG/BACKEND/public/' + item.imagen_url" class="w-100 h-100 object-fit-cover">
+                            <img *ngIf="item.imagen_url" [src]="mediaUrl + item.imagen_url" class="w-100 h-100 object-fit-cover" (error)="item.imagen_url = null">
                             <i *ngIf="!item.imagen_url" class="bi bi-box-seam w-100 h-100 d-flex align-items-center justify-content-center text-muted"></i>
                         </div>
 
@@ -135,34 +110,28 @@
                                 <span class="text-success fw-bold ms-2">{{ item.precio_venta }}€</span>
                             </small>
                         </div>
-
                         <i class="bi bi-chevron-right text-muted small me-2"></i>
                     </div>
-
                 </div>
             </div>
-            
-            <small class="text-muted fw-bold" *ngIf="productosFiltradosGlobal && productosFiltradosGlobal.length > 0">
+            <small class="text-muted fw-bold" *ngIf="productosFiltradosGlobal.length > 0">
                 {{ productosFiltradosGlobal.length }} productos encontrados
             </small>
         </div>
 
         <div *ngIf="productosPaginados.length === 0" class="text-center py-5 mt-4">
-            <div class="mb-3">
-                <i class="bi bi-search fs-1 text-muted opacity-25"></i>
-            </div>
+            <div class="mb-3"><i class="bi bi-search fs-1 text-muted opacity-25"></i></div>
             <h5 class="fw-bold text-muted">No se encontraron productos</h5>
             <p class="text-muted small">Intenta con otro término o cambia de categoría.</p>
         </div>
         
         <div *ngIf="productosPaginados.length > 0" class="row g-3 fade-in">
-            
             <div *ngFor="let p of productosPaginados" class="col-md-4 col-xl-3">
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden product-card">
-                    
                     <div class="position-relative bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
-                        <img *ngIf="p.imagen_url" [src]="'http://localhost/TFG/BACKEND/public/' + p.imagen_url" 
-                             class="w-100 h-100 object-fit-cover" alt="{{ p.nombre }}">
+                        <img *ngIf="p.imagen_url" [src]="mediaUrl + p.imagen_url" class="w-100 h-100 object-fit-cover" 
+                             alt="{{ p.nombre }}" (error)="p.imagen_url = null">
+                        
                         <i *ngIf="!p.imagen_url" class="bi bi-image fs-1 text-secondary opacity-25"></i>
 
                         <span class="position-absolute top-0 end-0 m-2 badge rounded-pill border"
@@ -178,7 +147,6 @@
                         <h6 class="fw-bold text-dark mt-1 mb-2 text-truncate" title="{{ p.nombre }}">
                             {{ p.nombre }}
                         </h6>
-
                         <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
                             <div>
                                 <span class="d-block fw-bold text-dark h5 mb-0">{{ p.precio_venta }}€</span>
@@ -191,7 +159,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="card-footer bg-white border-0 p-2 d-flex gap-2">
                         <a [routerLink]="['/dashboard/productos/editar', p.id]" class="btn btn-sm btn-light w-100 fw-bold text-primary">
                             <i class="bi bi-pencil-square"></i> Editar
@@ -199,7 +166,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div *ngIf="totalPaginas > 1" class="d-flex justify-content-center mt-5">
@@ -210,13 +176,11 @@
                             <i class="bi bi-chevron-left"></i>
                         </button>
                     </li>
-                    
                     <li class="page-item disabled">
                         <span class="page-link border-0 text-muted fw-bold bg-white">
                             Página {{ paginaActual }} de {{ totalPaginas }}
                         </span>
                     </li>
-
                     <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
                         <button class="page-link border-0 text-dark rounded-end-pill px-3 fw-bold" (click)="cambiarPagina(paginaActual + 1)">
                             <i class="bi bi-chevron-right"></i>
@@ -225,12 +189,9 @@
                 </ul>
             </nav>
         </div>
-
       </div>
-
     </div>
   </div>
-
 </div>
 
 <div class="modal-backdrop fade show" *ngIf="modalCategoriaAbierto" style="z-index: 1040"></div>

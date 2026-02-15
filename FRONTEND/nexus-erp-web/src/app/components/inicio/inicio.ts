@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router'; // Importante para detectar el error del Guard
 import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
@@ -12,13 +13,19 @@ import { DashboardService } from '../../services/dashboard.service';
 export class Inicio implements OnInit {
 
   private dashboardService = inject(DashboardService);
+  private route = inject(ActivatedRoute); // Inyectamos la ruta activa
   
   usuario: any = {};
   
-  // Datos iniciales
+  // Datos para el Dashboard
   rendimiento: any = { total: 0, ventas: 0 };
   ventasRecientes: any[] = [];
   equipo: any[] = [];
+
+  // Variables para el Toast
+  toastVisible: boolean = false;
+  toastMensaje: string = '';
+  toastTipo: 'success' | 'error' | 'warning' = 'warning';
 
   ngOnInit() {
     const data = localStorage.getItem('usuario');
@@ -26,20 +33,33 @@ export class Inicio implements OnInit {
       this.usuario = JSON.parse(data);
       this.cargarDatosDashboard();
     }
+
+    // Detectar si el Guard nos ha redirigido por falta de permisos
+    this.route.queryParams.subscribe(params => {
+      if (params['error'] === 'unauthorized') {
+        this.mostrarToast('Acceso denegado: No tienes permisos para entrar ahí.', 'error');
+      }
+    });
+  }
+
+  mostrarToast(mensaje: string, tipo: 'success' | 'error' | 'warning') {
+    this.toastMensaje = mensaje;
+    this.toastTipo = tipo;
+    this.toastVisible = true;
+    setTimeout(() => this.toastVisible = false, 4000);
   }
 
   cargarDatosDashboard() {
-    // LLAMADA CORREGIDA: Solo enviamos el ID del usuario
     this.dashboardService.getResumen(this.usuario.id).subscribe({
       next: (res: any) => {
-        console.log('Datos Dashboard:', res); // Debug en consola
         this.rendimiento = res.rendimiento;
         this.ventasRecientes = res.recientes;
         this.equipo = res.equipo;
       },
       error: (err) => {
-        // Ahora si hay error, saldrá el mensaje real del backend
         console.error('Error:', err);
+        const msg = err.error?.messages?.error || 'Error al cargar datos del dashboard';
+        this.mostrarToast(msg, 'error');
       }
     });
   }

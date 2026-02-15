@@ -10,11 +10,13 @@ import { ProductosComponent } from './components/productos/productos';
 import { ProductosCreateComponent } from './components/productos/productos-create/productos-create';
 import { PersonalComponent } from './components/personal/personal';
 import { ClientesComponent } from './components/clientes/clientes';
-
-// ✅ IMPORTAR LOS NUEVOS COMPONENTES
 import { InvitarComponent } from './components/invitar/invitar'; 
 import { GestionUsuariosComponent } from './components/gestion-usuarios/gestion-usuarios';
 import { GestionRRHHComponent } from './components/gestion-rrhh/gestion-rrhh';
+
+// Importa tu componente de Admin
+import { AdminComponent } from './components/admin/admin'; 
+import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -23,6 +25,9 @@ export const routes: Routes = [
     { path: 'registro-encargado', component: RegistroEncargado },
     { path: 'registro-empleado', component: RegistroEmpleado }, 
     { path: 'crear-empresa', component: CrearEmpresaComponent },
+
+    // ✅ CORRECCIÓN: La ruta 'admin' debe estar AQUÍ (en la raíz), no dentro de dashboard
+    { path: 'admin', component: AdminComponent },
 
     // Rutas del Dashboard
     { 
@@ -38,14 +43,21 @@ export const routes: Routes = [
             { path: 'productos/nuevo', component: ProductosCreateComponent },
             { path: 'productos/editar/:id', component: ProductosCreateComponent },
             { path: 'personal', component: PersonalComponent },
-            
-            // ✅ ASEGÚRATE DE QUE HAY UNA COMA AL FINAL DE ESTA LÍNEA
             { path: 'clientes', component: ClientesComponent }, 
-
-            // --- NUEVAS RUTAS (Fíjate en las comas) ---
-            { path: 'usuarios', component: GestionUsuariosComponent },
-            { path: 'rrhh', component: GestionRRHHComponent },
-            { path: 'invitar', component: InvitarComponent } 
+            { 
+                path: 'usuarios', 
+                component: GestionUsuariosComponent, 
+                canActivate: [roleGuard] 
+            },
+            { 
+                path: 'rrhh', 
+                component: GestionRRHHComponent, 
+                canActivate: [roleGuard] 
+            },
+            
+            { path: 'invitar', component: InvitarComponent, canActivate: [roleGuard] }
         ]
-    }
+    },
+    { path: 'admin', component: AdminComponent, canActivate: [roleGuard] },
+    { path: '**', redirectTo: 'login' }
 ];

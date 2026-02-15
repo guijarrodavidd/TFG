@@ -31,6 +31,8 @@ $routes->group('api', ['filter' => 'cors'], function($routes) {
     $routes->get('productos/(:num)', 'Productos::show/$1');
     $routes->post('productos/crear', 'Productos::create');
     $routes->post('productos/actualizar/(:num)', 'Productos::update/$1');
+    $routes->get('productos/ver/(:num)', 'Productos::getProductoById/$1');
+    $routes->post('productos/actualizar/(:num)', 'Productos::updateProducto/$1');
 
     // --- CATEGORÍAS ---
     $routes->get('categorias/empresa/(:num)', 'Categorias::index/$1');

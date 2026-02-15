@@ -1,183 +1,138 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../../services/product.service';
-import { environment } from '../../../../environments/environment'; // Importación clave
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-productos-create',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './productos-create.html',
-  styleUrls: ['./productos-create.css']
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './productos-create.html'
 })
 export class ProductosCreateComponent implements OnInit {
-  
-  http = inject(HttpClient);
-  router = inject(Router);
-  route = inject(ActivatedRoute);
-  productService = inject(ProductService);
-  url = environment.apiUrl; // Usamos la URL centralizada del environment
-  
+  private productService = inject(ProductService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  // --- CONFIGURACIÓN Y SESIÓN ---
+  mediaUrl = environment.mediaUrl;
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
-
-  // Listas
-  listaCategorias: any[] = [];
-
-  // Variables de Estado y Textos
-  esEdicion: boolean = false;
-  productoId: string | null = null;
   
-  // TEXTOS DINÁMICOS (Por defecto: modo creación)
-  tituloPagina: string = 'Nuevo Producto';
-  subtituloPagina: string = 'Rellena la información para añadir al catálogo.';
-  textoBoton: string = 'Guardar Producto';
+  // --- ESTADOS DE VISTA ---
+  categorias: any[] = [];
+  editMode: boolean = false;
+  idProducto: string | null = null;
+  modalBorrarVisible: boolean = false; // Control del modal de eliminación
 
-  // Variables para el TOAST (Notificación)
-  toastVisible: boolean = false;
-  toastMensaje: string = '';
-  toastTipo: 'success' | 'error' = 'success';
-
-  producto = {
+  // --- MODELOS ---
+  producto: any = {
     nombre: '',
-    sku: '',
-    categoria_id: null, 
-    precio_venta: 0,    
-    impuesto: 21,       
+    descripcion: '',
+    precio_venta: 0,
     stock_actual: 0,
     stock_minimo: 5,
-    descripcion: '',
-    estado: 'activo'
+    categoria_id: '',
+    estado: 'activo',
+    empresa_id: this.usuario.empresa_id
   };
 
-  imagenSeleccionada: File | null = null;
-  imagenPreview: string | null = null;
-  precioSinIva: number = 0;
+  imagePreview: string | null = null;
+  selectedFile: File | null = null;
 
   ngOnInit() {
     this.cargarCategorias();
     
-    // DETECTAR SI ESTAMOS EDITANDO
-    this.route.paramMap.subscribe(params => {
-      this.productoId = params.get('id');
-      
-      if (this.productoId) {
-        // --- MODO EDICIÓN ---
-        this.esEdicion = true;
-        this.tituloPagina = 'Editar Producto';
-        this.subtituloPagina = 'Modifica los detalles y guarda los cambios.';
-        this.textoBoton = 'Actualizar Cambios';
-        
-        this.cargarProductoParaEditar(this.productoId);
-      } else {
-        // --- MODO CREAR ---
-        this.generarSKU();
-      }
-    });
+    // Obtenemos el ID de la URL
+    this.idProducto = this.route.snapshot.paramMap.get('id');
+    
+    if (this.idProducto) {
+      this.editMode = true;
+      this.cargarProducto(this.idProducto);
+    }
   }
 
   cargarCategorias() {
-    const idEmpresa = this.usuario.empresa_id;
-    this.productService.getCategorias(idEmpresa)
-      .subscribe((res: any) => {
-        this.listaCategorias = res;
-        // Seleccionar "General" por defecto solo si es nuevo
-        if (!this.esEdicion && this.listaCategorias.length > 0) {
-           const general = this.listaCategorias.find(c => c.nombre.toLowerCase() === 'general');
-           this.producto.categoria_id = general ? general.id : this.listaCategorias[0].id;
+    this.productService.getCategorias(this.usuario.empresa_id).subscribe({
+      next: (res: any) => this.categorias = res,
+      error: (err) => console.error('Error al cargar categorías', err)
+    });
+  }
+
+  cargarProducto(id: string) {
+    this.productService.getProductoById(id).subscribe({
+      next: (res: any) => {
+        this.producto = res;
+        // Si el producto ya tiene imagen en BD, cargamos la URL completa
+        if (this.producto.imagen_url) {
+          this.imagePreview = this.mediaUrl + this.producto.imagen_url;
         }
-      });
+      },
+      error: (err) => console.error('Error al cargar producto', err)
+    });
   }
 
-  cargarProductoParaEditar(id: string) {
-    this.productService.getProductoById(id)
-      .subscribe({
-        next: (data: any) => {
-          this.producto = data;
-          this.calcularBase();
-          if (data.imagen_url) {
-            this.imagenPreview = this.url + data.imagen_url;
-          }
-        },
-        error: (err) => console.error("Error cargando producto", err)
-      });
-  }
-
-  // --- CÁLCULOS Y HELPERS ---
-  calcularBase() {
-    const pvp = this.producto.precio_venta;
-    const iva = this.producto.impuesto || 21;
-    this.precioSinIva = pvp > 0 ? pvp / (1 + (iva / 100)) : 0;
-  }
-
-  generarSKU() {
-    const random = Math.floor(Math.random() * 1000000);
-    this.producto.sku = 'PROD-' + random;
-  }
-
+  // --- GESTIÓN DE IMAGEN ---
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.imagenSeleccionada = file;
+      this.selectedFile = file;
       const reader = new FileReader();
-      reader.onload = (e) => this.imagenPreview = e.target?.result as string;
+      reader.onload = () => {
+        // Genera previsualización local (base64)
+        this.imagePreview = reader.result as string;
+      };
       reader.readAsDataURL(file);
     }
   }
 
-  // --- FUNCIÓN TOAST ---
-  mostrarToast(mensaje: string, tipo: 'success' | 'error') {
-    this.toastMensaje = mensaje;
-    this.toastTipo = tipo;
-    this.toastVisible = true;
-    
-    // Ocultar automáticamente a los 3 segundos
-    setTimeout(() => {
-        this.toastVisible = false;
-    }, 3000);
-  }
-
-  // --- GUARDAR ---
-  guardarProducto() {
+  // --- ACCIONES PRINCIPALES ---
+  guardar() {
     const formData = new FormData();
-    formData.append('empresa_id', this.usuario.empresa_id);
     
+    // Mapeamos el objeto producto al FormData
     Object.keys(this.producto).forEach(key => {
-      let value = (this.producto as any)[key];
-      if (value === null) value = '';
-      formData.append(key, value);
+      // Evitamos enviar nulos como string "null"
+      const valor = this.producto[key] === null ? '' : this.producto[key];
+      formData.append(key, valor);
     });
 
-    const coste = this.precioSinIva ? this.precioSinIva.toString() : '0';
-    formData.append('precio_coste', coste);
-
-    if (this.imagenSeleccionada) {
-      formData.append('imagen', this.imagenSeleccionada);
+    // Si hay una nueva imagen seleccionada, la añadimos
+    if (this.selectedFile) {
+      formData.append('imagen', this.selectedFile);
     }
 
-        let url = `${this.url}/productos/crear`;
-    if (this.esEdicion && this.productoId) {
-       url = `${this.url}/productos/actualizar/${this.productoId}`;
+    if (this.editMode && this.idProducto) {
+      this.productService.updateProducto(this.idProducto, formData).subscribe({
+        next: () => this.router.navigate(['/dashboard/productos']),
+        error: (err) => console.error('Error al actualizar', err)
+      });
+    } else {
+      this.productService.createProducto(formData).subscribe({
+        next: () => this.router.navigate(['/dashboard/productos']),
+        error: (err) => console.error('Error al crear', err)
+      });
     }
+  }
 
-    this.http.post(url, formData)
-      .subscribe({
+  // --- LÓGICA DE ELIMINACIÓN ---
+  confirmarBorrado() {
+    this.modalBorrarVisible = true;
+  }
+
+  ejecutarBorrado() {
+    if (this.idProducto) {
+      this.productService.borrarProducto(this.idProducto).subscribe({
         next: () => {
-          // 1. Mostrar mensaje de éxito
-          const msg = this.esEdicion ? '¡Producto actualizado correctamente!' : '¡Producto creado con éxito!';
-          this.mostrarToast(msg, 'success');
-
-          // 2. Esperar 1.5 segundos para que el usuario lea el mensaje antes de irse
-          setTimeout(() => {
-              this.router.navigate(['/dashboard/productos']);
-          }, 1500);
+          this.modalBorrarVisible = false;
+          this.router.navigate(['/dashboard/productos']);
         },
         error: (err) => {
-          console.error(err);
-          this.mostrarToast('Hubo un error al guardar.', 'error');
+          console.error('Error al eliminar producto', err);
+          this.modalBorrarVisible = false;
         }
       });
+    }
   }
 }

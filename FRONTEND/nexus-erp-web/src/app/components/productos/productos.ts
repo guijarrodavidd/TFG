@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-productos',
@@ -14,6 +15,7 @@ import { ProductService } from '../../services/product.service';
 export class ProductosComponent implements OnInit {
   
   private productService = inject(ProductService);
+  mediaUrl = environment.mediaUrl;
   
   // --- DATOS DE SESIÓN ---
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');

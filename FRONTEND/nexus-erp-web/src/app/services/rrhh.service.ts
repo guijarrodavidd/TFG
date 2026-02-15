@@ -32,9 +32,10 @@ export class RRHHService {
   // ==========================================
 
   // Obtener resumen completo (usuarios + solicitudes) para la vista de tarjetas
-  getEmpleadosResumen(empresaId: number) {
-    return this.http.get(`${this.apiUrl}/rrhh/empleados/${empresaId}`);
-  }
+  getEmpleadosResumen(empresaId: number, adminId: number) {
+  // Enviamos el adminId en la URL para que el controlador lo reciba en $this->request->getGet('admin_id')
+  return this.http.get(`${this.apiUrl}/rrhh/empleados/${empresaId}?admin_id=${adminId}`);
+}
 
   // Responder solicitud (Aprobar/Rechazar)
   responderSolicitud(solicitudId: number, accion: 'aprobada' | 'rechazada') {

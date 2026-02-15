@@ -2310,3 +2310,23 @@ Stack trace:
 #9 C:\xampp\htdocs\TFG\TFG\BACKEND\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 #10 C:\xampp\htdocs\TFG\TFG\BACKEND\public\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 #11 {main}
+CRITICAL - 2026-02-15 22:17:59 --> ErrorException: Undefined array key "sku"
+[Method: POST, Route: api/productos/actualizar/4]
+in APPPATH\Controllers\Productos.php on line 88.
+ 1 APPPATH\Controllers\Productos.php(88): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "sku"', 'C:\\xampp\\htdocs\\TFG\\TFG\\BACKEND\\app\\Controllers\\Productos.php', 88)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Productos->update('4')
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Productos))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-15 22:18:05 --> ErrorException: Undefined array key "sku"
+[Method: POST, Route: api/productos/actualizar/4]
+in APPPATH\Controllers\Productos.php on line 88.
+ 1 APPPATH\Controllers\Productos.php(88): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "sku"', 'C:\\xampp\\htdocs\\TFG\\TFG\\BACKEND\\app\\Controllers\\Productos.php', 88)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Productos->update('4')
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Productos))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(79): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

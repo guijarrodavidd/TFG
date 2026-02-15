@@ -1,3 +1,17 @@
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1060;">
+  <div class="toast align-items-center text-white border-0 shadow show" 
+       [ngClass]="{'bg-success': toastTipo === 'success', 'bg-danger': toastTipo === 'error', 'bg-warning': toastTipo === 'warning'}"
+       role="alert" aria-live="assertive" aria-atomic="true" *ngIf="toastVisible">
+    <div class="d-flex">
+      <div class="toast-body fw-bold">
+        <i class="bi me-2" [ngClass]="{'bi-check-circle-fill': toastTipo === 'success', 'bi-exclamation-triangle-fill': toastTipo === 'error' || toastTipo === 'warning'}"></i>
+        {{ toastMensaje }}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="toastVisible = false"></button>
+    </div>
+  </div>
+</div>
+
 <div class="container-fluid p-0 vh-100 overflow-hidden">
   <div class="row g-0 h-100">
     
@@ -5,20 +19,10 @@
       <div class="content-wrapper px-4 animate-fade-up">
         <h1 class="display-1 mb-0">Nexus</h1>
         <h1 class="display-1 mt-n3">ERP</h1>
-        
         <p class="lead mt-4 text-white-50">
           Potencia tu empresa con la gestión en la nube. 
           Control total, simplicidad absoluta y un diseño pensado para ti.
         </p>
-
-        <div class="mt-5 pt-3">
-          <p class="mb-3 small text-uppercase ls-1">Accede con redes sociales</p>
-          <div class="d-flex gap-3">
-            <a href="#" class="social-btn facebook"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="social-btn twitter"><i class="bi bi-twitter"></i></a>
-            <a href="#" class="social-btn instagram"><i class="bi bi-instagram"></i></a>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -26,49 +30,28 @@
       <div class="login-form-container p-5 animate-fade-up delay-1">
         
         <h2 class="mb-4 display-6">Iniciar Sesión</h2>
-        
         <p class="text-muted mb-4">
           ¿No tienes una cuenta?
           <a routerLink="/registro-encargado" class="text-decoration-none fw-bold text-primary">Crea tu empresa aquí</a>.
         </p>
 
         <form (ngSubmit)="conectar()">
-          
           <div class="mb-4">
             <label class="form-label text-muted">Correo Electrónico</label>
-            <input type="email" 
-                   class="form-control clean-input" 
-                   [(ngModel)]="usuario.email" 
-                   name="email" 
-                   placeholder="ejemplo@nexus.com" 
-                   required>
+            <input type="email" class="form-control clean-input" [(ngModel)]="usuario.email" name="email" placeholder="ejemplo@nexus.com" required [disabled]="cargando">
           </div>
 
           <div class="mb-4">
             <label class="form-label text-muted">Contraseña</label>
-            <input type="password" 
-                   class="form-control clean-input" 
-                   [(ngModel)]="usuario.password" 
-                   name="password" 
-                   placeholder="••••••••••••" 
-                   required>
+            <input type="password" class="form-control clean-input" [(ngModel)]="usuario.password" name="password" placeholder="••••••••••••" required [disabled]="cargando">
           </div>
-
-          <div class="d-flex justify-content-between align-items-center mb-5">
-            <div class="form-check">
-              <input class="form-check-input me-2" type="checkbox" id="rememberMe">
-              <label class="form-check-label small text-muted" for="rememberMe">Recuérdame</label>
-            </div>
-            <a href="#" class="small text-muted text-decoration-none">¿Olvidaste tu contraseña?</a>
-          </div>
-
-          <button type="submit" class="btn btn-primary w-100 py-2 rounded-pill fw-bold btn-glow">
-            ENTRAR
+          <button type="submit" class="btn btn-primary w-100 py-2 rounded-pill fw-bold btn-glow" [disabled]="cargando">
+            <span *ngIf="!cargando">ENTRAR</span>
+            <span *ngIf="cargando" class="spinner-border spinner-border-sm me-2"></span>
           </button>
-
         </form>
+
       </div>
     </div>
-
   </div>
 </div>

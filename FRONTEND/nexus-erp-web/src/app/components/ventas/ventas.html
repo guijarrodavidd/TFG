@@ -58,11 +58,13 @@
                         <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden product-card">
                             
                             <div class="position-relative bg-white d-flex align-items-center justify-content-center border-bottom" style="height: 160px;">
-                                <img *ngIf="p.imagen_url" [src]="'http://localhost/TFG/BACKEND/public/' + p.imagen_url" 
-                                     class="w-100 h-100 object-fit-cover">
+                                <img *ngIf="p.imagen_url" [src]="mediaUrl + p.imagen_url" 
+                                     class="w-100 h-100 object-fit-cover"
+                                     (error)="p.imagen_url = null">
+                                
                                 <i *ngIf="!p.imagen_url" class="bi bi-image fs-1 text-secondary opacity-25"></i>
                                 
-                                <span class="position-absolute top-0 end-0 m-2 badge rounded-pill border"
+                                <span class="position-absolute top-0 end-0 m-2 badge rounded-pill border shadow-sm"
                                       [ngClass]="p.stock_actual > 0 ? 'bg-white text-dark' : 'bg-danger text-white'">
                                     Stock: {{ p.stock_actual }}
                                 </span>
@@ -74,7 +76,7 @@
                                         <h6 class="fw-bold text-dark mb-0 text-truncate" style="max-width: 130px;" title="{{ p.nombre }}">
                                             {{ p.nombre }}
                                         </h6>
-                                        <small class="text-muted font-monospace" style="font-size: 0.75rem;">{{ p.sku }}</small>
+                                        <small class="text-muted font-monospace" style="font-size: 0.75rem;">{{ p.sku || '---' }}</small>
                                     </div>
                                     <div class="text-end">
                                         <span class="d-block fw-bold text-primary">{{ p.precio_venta }}€</span>
@@ -115,15 +117,12 @@
                     </ul>
                 </nav>
             </div>
-
         </div>
 
         <div class="col-lg-4 h-100">
             <div class="card border-0 shadow-lg rounded-4 h-100 d-flex flex-column bg-white">
-                
                 <div class="card-header bg-white border-bottom p-4">
                     <h5 class="fw-bold mb-3"><i class="bi bi-cart3 me-2"></i> Ticket de Venta</h5>
-                    
                     <select class="form-select bg-light border-0" [(ngModel)]="clienteSeleccionadoId">
                         <option value="" selected>Cliente Contado (Anónimo)</option>
                         <option *ngFor="let c of listaClientes" [value]="c.id">
@@ -133,7 +132,6 @@
                 </div>
 
                 <div class="card-body p-0 overflow-auto flex-grow-1 bg-light">
-                    
                     <div *ngIf="carrito.length === 0" class="h-100 d-flex flex-column align-items-center justify-content-center text-muted opacity-50">
                         <i class="bi bi-basket fs-1 mb-2"></i>
                         <p class="fw-bold">Carrito vacío</p>
@@ -141,12 +139,10 @@
 
                     <ul class="list-group list-group-flush">
                         <li *ngFor="let item of carrito; let i = index" class="list-group-item p-3 border-bottom bg-white m-2 rounded-3 shadow-sm">
-                            
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <span class="fw-bold text-dark">{{ item.producto.nombre }}</span>
                                 <span class="fw-bold">{{ item.subtotal | number:'1.2-2' }}€</span>
                             </div>
-
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group btn-group-sm" role="group">
                                     <button class="btn btn-outline-secondary" (click)="modificarCantidad(i, -1)">-</button>
@@ -168,7 +164,6 @@
                         <span class="h5 text-muted mb-0">Total</span>
                         <span class="h2 fw-bold text-primary mb-0">{{ totalVenta | number:'1.2-2' }}€</span>
                     </div>
-
                     <div class="d-grid gap-2">
                         <button class="btn btn-primary py-3 fw-bold rounded-3 shadow-sm" 
                                 (click)="procesarVenta()" 
@@ -180,9 +175,7 @@
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 </div>

@@ -18,6 +18,11 @@ export class RegistroEncargado {
 
   usuario = { nombre: '', email: '', password: '' };
   
+  // Variables para Toast
+  toastVisible: boolean = false;
+  toastMensaje: string = '';
+  toastTipo: 'warning' | 'error' | 'success' = 'warning';
+
   // Estado de la seguridad de la contraseña
   fuerza = { 
     puntuacion: 0, 
@@ -26,13 +31,18 @@ export class RegistroEncargado {
     errores: [] as string[] 
   };
 
-  // --- LÓGICA DE VALIDACIÓN IMPLEMENTADA ---
+  mostrarToast(mensaje: string, tipo: 'warning' | 'error' | 'success') {
+    this.toastMensaje = mensaje;
+    this.toastTipo = tipo;
+    this.toastVisible = true;
+    setTimeout(() => this.toastVisible = false, 3000);
+  }
+
   validarPassword() {
     const p = this.usuario.password;
     let score = 0;
     this.fuerza.errores = [];
 
-    // 1. Si está vacía, reseteamos
     if (!p) {
         this.fuerza.puntuacion = 0;
         this.fuerza.texto = '';
@@ -40,7 +50,6 @@ export class RegistroEncargado {
         return;
     }
 
-    // 2. Reglas de puntuación
     if (p.length >= 8) score += 25;
     else this.fuerza.errores.push("Mínimo 8 caracteres.");
 
@@ -55,7 +64,6 @@ export class RegistroEncargado {
 
     this.fuerza.puntuacion = score;
 
-    // 3. Feedback visual (Color y Texto)
     if (score < 50) {
         this.fuerza.color = 'bg-danger';
         this.fuerza.texto = 'Débil';
@@ -69,33 +77,32 @@ export class RegistroEncargado {
   }
 
   registrar() {
-    // Verificamos que la seguridad sea del 100%
     if (this.fuerza.puntuacion < 100) {
-      alert("Por favor, mejora la seguridad de tu contraseña hasta que sea 'Segura'.");
+      this.mostrarToast("Mejora la seguridad de tu contraseña hasta que sea 'Segura'.", 'warning');
       return;
     }
 
-    const datosRegistro = { ...this.usuario, rol: 'admin' };
+    const datosRegistro = { ...this.usuario, rol_id: 2 }; // Usamos el ID de rol encargado
 
     this.authService.registrarEncargado(datosRegistro).subscribe({
         next: (res: any) => {
-          // Guardamos sesión básica para UX inmediata
           const usuarioLogueado = {
             id: res.id || (res.data && res.data.id), 
             nombre: this.usuario.nombre,
             email: this.usuario.email,
-            rol: 'admin',
+            rol: 'admin', // Mantenemos el alias para lógica de sidebar
+            rol_id: 2,
             empresa_id: null
           };
           localStorage.setItem('usuario', JSON.stringify(usuarioLogueado));
           
-          alert('¡Cuenta creada! Vamos a configurar tu empresa.');
-          this.router.navigate(['/crear-empresa']);
+          this.mostrarToast('¡Cuenta creada! Redirigiendo a configuración...', 'success');
+          setTimeout(() => this.router.navigate(['/crear-empresa']), 1500);
         },
         error: (err) => {
           console.error(err);
           const msg = err.error?.message || 'No se pudo completar el registro.';
-          alert('Error: ' + msg);
+          this.mostrarToast(msg, 'error');
         }
       });
   }

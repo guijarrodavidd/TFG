@@ -18,16 +18,20 @@ export class ProductService {
     return this.http.get(`${this.apiUrl}/productos/empresa/${empresaId}`);
   }
 
-  getProductoById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/productos/${id}`);
+  getProductoById(id: string) {
+    return this.http.get(`${this.apiUrl}/productos/ver/${id}`);
   }
 
   createProducto(data: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/productos/crear`, data);
   }
 
-  updateProducto(id: string, data: FormData): Observable<any> {
+  updateProducto(id: string, data: FormData) {
     return this.http.post(`${this.apiUrl}/productos/actualizar/${id}`, data);
+  }
+
+  borrarProducto(id: string) {
+    return this.http.delete(`${this.apiUrl}/productos/borrar/${id}`);
   }
 
   // --- CATEGORÍAS ---

@@ -5,7 +5,7 @@
       <span class="initials">{{ usuario.nombre?.charAt(0) | uppercase }}</span>
     </div>
     <h5 class="fw-bold mb-0">{{ usuario.nombre }}</h5>
-    <small class="text-white-50" *ngIf="usuario.empresa_id">NEXUS ERP</small>
+    <small class="text-white-50">{{ usuario.empresa_nombre || 'NEXUS ERP' }}</small>
   </div>
 
   <nav class="nav flex-column gap-2 flex-grow-1">
@@ -30,24 +30,27 @@
       <i class="bi bi-person-badge-fill me-3"></i> Mi Personal
     </a>
 
-    <div *ngIf="usuario.rol === 'admin'" class="mt-4 mb-2 small text-uppercase text-white-50 ps-3 ls-1 fw-bold" style="font-size: 0.75rem;">
-        Administración
-    </div>
+    <ng-container *ngIf="usuario.rol === 'admin' || usuario.rol_id == 2 || usuario.rol_id == 1">
+        
+        <div class="mt-4 mb-2 small text-uppercase text-white-50 ps-3 ls-1 fw-bold" style="font-size: 0.75rem;">
+            Administración
+        </div>
 
-    <a *ngIf="usuario.rol === 'admin'" routerLink="/dashboard/usuarios" routerLinkActive="active-link" class="nav-item text-white-50">
-      <i class="bi bi-people-fill me-3"></i> Usuarios
-    </a>
+        <a routerLink="/dashboard/usuarios" routerLinkActive="active-link" class="nav-item text-white-50">
+          <i class="bi bi-people-fill me-3"></i> Usuarios
+        </a>
 
-    <a *ngIf="usuario.rol === 'admin'" routerLink="/dashboard/rrhh" routerLinkActive="active-link" class="nav-item text-white-50">
-      <i class="bi bi-file-earmark-person-fill me-3"></i> Gestión RRHH
-    </a>
+        <a routerLink="/dashboard/rrhh" routerLinkActive="active-link" class="nav-item text-white-50">
+          <i class="bi bi-file-earmark-person-fill me-3"></i> Gestión RRHH
+        </a>
 
-    <a *ngIf="usuario.rol === 'admin'" 
-       routerLink="/dashboard/invitar" 
-       routerLinkActive="active-link"
-       class="nav-item text-white-50 mt-4 border-top pt-3">
-      <i class="bi bi-person-plus-fill me-3 text-success"></i> Invitar Trabajador
-    </a>
+        <a routerLink="/dashboard/invitar" 
+           routerLinkActive="active-link"
+           class="nav-item text-white-50 mt-4 border-top pt-3">
+          <i class="bi bi-person-plus-fill me-3 text-success"></i> Invitar Trabajador
+        </a>
+        
+    </ng-container>
 
   </nav>
 

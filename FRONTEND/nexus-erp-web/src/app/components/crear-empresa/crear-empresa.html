@@ -1,35 +1,65 @@
-<div class="container mt-5">
-  <div class="card shadow p-4">
-    <h2 class="text-center mb-4">Configura tu Organización</h2>
-    <p class="text-center text-muted">Es el primer paso para usar Nexus ERP. Estos datos aparecerán en tus facturas.</p>
-    
-    <form (ngSubmit)="guardarEmpresa()">
-      
-      <div class="mb-3">
-        <label class="form-label">Nombre de la Empresa *</label>
-        <input type="text" class="form-control" [(ngModel)]="empresa.nombre" name="nombre" required placeholder="Ej: Tech Solutions S.L.">
-      </div>
-
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label class="form-label">CIF / NIF</label>
-          <input type="text" class="form-control" [(ngModel)]="empresa.cif" name="cif" placeholder="B-12345678">
+<div class="container py-5">
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1060;">
+    <div class="toast align-items-center text-white border-0 shadow show" 
+         [ngClass]="{'bg-success': toastTipo === 'success', 'bg-danger': toastTipo === 'error', 'bg-warning': toastTipo === 'warning'}"
+         role="alert" *ngIf="toastVisible">
+      <div class="d-flex">
+        <div class="toast-body fw-bold">
+          <i class="bi me-2" [ngClass]="{'bi-check-circle-fill': toastTipo === 'success', 'bi-exclamation-triangle-fill': toastTipo === 'error' || toastTipo === 'warning'}"></i>
+          {{ toastMensaje }}
         </div>
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Teléfono</label>
-          <input type="text" class="form-control" [(ngModel)]="empresa.telefono" name="telefono">
-        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="toastVisible = false"></button>
       </div>
+    </div>
+  </div>
 
-      <div class="mb-3">
-        <label class="form-label">Dirección Fiscal</label>
-        <textarea class="form-control" [(ngModel)]="empresa.direccion" name="direccion" rows="2"></textarea>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card border-0 shadow-lg rounded-4 p-4">
+        <h2 class="fw-bold mb-4 text-center">Configura tu Empresa</h2>
+        
+        <form (ngSubmit)="registrarEmpresa()">
+          <div class="mb-3">
+            <label class="form-label text-muted small fw-bold">NOMBRE DE LA EMPRESA</label>
+            <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="empresa.nombre" name="nombre" placeholder="Ej: Mi Negocio S.L." required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label text-muted small fw-bold">CIF (B + 8 números)</label>
+            <input type="text" class="form-control bg-light border-0 py-2" 
+                   [(ngModel)]="empresa.cif" name="cif" 
+                   placeholder="B12345678" 
+                   (keyup)="validarDatosLocales()"
+                   [ngClass]="{'is-invalid': cifInvalido}" required>
+            <div class="invalid-feedback" *ngIf="cifInvalido">
+              El CIF debe ser una B seguida de 8 números.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label text-muted small fw-bold">TELÉFONO (9 números)</label>
+            <input type="text" class="form-control bg-light border-0 py-2" 
+                   [(ngModel)]="empresa.telefono" name="telefono" 
+                   placeholder="600123456"
+                   (keyup)="validarDatosLocales()"
+                   [ngClass]="{'is-invalid': telfInvalido}">
+            <div class="invalid-feedback" *ngIf="telfInvalido">
+              El teléfono debe tener exactamente 9 dígitos.
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label text-muted small fw-bold">DIRECCIÓN</label>
+            <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="empresa.direccion" name="direccion" placeholder="Calle Ejemplo 123">
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2 rounded-pill fw-bold shadow-sm" 
+                  [disabled]="cargando || cifInvalido || telfInvalido">
+            <span *ngIf="!cargando">CREAR EMPRESA</span>
+            <span *ngIf="cargando" class="spinner-border spinner-border-sm me-2"></span>
+          </button>
+        </form>
       </div>
-
-      <button type="submit" class="btn btn-primary w-100 py-2">
-        🚀 Crear Empresa y Acceder
-      </button>
-
-    </form>
+    </div>
   </div>
 </div>

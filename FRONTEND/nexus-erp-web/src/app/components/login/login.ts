@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service'; // <--- Importar Service
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service'; // <--- Importar Serv
 })
 export class LoginComponent {
   
-  private authService = inject(AuthService); // <--- Inyectar Service
+  private authService = inject(AuthService);
   router = inject(Router);
 
   usuario = { email: '', password: '' };
@@ -23,70 +23,75 @@ export class LoginComponent {
   cargando: boolean = false;
 
   conectar() {
+    if (!this.usuario.email || !this.usuario.password) {
+      this.mostrarToast('Por favor, rellena todos los campos', 'warning');
+      return;
+    }
+
     this.cargando = true;
 
     this.authService.login(this.usuario).subscribe({
-        next: (res: any) => {
-          const datosBackend = res.data || res;
-          
-          console.group("🔍 DEBUG LOGIN");
-          console.log("Rol ID recibido:", datosBackend.rol_id);
-          
-          // --- ADAPTADOR DE ROLES (BASE DE DATOS -> FRONTEND) ---
-          let rolEstimado = 'empleado'; // Por defecto (rol_id 3)
+      next: (res: any) => {
+        const datosBackend = res.data || res;
+        
+        // Guardar token
+        localStorage.setItem('token', res.token);
+        
+        // Forzamos que el ID de rol sea numérico
+        const rolID = Number(datosBackend.rol_id);
 
-          // Convertimos a número para asegurar la comparación
-          const rolID = Number(datosBackend.rol_id);
+        // Determinamos el alias del rol para el Sidebar y Guards
+        let rolAlias = 'empleado';
+        if (rolID === 1) rolAlias = 'superadmin';
+        else if (rolID === 2) rolAlias = 'admin';
+        else if (!rolID && datosBackend.empresa_id === null) rolAlias = 'admin';
 
-          switch (rolID) {
-              case 1:
-                  rolEstimado = 'superadmin'; // Administrador Global (si existe)
-                  break;
-              case 2:
-                  rolEstimado = 'admin'; // ✅ EL ENCARGADO ES EL 'ADMIN' EN EL FRONTEND
-                  break;
-              case 3:
-                  rolEstimado = 'empleado'; // Empleado normal
-                  break;
-              default:
-                  // Si no tiene rol pero no tiene empresa, asumimos que es un jefe registrándose
-                  if (datosBackend.empresa_id === null) {
-                      rolEstimado = 'admin';
-                  }
-                  break;
-          }
-          console.log("Rol Asignado al Frontend:", rolEstimado);
-          console.groupEnd();
-          // ------------------------------------------------------
+        // Construimos el objeto de usuario final para el storage
+        const usuarioFinal = { 
+          ...datosBackend, 
+          rol_id: rolID, // Aseguramos que sea número
+          rol: rolAlias   // Aseguramos el alias
+        };
+        
+        localStorage.setItem('usuario', JSON.stringify(usuarioFinal));
 
-          const usuarioFinal = {
-            ...datosBackend,
-            rol: rolEstimado 
-          };
-          
-          localStorage.setItem('usuario', JSON.stringify(usuarioFinal));
-
-          if (usuarioFinal.empresa_id) {
-            this.router.navigate(['/dashboard']);
-          } else {
-            this.mostrarToast('Bienvenido. Vamos a crear tu empresa.', 'success');
-            setTimeout(() => this.router.navigate(['/crear-empresa']), 1000);
-          }
-          this.cargando = false;
-        },
-        error: (err) => {
-          console.error(err);
-          const msg = err.error?.message || 'Credenciales incorrectas';
-          this.mostrarToast(msg, 'error');
-          this.cargando = false;
+        // REDIRECCIÓN SEGÚN ROL
+        if (rolID === 1) {
+          this.mostrarToast('Acceso maestro concedido', 'success');
+          this.router.navigate(['/admin']); 
+        } else if (usuarioFinal.empresa_id) {
+          this.router.navigate(['/dashboard/home']); 
+        } else {
+          // Si es un encargado recién registrado sin empresa
+          this.mostrarToast('Login correcto. Configura tu empresa.', 'success');
+          setTimeout(() => this.router.navigate(['/crear-empresa']), 1000);
         }
-      });
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error en login:', err);
+        this.cargando = false;
+        
+        let msg = 'Error de conexión';
+        if (err.status === 401) {
+          msg = 'Correo o contraseña incorrectos';
+        } else if (err.error?.messages?.error) {
+          msg = err.error.messages.error;
+        } else if (err.error?.message) {
+          msg = err.error.message;
+        }
+
+        this.mostrarToast(msg, 'error');
+      }
+    });
   }
 
   mostrarToast(mensaje: string, tipo: 'warning' | 'error' | 'success') {
     this.toastMensaje = mensaje;
     this.toastTipo = tipo;
     this.toastVisible = true;
-    setTimeout(() => this.toastVisible = false, 3000);
+    setTimeout(() => {
+        if (this.toastVisible) this.toastVisible = false;
+    }, 3000);
   }
 }

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // Necesario para ngModel
+import { FormsModule } from '@angular/forms';
 import { RRHHService } from '../../services/rrhh.service';
 
 @Component({
@@ -17,62 +17,92 @@ export class GestionRRHHComponent implements OnInit {
   
   empleados: any[] = [];
 
+  // Variables para Toasts
+  toastVisible: boolean = false;
+  toastMensaje: string = '';
+  toastTipo: 'warning' | 'error' | 'success' = 'warning';
+
   ngOnInit() {
     this.cargarDatos();
   }
 
-  cargarDatos() {
-    if (!this.usuarioLogueado.empresa_id) return;
+  mostrarToast(mensaje: string, tipo: 'warning' | 'error' | 'success') {
+    this.toastMensaje = mensaje;
+    this.toastTipo = tipo;
+    this.toastVisible = true;
+    setTimeout(() => this.toastVisible = false, 3000);
+  }
 
-    this.rrhhService.getEmpleadosResumen(this.usuarioLogueado.empresa_id).subscribe({
+  cargarDatos() {
+  const empresaId = this.usuarioLogueado.empresa_id;
+  const adminId = this.usuarioLogueado.id;
+
+  if (empresaId && adminId) {
+    this.rrhhService.getEmpleadosResumen(empresaId, adminId).subscribe({
       next: (res: any) => {
-        // Filtrar para no mostrarse a uno mismo en la lista (opcional)
-        this.empleados = res.filter((u: any) => u.id != this.usuarioLogueado.id);
+        this.empleados = res.filter((u: any) => u.id != adminId);
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error('Error:', err);
+        this.mostrarToast('No se han podido cargar los empleados', 'error');
+      }
     });
   }
+}
 
   // --- GESTIÓN DE SOLICITUDES ---
   gestionarSolicitud(solicitud: any, accion: 'aprobada' | 'rechazada') {
-    if(!confirm(`¿Estás seguro de querer marcar como ${accion.toUpperCase()} esta solicitud?`)) return;
-
+    // Usamos el toast de advertencia informativo en lugar de confirm para flujo rápido
+    // Opcional: Podrías implementar un modal de confirmación si quieres seguridad extra
     this.rrhhService.responderSolicitud(solicitud.id, accion).subscribe({
       next: () => {
-        alert('Solicitud actualizada correctamente');
-        this.cargarDatos(); // Recargar para ver los días restados
+        this.mostrarToast(`Solicitud ${accion} correctamente`, 'success');
+        this.cargarDatos(); 
       },
-      error: (err) => alert('Error: ' + (err.error?.messages?.error || 'No se pudo procesar'))
+      error: (err) => {
+        const errorMsg = err.error?.messages?.error || 'No se pudo procesar la solicitud';
+        this.mostrarToast(errorMsg, 'error');
+      }
     });
   }
 
   // --- ACTUALIZAR DÍAS DISPONIBLES ---
   guardarDias(empleado: any) {
     this.rrhhService.actualizarDias(empleado.id, empleado.dias_disponibles).subscribe({
-        next: () => alert('Días actualizados correctamente'),
-        error: () => alert('Error al actualizar días')
+        next: () => this.mostrarToast('Días actualizados con éxito', 'success'),
+        error: () => this.mostrarToast('Error al actualizar los días', 'error')
     });
   }
 
   // --- SUBIR NÓMINA ---
   onFileSelected(event: any, userId: number, mes: string) {
-    if(!mes) { alert('Selecciona el mes primero'); return; }
+    if(!mes) { 
+      this.mostrarToast('Selecciona el mes de la nómina primero', 'warning'); 
+      return; 
+    }
     
     const file = event.target.files[0];
     if(file) {
+        if (file.type !== 'application/pdf') {
+            this.mostrarToast('Solo se admiten archivos PDF', 'warning');
+            return;
+        }
+
         const formData = new FormData();
         formData.append('nomina', file);
         formData.append('usuario_id', userId.toString());
         formData.append('mes', mes);
 
         this.rrhhService.subirNomina(formData).subscribe({
-            next: () => alert('Nómina subida correctamente'),
-            error: () => alert('Error al subir archivo')
+            next: () => {
+                this.mostrarToast('Nómina subida y asignada correctamente', 'success');
+                event.target.value = ''; // Limpiar el input file
+            },
+            error: () => this.mostrarToast('Error crítico al subir el archivo', 'error')
         });
     }
   }
 
-  // Helper para calcular días visualmente
   calcularDias(inicio: string, fin: string): number {
       const d1 = new Date(inicio);
       const d2 = new Date(fin);
