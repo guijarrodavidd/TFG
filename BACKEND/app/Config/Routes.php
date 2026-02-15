@@ -50,7 +50,7 @@ $routes->group('api', ['filter' => 'cors'], function($routes) {
 
     // --- OTROS ---
     $routes->get('dashboard', 'Dashboard::index');
-
+    $routes->get('dashboard/resumen/(:num)', 'Dashboard::index/$1');
     // --- GESTIÓN USUARIOS (CRUD Encargado) ---
     $routes->get('usuarios/empresa/(:num)', 'Usuarios::getByEmpresa/$1');
     $routes->post('usuarios/crear', 'Usuarios::create');
@@ -62,6 +62,12 @@ $routes->group('api', ['filter' => 'cors'], function($routes) {
     $routes->post('rrhh/subir-nomina', 'RRHH::subirNomina');
     $routes->post('rrhh/gestionar-ausencia', 'RRHH::gestionarAusencia'); // Aprobar/Rechazar
     $routes->post('rrhh/actualizar-dias', 'RRHH::actualizarDias');
+
+    $routes->get('admin/empresas/(:num)', 'Admin::index/$1');
+    $routes->post('admin/guardar-empresa', 'Admin::guardarEmpresa');
+    $routes->delete('admin/borrar-empresa/(:num)/(:num)', 'Admin::borrarEmpresa/$1/$2');
+    $routes->post('admin/crear-usuario', 'Admin::crearUsuario');
+    $routes->delete('admin/borrar-usuario/(:num)/(:num)', 'Admin::borrarUsuario/$1/$2');
     
     // Manejar todas las peticiones OPTIONS automáticamente (CORS Preflight)
     $routes->options('(:any)', function() {});

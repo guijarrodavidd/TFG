@@ -1,185 +1,131 @@
-<div class="container-fluid p-4 fade-in">
+<div class="container-fluid p-4" style="background-color: #f8f9fa; min-height: 100vh;">
+  
+  <div class="mb-4">
+    <h2 class="fw-bold text-dark mb-1">Buenas tardes, {{ usuarioLogueado.nombre }}!</h2>
+    <p class="text-muted small">Hoy en {{ usuarioLogueado.empresa_nombre || 'Tu Empresa' }}</p>
+  </div>
+
+  <div class="row g-4">
     
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold text-dark mb-0">Control de Presencia</h2>
-            <p class="text-muted small">Panel del empleado</p>
+    <div class="col-lg-4">
+      
+      <div class="card border-0 shadow-sm rounded-4 mb-4 p-3">
+        <div class="card-body">
+          <label class="text-uppercase fw-bold text-muted mb-3" style="font-size: 0.7rem;">FICHAJE</label>
+          <div class="d-flex justify-content-between align-items-start mb-4">
+            <div>
+              <h3 class="fw-bold mb-0">{{ fichajeActivo ? 'En curso' : 'Salida' }}</h3>
+              <p class="text-muted small">{{ fichajeActivo ? 'Estás trabajando' : 'No estás trabajando' }}</p>
+            </div>
+            <div class="text-end">
+              <h2 class="fw-bold text-primary mb-0">{{ tiempoTrabajado }}</h2>
+              <span class="text-muted small">{{ fechaActual | date:'dd MMM yyyy' }}</span>
+            </div>
+          </div>
+          <button class="btn btn-dark w-100 py-2 rounded-pill fw-bold" (click)="fichar()">
+            <i class="bi me-2" [ngClass]="fichajeActivo ? 'bi-stop-fill' : 'bi-play-fill'"></i>
+            {{ fichajeActivo ? 'Finalizar' : 'Fichar' }}
+          </button>
         </div>
-        <span class="badge rounded-pill px-3 py-2 border" 
-              [ngClass]="fichajeActivo ? 'bg-success-subtle text-success border-success' : 'bg-light text-secondary border-secondary'">
-            <i class="bi me-1" [ngClass]="fichajeActivo ? 'bi-circle-fill' : 'bi-circle'"></i>
-            {{ fichajeActivo ? 'ACTIVO' : 'INACTIVO' }}
-        </span>
-    </div>
+      </div>
 
-    <div class="row g-4 mb-5">
-        
-        <div class="col-lg-5">
-            <div class="card h-100 border-0 shadow-sm rounded-4 text-center justify-content-center bg-white overflow-hidden">
-                <div class="card-body p-5 d-flex flex-column justify-content-center">
-                    
-                    <h6 class="text-muted text-uppercase ls-2 fw-bold mb-4">Tiempo Transcurrido</h6>
-                    
-                    <div class="display-1 fw-bold mb-4 font-monospace text-dark tracking-tight" style="font-size: 4.5rem;">
-                        {{ tiempoTrabajado }}
-                    </div>
-
-                    <button class="btn btn-lg w-100 py-3 rounded-pill fw-bold fs-5 shadow-sm transition-all"
-                            [ngClass]="fichajeActivo ? 'btn-danger' : 'btn-success'"
-                            (click)="fichar()">
-                        <i class="bi me-2" [ngClass]="fichajeActivo ? 'bi-stop-circle-fill' : 'bi-play-circle-fill'"></i>
-                        {{ fichajeActivo ? 'FINALIZAR JORNADA' : 'INICIAR JORNADA' }}
+      <div class="card border-0 shadow-sm rounded-4 mb-4 p-3">
+        <div class="card-body text-center">
+            <h6 class="fw-bold text-start mb-3">Ausencias</h6>
+            <div class="row g-2">
+                <div class="col-7 bg-light rounded-4 p-3">
+                    <h2 class="fw-bold mb-0">{{ usuarioLogueado.dias_disponibles || 0 }}</h2>
+                    <p class="text-muted small mb-0">Días disponibles</p>
+                </div>
+                <div class="col-5">
+                    <button class="btn btn-outline-dark h-100 w-100 rounded-4 d-flex flex-column align-items-center justify-content-center" (click)="enviarSolicitud()">
+                        <i class="bi bi-calendar-plus fs-4"></i>
+                        <span class="small fw-bold">Solicitar</span>
                     </button>
-
-                    <div class="mt-4 text-muted small">
-                        <i class="bi bi-clock me-1"></i>
-                        {{ fichajeActivo ? 'Entrada registrada a las ' + (fichajeActivo.entrada | date:'HH:mm') : 'Jornada cerrada' }}
-                    </div>
-                </div>
-                <div class="progress" style="height: 5px;" *ngIf="fichajeActivo">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 100%"></div>
                 </div>
             </div>
         </div>
+      </div>
 
-        <div class="col-lg-7">
-            <div class="card h-100 border-0 shadow-sm rounded-4 bg-white">
-                <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold mb-0">Últimos Fichajes</h5>
-                    <small class="text-muted">Historial reciente</small>
-                </div>
-                
-                <div class="card-body px-4 pb-4 overflow-auto" style="max-height: 400px;">
-                    
-                    <div class="list-group list-group-flush">
-                        <div *ngFor="let f of datos.fichajes" class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center border-bottom">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-secondary" style="width: 45px; height: 45px;">
-                                    <i class="bi bi-calendar4-week"></i>
-                                </div>
-                                <div>
-                                    <div class="fw-bold text-dark">{{ f.entrada | date:'EEEE, d MMMM' | titlecase }}</div>
-                                    <div class="small mt-1">
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle me-2">
-                                            <i class="bi bi-box-arrow-in-right"></i> {{ f.entrada | date:'HH:mm' }}
-                                        </span>
-                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle" *ngIf="f.salida">
-                                            <i class="bi bi-box-arrow-right"></i> {{ f.salida | date:'HH:mm' }}
-                                        </span>
-                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle animate-pulse" *ngIf="!f.salida">
-                                            En curso...
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div *ngIf="datos.fichajes?.length === 0" class="text-center py-5 text-muted">
-                            <i class="bi bi-clock-history display-4 mb-3 d-block opacity-25"></i>
-                            No hay registros de fichaje recientes.
-                        </div>
-                    </div>
-
+      <div class="card border-0 shadow-sm rounded-4 p-3">
+        <div class="card-body" *ngFor="let nom of $any(datos.nominas) | slice:0:1">
+          <h6 class="fw-bold mb-3">Última Nómina</h6>
+          <div class="d-flex align-items-center justify-content-between p-3 rounded-4 bg-light">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-file-earmark-text-fill text-success fs-3 me-3"></i>
+                <div>
+                    <h6 class="fw-bold mb-0">{{ $any(nom).mes }}</h6>
+                    <small class="text-muted">Descargar PDF</small>
                 </div>
             </div>
+            <a [href]="$any(nom).url_descarga" target="_blank" class="btn btn-light rounded-circle shadow-sm">
+                <i class="bi bi-download"></i>
+            </a>
+          </div>
         </div>
-    </div>
-
-    <hr class="my-5 border-light-subtle">
-
-    <div class="row g-4">
         
-        <div class="col-md-5">
-            <div class="card h-100 border-0 shadow-sm rounded-4">
-                <div class="card-header bg-white border-0 pt-4 px-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="fw-bold mb-0">Solicitar Ausencia</h5>
-                        <span class="badge bg-primary rounded-pill px-3 py-2">
-                            {{ usuarioLogueado.dias_disponibles || 0 }} días disponibles
-                        </span>
-                    </div>
-                </div>
-                <div class="card-body p-4">
-                    <form (ngSubmit)="enviarSolicitud()">
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold text-muted">TIPO</label>
-                            <select class="form-select bg-light border-0" [(ngModel)]="solicitud.tipo" name="tipo">
-                                <option value="vacaciones">Vacaciones</option>
-                                <option value="baja">Baja Médica</option>
-                                <option value="asuntos">Asuntos Propios</option>
-                            </select>
-                        </div>
+        <div class="card-body text-center py-4" *ngIf="!datos.nominas || datos.nominas.length === 0">
+             <small class="text-muted">No hay nóminas disponibles.</small>
+        </div>
+      </div>
 
-                        <div class="row g-2 mb-3">
-                            <div class="col-6">
-                                <label class="form-label small fw-bold text-muted">DESDE</label>
-                                <input type="date" class="form-control bg-light border-0" [(ngModel)]="solicitud.fecha_inicio" name="fi">
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label small fw-bold text-muted">HASTA</label>
-                                <input type="date" class="form-control bg-light border-0" [(ngModel)]="solicitud.fecha_fin" name="ff">
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold text-muted">COMENTARIOS</label>
-                            <textarea class="form-control bg-light border-0" rows="2" [(ngModel)]="solicitud.comentarios" name="com"></textarea>
-                        </div>
-
-                        <button class="btn btn-dark w-100 rounded-pill fw-bold mt-2">
-                            <i class="bi bi-send me-2"></i> Enviar Solicitud
-                        </button>
-                    </form>
-                </div>
-            </div>
+    </div> 
+    <div class="col-lg-8">
+      
+      <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h5 class="fw-bold mb-0">Control Horario</h5>
+          
+          <div class="btn-group shadow-sm">
+            <button class="btn btn-outline-secondary btn-sm rounded-start-pill px-3" (click)="cambiarSemana(-1)">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="btn btn-light btn-sm pe-none text-dark fw-bold px-4" style="min-width: 160px;">
+                {{ textoSemana }}
+            </button>
+            <button class="btn btn-outline-secondary btn-sm rounded-end-pill px-3" (click)="cambiarSemana(1)">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
         </div>
 
-        <div class="col-md-7">
-            
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold mb-0">Mis Nóminas</h5>
-                </div>
-                <div class="card-body px-4 py-3">
-                    <div class="d-flex flex-wrap gap-2">
-                        <a *ngFor="let nom of datos.nominas" [href]="nom.url_descarga" target="_blank" 
-                           class="btn btn-outline-light text-dark border d-flex align-items-center gap-2 px-3 py-2 rounded-3">
-                            <i class="bi bi-file-earmark-pdf-fill text-danger fs-5"></i> 
-                            <div class="text-start lh-1">
-                                <div class="fw-bold small">{{ nom.mes }}</div>
-                                <div class="text-muted" style="font-size: 0.7rem">PDF</div>
-                            </div>
-                        </a>
-                        <span *ngIf="datos.nominas?.length === 0" class="text-muted small py-2">No tienes nóminas disponibles.</span>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle border-0">
+            <tbody>
+              <tr *ngFor="let f of fichajesFiltrados" class="border-bottom">
+                <td class="ps-0 py-3">
+                    <div class="bg-light rounded-circle p-2 text-center" style="width: 40px;">
+                        <i class="bi bi-calendar-event"></i>
                     </div>
-                </div>
-            </div>
-
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-header bg-white border-0 pt-4 px-4">
-                    <h5 class="fw-bold mb-0">Estado Solicitudes</h5>
-                </div>
-                <div class="card-body px-4 py-3">
-                    <div class="list-group list-group-flush">
-                        <div *ngFor="let sol of datos.solicitudes" class="list-group-item px-0 py-2 border-0 d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="fw-bold text-dark">{{ sol.tipo | titlecase }}</span>
-                                <span class="text-muted small ms-2">({{ sol.fecha_inicio | date:'dd MMM' }} - {{ sol.fecha_fin | date:'dd MMM' }})</span>
-                            </div>
-                            <span class="badge rounded-pill"
-                                  [ngClass]="{
-                                    'bg-warning text-dark': sol.estado === 'pendiente',
-                                    'bg-success': sol.estado === 'aprobada',
-                                    'bg-danger': sol.estado === 'rechazada'
-                                  }">
-                                {{ sol.estado | uppercase }}
-                            </span>
-                        </div>
-                         <span *ngIf="datos.solicitudes?.length === 0" class="text-muted small py-2">No hay solicitudes recientes.</span>
-                    </div>
-                </div>
-            </div>
-
+                </td>
+                <td>
+                    <span class="fw-bold">{{ f.entrada | date:'EEEE, d MMMM' | titlecase }}</span>
+                </td>
+                <td>
+                  <div class="d-flex gap-2">
+                    <span class="badge rounded-pill bg-success bg-opacity-10 text-success border border-success px-3 py-2">
+                        → {{ f.entrada | date:'HH:mm' }}
+                    </span>
+                    <span *ngIf="f.salida" class="badge rounded-pill bg-danger bg-opacity-10 text-danger border border-danger px-3 py-2">
+                        ← {{ f.salida | date:'HH:mm' }}
+                    </span>
+                  </div>
+                </td>
+                <td class="text-end fw-bold text-muted small">
+                    {{ f.salida ? 'Jornada Completa' : 'En curso' }}
+                </td>
+              </tr>
+              
+              <tr *ngIf="fichajesFiltrados.length === 0">
+                  <td colspan="4" class="text-center py-5 text-muted">
+                      No hay registros en esta semana.
+                  </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
+
+    </div>
     </div>
 </div>

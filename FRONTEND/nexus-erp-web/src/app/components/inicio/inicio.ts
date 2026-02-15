@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-inicio',
@@ -10,23 +11,36 @@ import { CommonModule } from '@angular/common';
 })
 export class Inicio implements OnInit {
 
+  private dashboardService = inject(DashboardService);
+  
   usuario: any = {};
-
-  // Datos "Mock" (Falsos) para el diseño
-  proyectos = [
-    { nombre: 'Alexander Smith', rol: 'CEO', avatar: 'https://ui-avatars.com/api/?name=Alexander+Smith&background=random' },
-    { nombre: 'Sarah Connor', rol: 'Diseñadora', avatar: 'https://ui-avatars.com/api/?name=Sarah+Connor&background=random' },
-    { nombre: 'John Doe', rol: 'Dev', avatar: 'https://ui-avatars.com/api/?name=John+Doe&background=random' }
-  ];
-
-  facturas = [
-    { cliente: 'Tech Solutions', estado: 'Pagado', monto: 1200, color: 'success' },
-    { cliente: 'Maria Garcia', estado: 'Pendiente', monto: 350, color: 'warning' },
-    { cliente: 'Nexus Inc', estado: 'Atrasado', monto: 12999, color: 'danger' }
-  ];
+  
+  // Datos iniciales
+  rendimiento: any = { total: 0, ventas: 0 };
+  ventasRecientes: any[] = [];
+  equipo: any[] = [];
 
   ngOnInit() {
     const data = localStorage.getItem('usuario');
-    if (data) this.usuario = JSON.parse(data);
+    if (data) {
+      this.usuario = JSON.parse(data);
+      this.cargarDatosDashboard();
+    }
+  }
+
+  cargarDatosDashboard() {
+    // LLAMADA CORREGIDA: Solo enviamos el ID del usuario
+    this.dashboardService.getResumen(this.usuario.id).subscribe({
+      next: (res: any) => {
+        console.log('Datos Dashboard:', res); // Debug en consola
+        this.rendimiento = res.rendimiento;
+        this.ventasRecientes = res.recientes;
+        this.equipo = res.equipo;
+      },
+      error: (err) => {
+        // Ahora si hay error, saldrá el mensaje real del backend
+        console.error('Error:', err);
+      }
+    });
   }
 }

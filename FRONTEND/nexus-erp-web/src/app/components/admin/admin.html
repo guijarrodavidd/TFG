@@ -1,0 +1,139 @@
+<div class="container py-5">
+  
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h2 class="fw-bold mb-0">Panel de Administración</h2>
+      <p class="text-muted">Gestión global de Nexus ERP</p>
+    </div>
+    <button class="btn btn-dark rounded-pill px-4 fw-bold shadow" (click)="abrirModalEmpresa()">
+      <i class="bi bi-plus-lg me-2"></i>Nueva Empresa
+    </button>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-4" *ngFor="let emp of empresas">
+      <div class="card h-100 border-0 shadow-sm rounded-4 card-hover cursor-pointer" style="transition: transform 0.2s;">
+        <div class="card-body p-4 d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
+                <i class="bi bi-building fs-4"></i>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
+                <ul class="dropdown-menu border-0 shadow">
+                    <li><a class="dropdown-item" href="javascript:void(0)" (click)="abrirModalEmpresa(emp)">Editar</a></li>
+                    <li><a class="dropdown-item text-danger" href="javascript:void(0)" (click)="borrarEmpresa(emp.id)">Eliminar</a></li>
+                </ul>
+            </div>
+          </div>
+          
+          <h5 class="fw-bold mb-1">{{ emp.nombre }}</h5>
+          <p class="text-muted small mb-3">{{ emp.direccion || 'Sin dirección' }}</p>
+          
+          <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+             <div class="d-flex align-items-center text-muted small">
+                <i class="bi bi-people me-2"></i> {{ emp.usuarios?.length || 0 }} Usuarios
+             </div>
+             <button class="btn btn-outline-primary btn-sm rounded-pill px-3" (click)="verDetalles(emp)">
+                Administrar
+             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="modalEmpresa" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow">
+      <div class="modal-header border-0 p-4">
+        <h5 class="fw-bold">{{ formEmpresa.id ? 'Editar' : 'Nueva' }} Empresa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4 pt-0">
+        <form (ngSubmit)="guardarEmpresa()">
+            <div class="mb-3">
+                <label class="form-label small text-muted fw-bold">NOMBRE</label>
+                <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="formEmpresa.nombre" name="nombre" required>
+            </div>
+            <div class="row g-2 mb-3">
+                <div class="col-6">
+                    <label class="form-label small text-muted fw-bold">CIF</label>
+                    <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="formEmpresa.cif" name="cif">
+                </div>
+                <div class="col-6">
+                    <label class="form-label small text-muted fw-bold">TELÉFONO</label>
+                    <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="formEmpresa.telefono" name="telefono">
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label small text-muted fw-bold">DIRECCIÓN</label>
+                <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="formEmpresa.direccion" name="dir">
+            </div>
+            <button type="submit" class="btn btn-dark w-100 py-2 rounded-pill fw-bold">Guardar Datos</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalDetalle" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 rounded-4 shadow">
+        <div class="modal-header border-0 p-4 pb-0">
+          <div>
+            <h4 class="fw-bold mb-0">{{ empresaSeleccionada.nombre }}</h4>
+            <span class="badge bg-light text-dark border mt-2">CIF: {{ empresaSeleccionada.cif }}</span>
+            <span class="badge bg-light text-dark border mt-2 ms-2">Token: {{ empresaSeleccionada.token_invitacion }}</span>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          
+          <div class="row g-4">
+            <div class="col-md-4 border-end">
+                <h6 class="fw-bold mb-3">Datos Fiscales</h6>
+                <p class="small text-muted mb-1"><i class="bi bi-geo-alt me-2"></i>{{ empresaSeleccionada.direccion }}</p>
+                <p class="small text-muted mb-4"><i class="bi bi-telephone me-2"></i>{{ empresaSeleccionada.telefono }}</p>
+
+                <hr>
+                <h6 class="fw-bold mb-3">Añadir Usuario</h6>
+                <form (ngSubmit)="agregarUsuario()">
+                    <input type="text" placeholder="Nombre" class="form-control form-control-sm mb-2 bg-light border-0" [(ngModel)]="formUsuario.nombre" name="unombre">
+                    <input type="email" placeholder="Email" class="form-control form-control-sm mb-2 bg-light border-0" [(ngModel)]="formUsuario.email" name="uemail">
+                    <select class="form-select form-select-sm mb-3 bg-light border-0" [(ngModel)]="formUsuario.rol_id" name="urol">
+                        <option [value]="2">Encargado</option>
+                        <option [value]="3">Empleado</option>
+                    </select>
+                    <button class="btn btn-primary btn-sm w-100 rounded-pill">Crear Usuario</button>
+                </form>
+            </div>
+
+            <div class="col-md-8">
+                <h6 class="fw-bold mb-3">Usuarios Activos ({{ empresaSeleccionada.usuarios?.length }})</h6>
+                <div class="list-group list-group-flush">
+                    <div *ngFor="let u of empresaSeleccionada.usuarios" class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <div>
+                            <span class="fw-bold d-block">{{ u.nombre }}</span>
+                            <small class="text-muted">{{ u.email }}</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary me-3">{{ u.rol_nombre }}</span>
+                            <button class="btn btn-light btn-sm text-danger rounded-circle" (click)="borrarUsuario(u.id)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div *ngIf="!empresaSeleccionada.usuarios?.length" class="text-center py-5 text-muted">
+                        No hay usuarios registrados.
+                    </div>
+                </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
