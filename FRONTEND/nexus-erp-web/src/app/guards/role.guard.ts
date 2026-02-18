@@ -12,13 +12,12 @@ export const roleGuard: CanActivateFn = (route, state) => {
 
   const user = JSON.parse(userStr);
   
-  // Debug para consola
-  console.log("🛡️ Guard - Usuario:", user.nombre, "| Rol ID:", user.rol_id, "| Rol Alias:", user.rol);
+  console.log("Guard - Usuario:", user.nombre, "| Rol ID:", user.rol_id, "| Rol Alias:", user.rol);
 
-  // Convertimos a número para evitar problemas de tipos (string vs number)
+  // PASAR A NUMERO POR SI DA ERROR
   const rolID = Number(user.rol_id);
 
-  // Verificación: Rol 1 (SuperAdmin) o Rol 2 (Encargado/Admin empresa)
+  // VERIFICAR SI ES ADMIN O ENCARGADO
   const esAutorizado = 
     rolID === 1 || 
     rolID === 2 || 
@@ -29,7 +28,7 @@ export const roleGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // Si no es ninguno de los anteriores, rebotamos al home con el error para el Toast
+  // MANEJO DE ERRORES POR USUARIO, SI NO SE PUEDE DEVOLVER A HOME
   console.error("🚫 Acceso denegado para el rol:", rolID);
   router.navigate(['/dashboard/home'], { queryParams: { error: 'unauthorized' } });
   return false;

@@ -18,12 +18,12 @@ export class RegistroEncargado {
 
   usuario = { nombre: '', email: '', password: '' };
   
-  // Variables para Toast
+  // TOASTS
   toastVisible: boolean = false;
   toastMensaje: string = '';
   toastTipo: 'warning' | 'error' | 'success' = 'warning';
 
-  // Estado de la seguridad de la contraseña
+  // FUERZA DE CONTRASEÑA
   fuerza = { 
     puntuacion: 0, 
     color: 'bg-danger', 
@@ -82,7 +82,7 @@ export class RegistroEncargado {
       return;
     }
 
-    const datosRegistro = { ...this.usuario, rol_id: 2 }; // Usamos el ID de rol encargado
+    const datosRegistro = { ...this.usuario, rol_id: 2 };
 
     this.authService.registrarEncargado(datosRegistro).subscribe({
         next: (res: any) => {
@@ -90,7 +90,7 @@ export class RegistroEncargado {
             id: res.id || (res.data && res.data.id), 
             nombre: this.usuario.nombre,
             email: this.usuario.email,
-            rol: 'admin', // Mantenemos el alias para lógica de sidebar
+            rol: 'admin',
             rol_id: 2,
             empresa_id: null
           };

@@ -2,11 +2,12 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PersonalService } from '../../services/personal.service';
+import { HolidaysWidgetComponent } from '../widgets/holidays-widget/holidays-widget';
 
 @Component({
   selector: 'app-personal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HolidaysWidgetComponent],
   templateUrl: './personal.html',
   providers: [DatePipe]
 })
@@ -15,14 +16,12 @@ export class PersonalComponent implements OnInit, OnDestroy {
   personalService = inject(PersonalService);
   usuarioLogueado = JSON.parse(localStorage.getItem('usuario') || '{}');
   
-  // Variables de Estado
   fichajeActivo: any = null; 
   tiempoTrabajado: string = '00:00:00';
-  fechaActual = new Date(); // Para el HTML
+  fechaActual = new Date();
   lunesActual = this.getLunes(new Date()); 
   private timerInterval: any;
 
-  // Estructura de datos segura
   datos: any = {
     usuario: {},
     nominas: [],
@@ -34,7 +33,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.cargarDashboard();
-    // Iniciar el reloj inmediatamente
     setInterval(() => {
         if(this.fichajeActivo) this.gestionarCronometro();
     }, 1000);
@@ -44,7 +42,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
     if (this.timerInterval) clearInterval(this.timerInterval);
   }
 
-  // --- NAVEGACIÓN SEMANAL ---
   getLunes(d: Date) {
     d = new Date(d);
     const day = d.getDay();
@@ -64,7 +61,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
     return `${this.lunesActual.getDate()} ${this.lunesActual.toLocaleString('es-ES', {month:'short'})} - ${finSemana.getDate()} ${finSemana.toLocaleString('es-ES', {month:'short'})}`;
   }
 
-  // --- FILTRO DE FICHAJES (Semana visible) ---
   get fichajesFiltrados() {
     if (!this.datos.fichajes) return [];
 
@@ -76,17 +72,13 @@ export class PersonalComponent implements OnInit, OnDestroy {
     fin.setHours(23, 59, 59, 999);
 
     return this.datos.fichajes.filter((f: any) => {
-      // f.entrada ya es objeto Date gracias a cargarDashboard
       return f.entrada >= inicio && f.entrada <= fin;
     });
   }
 
-  // --- LÓGICA DE FECHAS (Corrección horaria) ---
   private corregirFecha(fechaStr: string): Date {
     if (!fechaStr) return new Date();
-    // Cambiar espacio por T para formato ISO
     const fecha = new Date(fechaStr.replace(' ', 'T'));
-    // Sumar 1 hora (3600 * 1000 ms) para ajuste horario manual si servidor va mal
     return new Date(fecha.getTime() + 3600 * 1000); 
   }
 
@@ -95,7 +87,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
 
     this.personalService.getDashboard(this.usuarioLogueado.id).subscribe({
       next: (res: any) => {
-        // ... (lógica de fechas que ya tienes) ...
         if (res.fichajes) {
           res.fichajes = res.fichajes.map((f: any) => ({
             ...f,
@@ -107,12 +98,8 @@ export class PersonalComponent implements OnInit, OnDestroy {
         this.datos = res;
         this.fichajeActivo = res.fichaje_activo; 
         
-        // ✅ ESTO ES LO IMPORTANTE: ACTUALIZAR EL NOMBRE DE LA EMPRESA
         if (res.usuario) {
-            // Fusionamos los datos nuevos (que traen empresa_nombre) con los que ya teníamos
             this.usuarioLogueado = { ...this.usuarioLogueado, ...res.usuario };
-            
-            // Guardamos para que al recargar la página siga saliendo
             localStorage.setItem('usuario', JSON.stringify(this.usuarioLogueado));
         }
 
@@ -139,7 +126,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
         return;
     }
     
-    // Usamos la misma corrección para el inicio
     const inicio = this.corregirFecha(this.fichajeActivo.entrada).getTime();
     const ahora = new Date().getTime();
     let diferencia = ahora - inicio;

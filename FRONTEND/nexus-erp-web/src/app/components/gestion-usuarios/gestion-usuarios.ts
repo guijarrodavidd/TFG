@@ -20,8 +20,6 @@ export class GestionUsuariosComponent implements OnInit {
   empleados: any[] = [];
   empleadoForm: any = { id: null, nombre: '', email: '', password: '' };
   esEdicion = false;
-  
-  // Guardamos referencia al modal para cerrarlo limpiamente
   private modalInstance: any;
 
   ngOnInit() {
@@ -31,7 +29,6 @@ export class GestionUsuariosComponent implements OnInit {
   cargarEmpleados() {
     if(!this.usuarioLogueado.empresa_id) return;
     
-    // Ahora esta función SÍ existe en el servicio actualizado
     this.rrhhService.getUsuarios(this.usuarioLogueado.empresa_id).subscribe({
         next: (res: any) => this.empleados = res,
         error: (err) => console.error('Error cargando usuarios:', err)
@@ -42,10 +39,10 @@ export class GestionUsuariosComponent implements OnInit {
     this.esEdicion = !!empleado;
     
     if (empleado) {
-        // Al editar, copiamos los datos y limpiamos la contraseña para no enviarla si no se cambia
+        // NO GUARDAR CONTRASEÑA SI NO HA FUNCIONADO
         this.empleadoForm = { ...empleado, password: '' };
     } else {
-        // Al crear, inicializamos todo
+        // SI FUNCIONA INICIAR TODO
         this.empleadoForm = { 
             id: null, 
             nombre: '', 

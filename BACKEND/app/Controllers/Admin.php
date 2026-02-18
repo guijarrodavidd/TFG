@@ -6,9 +6,7 @@ class Admin extends ResourceController {
     
     protected $format = 'json';
 
-    /**
-     * SEGURIDAD: Solo permite el paso si el usuario es Rol 1 (Superadmin)
-     */
+    // SOLO PARA SUPERADMIN
     private function verificarAdmin($usuarioId) {
         if (!$usuarioId) return false;
         $db = \Config\Database::connect();

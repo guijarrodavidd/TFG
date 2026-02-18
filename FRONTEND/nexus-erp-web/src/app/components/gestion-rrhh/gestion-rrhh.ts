@@ -17,7 +17,7 @@ export class GestionRRHHComponent implements OnInit {
   
   empleados: any[] = [];
 
-  // Variables para Toasts
+  // TOASTS VARIABLES
   toastVisible: boolean = false;
   toastMensaje: string = '';
   toastTipo: 'warning' | 'error' | 'success' = 'warning';
@@ -49,11 +49,8 @@ export class GestionRRHHComponent implements OnInit {
     });
   }
 }
-
-  // --- GESTIÓN DE SOLICITUDES ---
+  // PARA SOLICITAR VACACIONES + TOAST DE VALIDACIÓN O ERROR
   gestionarSolicitud(solicitud: any, accion: 'aprobada' | 'rechazada') {
-    // Usamos el toast de advertencia informativo en lugar de confirm para flujo rápido
-    // Opcional: Podrías implementar un modal de confirmación si quieres seguridad extra
     this.rrhhService.responderSolicitud(solicitud.id, accion).subscribe({
       next: () => {
         this.mostrarToast(`Solicitud ${accion} correctamente`, 'success');
@@ -66,7 +63,7 @@ export class GestionRRHHComponent implements OnInit {
     });
   }
 
-  // --- ACTUALIZAR DÍAS DISPONIBLES ---
+  // MODIFICAR VACACIONES
   guardarDias(empleado: any) {
     this.rrhhService.actualizarDias(empleado.id, empleado.dias_disponibles).subscribe({
         next: () => this.mostrarToast('Días actualizados con éxito', 'success'),
@@ -74,7 +71,7 @@ export class GestionRRHHComponent implements OnInit {
     });
   }
 
-  // --- SUBIR NÓMINA ---
+  // SUBIR NOMINA + MANEJO DE ERRORES SI NO SE SUBE
   onFileSelected(event: any, userId: number, mes: string) {
     if(!mes) { 
       this.mostrarToast('Selecciona el mes de la nómina primero', 'warning'); 
@@ -96,7 +93,7 @@ export class GestionRRHHComponent implements OnInit {
         this.rrhhService.subirNomina(formData).subscribe({
             next: () => {
                 this.mostrarToast('Nómina subida y asignada correctamente', 'success');
-                event.target.value = ''; // Limpiar el input file
+                event.target.value = '';
             },
             error: () => this.mostrarToast('Error crítico al subir el archivo', 'error')
         });

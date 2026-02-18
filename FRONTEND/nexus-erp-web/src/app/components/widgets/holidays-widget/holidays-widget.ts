@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms'; // <--- IMPORTANTE
+import { FormsModule } from '@angular/forms'; 
 
 @Component({
   selector: 'app-holidays-widget',
-  standalone: true, // <--- ESTA ES LA LÍNEA QUE TE FALTA Y DA EL ERROR
-  imports: [CommonModule, FormsModule], // <--- Necesario para que funcione
+  standalone: true,
+  imports: [CommonModule, FormsModule], 
   templateUrl: './holidays-widget.html',
   styleUrls: ['./holidays-widget.css']
 })
@@ -21,7 +21,7 @@ export class HolidaysWidgetComponent implements OnInit {
 
   comunidadSeleccionada: string = 'ES-VC';
 
-  // Lista de Comunidades
+  // LISTA DE CCAA
   comunidades = [
     { code: 'ES-AN', nombre: 'Andalucía' },
     { code: 'ES-AR', nombre: 'Aragón' },
@@ -71,7 +71,7 @@ export class HolidaysWidgetComponent implements OnInit {
     
     this.festivosFiltrados = this.todosLosFestivos.filter(f => {
       const esFuturo = new Date(f.date) >= hoy;
-      // Lógica: Si es global (nacional) O coincide con la comunidad seleccionada
+      // SI ES NACIONAL O SOLO DE COMUNIDAD
       const aplicaAComunidad = f.global === true || (f.counties && f.counties.includes(this.comunidadSeleccionada));
 
       return esFuturo && aplicaAComunidad;

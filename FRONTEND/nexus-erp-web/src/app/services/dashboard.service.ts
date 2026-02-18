@@ -7,7 +7,6 @@ export class DashboardService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  // Modificado: Solo pide usuarioId
   getResumen(usuarioId: number) {
     return this.http.get(`${this.apiUrl}/dashboard/resumen/${usuarioId}`);
   }

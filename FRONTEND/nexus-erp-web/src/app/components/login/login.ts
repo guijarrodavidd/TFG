@@ -34,23 +34,19 @@ export class LoginComponent {
       next: (res: any) => {
         const datosBackend = res.data || res;
         
-        // Guardar token
         localStorage.setItem('token', res.token);
-        
-        // Forzamos que el ID de rol sea numérico
         const rolID = Number(datosBackend.rol_id);
 
-        // Determinamos el alias del rol para el Sidebar y Guards
+        // DEPENDE DE COMO SE HAYA CREADO EL USUARIO TIENE UN ROLID U OTRO, SIRVE PARA EL GUARD
         let rolAlias = 'empleado';
         if (rolID === 1) rolAlias = 'superadmin';
         else if (rolID === 2) rolAlias = 'admin';
         else if (!rolID && datosBackend.empresa_id === null) rolAlias = 'admin';
 
-        // Construimos el objeto de usuario final para el storage
         const usuarioFinal = { 
           ...datosBackend, 
-          rol_id: rolID, // Aseguramos que sea número
-          rol: rolAlias   // Aseguramos el alias
+          rol_id: rolID,
+          rol: rolAlias
         };
         
         localStorage.setItem('usuario', JSON.stringify(usuarioFinal));
@@ -62,7 +58,7 @@ export class LoginComponent {
         } else if (usuarioFinal.empresa_id) {
           this.router.navigate(['/dashboard/home']); 
         } else {
-          // Si es un encargado recién registrado sin empresa
+          // MANEJO DE ERROR SI ES ENCARGADO SIN EMPRESA
           this.mostrarToast('Login correcto. Configura tu empresa.', 'success');
           setTimeout(() => this.router.navigate(['/crear-empresa']), 1000);
         }

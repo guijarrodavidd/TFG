@@ -9,8 +9,6 @@ class Personal extends ResourceController {
     public function getDashboard($userId = null) {
         $db = \Config\Database::connect();
 
-        // 1. USUARIO (AHORA CON NOMBRE DE EMPRESA)
-        // Usamos 'usuarios.id' para evitar el error "Column 'id' is ambiguous"
         $usuario = $db->table('usuarios')
                       ->select('usuarios.id, usuarios.nombre, usuarios.email, usuarios.dias_disponibles, usuarios.empresa_id, empresas.nombre as empresa_nombre')
                       ->join('empresas', 'empresas.id = usuarios.empresa_id', 'left')
@@ -19,27 +17,26 @@ class Personal extends ResourceController {
 
         if (!$usuario) return $this->failNotFound('Usuario no encontrado');
 
-        // 2. FICHAJES
+        // FICHAJES
         $fichajes = $db->table('fichajes')
                        ->where('usuario_id', $userId)
                        ->orderBy('entrada', 'DESC')
                        ->get()->getResultArray();
 
-        // 3. ESTADO ACTUAL
+        // ESTADO ACTUAL DE FICHAJE
         $fichajeActivo = $db->table('fichajes')
                             ->where('usuario_id', $userId)
                             ->where('salida', null)
                             ->orderBy('entrada', 'DESC')
                             ->get()->getRowArray();
 
-        // 4. NÓMINAS (Con arreglo de URL)
+        // NÓMINAS
         $nominas = $db->table('nominas')
                       ->where('usuario_id', $userId)
                       ->orderBy('created_at', 'DESC')
                       ->get()->getResultArray();
 
         foreach ($nominas as &$n) {
-            // Parche de seguridad para la URL
             $rutaBase = str_replace('index.php', '', base_url());
             if (strpos($rutaBase, 'BACKEND') === false) {
                 $rutaBase = 'https://davidguijarro.com.es/tfg/BACKEND/public/';
@@ -53,7 +50,7 @@ class Personal extends ResourceController {
                           ->get()->getResultArray();
 
         return $this->respond([
-            'usuario' => $usuario, // Aquí ya va el 'empresa_nombre'
+            'usuario' => $usuario,
             'fichajes' => $fichajes,
             'fichaje_activo' => $fichajeActivo,
             'nominas' => $nominas,
@@ -61,26 +58,25 @@ class Personal extends ResourceController {
         ]);
     }
 
-    // --- FUNCIÓN DE FICHAR (ENTRADA/SALIDA) ---
+    // FICHAJE
     public function fichar() {
         $data = $this->request->getJSON(true);
         $usuarioId = $data['usuario_id'];
-        $empresaId = $data['empresa_id']; // Nos aseguramos de recibir esto
+        $empresaId = $data['empresa_id'];
 
         $db = \Config\Database::connect();
         $builder = $db->table('fichajes');
 
-        // Buscar si ya hay un turno abierto
         $abierto = $builder->where('usuario_id', $usuarioId)
                            ->where('salida', null)
                            ->get()->getRowArray();
 
         if ($abierto) {
-            // CERRAR TURNO (SALIDA)
+            // CERRAR TURNO
             $builder->where('id', $abierto['id'])->update(['salida' => date('Y-m-d H:i:s')]);
             return $this->respond(['status' => 'success', 'tipo' => 'salida']);
         } else {
-            // ABRIR TURNO (ENTRADA)
+            // ABRIR TURNO
             $builder->insert([
                 'usuario_id' => $usuarioId, 
                 'empresa_id' => $empresaId, 

@@ -7,7 +7,7 @@ class Productos extends ResourceController {
     protected $modelName = 'App\Models\ProductoModel';
     protected $format    = 'json';
 
-    // 1. OBTENER PRODUCTOS DE UNA EMPRESA
+    // OBTENER PRODUCTOS DE EMPRESA
     public function index($empresaId = null) {
         $db = \Config\Database::connect();
         
@@ -19,7 +19,7 @@ class Productos extends ResourceController {
         return $this->respond($productos);
     }
 
-    // 2. OBTENER UN SOLO PRODUCTO
+    // OBTENER UN SOLO PRODUCTO
     public function getProductoById($id = null) {
         $db = \Config\Database::connect();
         $producto = $db->table('productos')->where('id', $id)->get()->getRowArray();
@@ -31,7 +31,7 @@ class Productos extends ResourceController {
         }
     }
 
-    // 3. CREAR PRODUCTO
+    // CREAR PRODUCTO
     public function create() {
         $data = $this->request->getPost();
         
@@ -71,7 +71,7 @@ class Productos extends ResourceController {
         }
     }
 
-    // 4. ACTUALIZAR PRODUCTO (Arregla el error 501 redireccionando el método automático)
+    // ACTUALIZAR PRODUCTO
     public function update($id = null) {
         return $this->updateProducto($id);
     }
@@ -110,14 +110,12 @@ class Productos extends ResourceController {
         }
     }
 
-    // 5. ELIMINAR PRODUCTO (Nueva función solicitada)
+    // 5. ELIMINAR PRODUCTO
     public function borrarProducto($id = null) {
         if (!$id) return $this->fail('ID no válido');
 
         $db = \Config\Database::connect();
-        
-        // Opcional: Podrías buscar el registro primero para borrar el archivo físico de la carpeta uploads
-        
+                
         if ($db->table('productos')->where('id', $id)->delete()) {
             return $this->respondDeleted(['message' => 'Producto eliminado del almacén']);
         }

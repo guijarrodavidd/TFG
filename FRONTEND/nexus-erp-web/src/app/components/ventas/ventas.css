@@ -1,4 +1,3 @@
-/* Tarjetas de catálogo más compactas y clicables */
 .product-card-pos {
     cursor: pointer;
     transition: all 0.2s;
@@ -15,46 +14,51 @@
     transform: scale(0.98);
 }
 
-/* Estilo para productos sin stock */
 .out-of-stock {
     opacity: 0.7;
-    pointer-events: none; /* No se puede hacer clic */
+    pointer-events: none;
 }
 
-/* CARRITO PEGAJOSO (Sticky) */
 .sticky-cart {
     position: sticky;
-    /* Ajusta este valor según la altura de tu navbar superior si la tienes */
     top: 20px; 
-    max-height: calc(100vh - 40px); /* Para que no se salga de la pantalla */
+    max-height: calc(100vh - 40px);
     display: flex;
     flex-direction: column;
 }
 
-/* Área de ítems del carrito con scroll interno */
 .cart-items-container {
-    flex-grow: 1; /* Ocupa el espacio disponible */
-    overflow-y: auto; /* Scroll si hay muchos ítems */
-    /* Un fondo sutil para diferenciarlo */
+    flex-grow: 1;
+    overflow-y: auto;
     background-image: radial-gradient(#dee2e6 1px, transparent 1px);
     background-size: 20px 20px;
 }
 
 .cart-item-row {
     background: white;
-    margin-bottom: 1px; /* Pequeña separación */
+    margin-bottom: 1px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
-/* Estilo para productos sin stock */
+
 .out-of-stock {
-    opacity: 0.6; /* Un poco más transparente */
-    pointer-events: none; /* No recibe clics */
-    cursor: not-allowed; /* Icono de prohibido (por si acaso) */
-    filter: grayscale(0.5); /* Opcional: los pone un poco en blanco y negro */
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
 }
+
 @media (min-width: 1200px) {
     .col-xl-20 {
         flex: 0 0 auto;
         width: 20%;
     }
+}
+
+.product-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
 }

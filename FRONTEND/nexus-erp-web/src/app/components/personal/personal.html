@@ -47,7 +47,7 @@
         </div>
       </div>
 
-      <div class="card border-0 shadow-sm rounded-4 p-3">
+      <div class="card border-0 shadow-sm rounded-4 p-3 mb-4">
         <div class="card-body" *ngFor="let nom of $any(datos.nominas) | slice:0:1">
           <h6 class="fw-bold mb-3">Última Nómina</h6>
           <div class="d-flex align-items-center justify-content-between p-3 rounded-4 bg-light">
@@ -69,7 +69,12 @@
         </div>
       </div>
 
+      <div style="height: 350px;">
+          <app-holidays-widget></app-holidays-widget>
+      </div>
+
     </div> 
+
     <div class="col-lg-8">
       
       <div class="card border-0 shadow-sm rounded-4 p-4 h-100">

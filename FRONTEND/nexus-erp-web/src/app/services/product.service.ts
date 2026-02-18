@@ -11,9 +11,7 @@ export class ProductService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  // --- PRODUCTOS ---
 
-  // ✅ NUEVO: Obtener lista de productos por empresa
   getProductosPorEmpresa(empresaId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/productos/empresa/${empresaId}`);
   }
@@ -34,7 +32,6 @@ export class ProductService {
     return this.http.delete(`${this.apiUrl}/productos/borrar/${id}`);
   }
 
-  // --- CATEGORÍAS ---
 
   getCategorias(empresaId: string | number): Observable<any> {
     return this.http.get(`${this.apiUrl}/categorias/empresa/${empresaId}`);

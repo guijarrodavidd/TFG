@@ -13,16 +13,16 @@ import { DashboardService } from '../../services/dashboard.service';
 export class Inicio implements OnInit {
 
   private dashboardService = inject(DashboardService);
-  private route = inject(ActivatedRoute); // Inyectamos la ruta activa
+  private route = inject(ActivatedRoute);
   
   usuario: any = {};
   
-  // Datos para el Dashboard
+  // PASAR DATOS DASHBOARD
   rendimiento: any = { total: 0, ventas: 0 };
   ventasRecientes: any[] = [];
   equipo: any[] = [];
 
-  // Variables para el Toast
+  // TOAST
   toastVisible: boolean = false;
   toastMensaje: string = '';
   toastTipo: 'success' | 'error' | 'warning' = 'warning';
@@ -34,7 +34,7 @@ export class Inicio implements OnInit {
       this.cargarDatosDashboard();
     }
 
-    // Detectar si el Guard nos ha redirigido por falta de permisos
+    // MANEJO DE ERRORES POR PERMISOS DE USUARIO
     this.route.queryParams.subscribe(params => {
       if (params['error'] === 'unauthorized') {
         this.mostrarToast('Acceso denegado: No tienes permisos para entrar ahí.', 'error');

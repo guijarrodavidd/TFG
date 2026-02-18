@@ -16,19 +16,19 @@ export class ProductosCreateComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  // --- CONFIGURACIÓN Y SESIÓN ---
   mediaUrl = environment.mediaUrl;
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
   
-  // --- ESTADOS DE VISTA ---
   categorias: any[] = [];
+  listaProductosTotal: any[] = []; 
   editMode: boolean = false;
   idProducto: string | null = null;
-  modalBorrarVisible: boolean = false; // Control del modal de eliminación
+  modalBorrarVisible: boolean = false; 
+  skuDuplicado: boolean = false; 
 
-  // --- MODELOS ---
   producto: any = {
     nombre: '',
+    sku: '',
     descripcion: '',
     precio_venta: 0,
     stock_actual: 0,
@@ -43,8 +43,8 @@ export class ProductosCreateComponent implements OnInit {
 
   ngOnInit() {
     this.cargarCategorias();
+    this.cargarTodosLosProductos(); 
     
-    // Obtenemos el ID de la URL
     this.idProducto = this.route.snapshot.paramMap.get('id');
     
     if (this.idProducto) {
@@ -60,11 +60,17 @@ export class ProductosCreateComponent implements OnInit {
     });
   }
 
+  cargarTodosLosProductos() {
+    this.productService.getProductosPorEmpresa(this.usuario.empresa_id).subscribe({
+      next: (res: any) => this.listaProductosTotal = res,
+      error: (err) => console.error('Error al cargar lista productos', err)
+    });
+  }
+
   cargarProducto(id: string) {
     this.productService.getProductoById(id).subscribe({
       next: (res: any) => {
         this.producto = res;
-        // Si el producto ya tiene imagen en BD, cargamos la URL completa
         if (this.producto.imagen_url) {
           this.imagePreview = this.mediaUrl + this.producto.imagen_url;
         }
@@ -73,32 +79,42 @@ export class ProductosCreateComponent implements OnInit {
     });
   }
 
-  // --- GESTIÓN DE IMAGEN ---
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
       const reader = new FileReader();
       reader.onload = () => {
-        // Genera previsualización local (base64)
         this.imagePreview = reader.result as string;
       };
       reader.readAsDataURL(file);
     }
   }
 
-  // --- ACCIONES PRINCIPALES ---
   guardar() {
+    this.skuDuplicado = false;
+
+    if (this.producto.sku) {
+        const skuNormalizado = this.producto.sku.trim().toUpperCase();
+        const existe = this.listaProductosTotal.find(p => 
+            p.sku && 
+            p.sku.toUpperCase() === skuNormalizado && 
+            p.id != this.idProducto 
+        );
+
+        if (existe) {
+            this.skuDuplicado = true;
+            return;
+        }
+    }
+
     const formData = new FormData();
     
-    // Mapeamos el objeto producto al FormData
     Object.keys(this.producto).forEach(key => {
-      // Evitamos enviar nulos como string "null"
       const valor = this.producto[key] === null ? '' : this.producto[key];
       formData.append(key, valor);
     });
 
-    // Si hay una nueva imagen seleccionada, la añadimos
     if (this.selectedFile) {
       formData.append('imagen', this.selectedFile);
     }
@@ -116,7 +132,6 @@ export class ProductosCreateComponent implements OnInit {
     }
   }
 
-  // --- LÓGICA DE ELIMINACIÓN ---
   confirmarBorrado() {
     this.modalBorrarVisible = true;
   }

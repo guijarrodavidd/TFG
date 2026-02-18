@@ -1,25 +1,16 @@
 <?php
 
-// --- INICIO DEL BLOQUE CORS NUCLEAR ---
-// Permitir acceso desde cualquier origen
 header('Access-Control-Allow-Origin: *');
 
-// Permitir los métodos habituales
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 
-// Permitir las cabeceras que Angular suele enviar
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization, X-API-KEY");
 
-// Si el navegador está preguntando "¿Puedo pasar?" (OPTIONS), le decimos QUE SÍ y matamos el proceso aquí.
+
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     header("HTTP/1.1 200 OK");
-    die(); // ¡MUERE AQUÍ! No dejamos que CodeIgniter cargue nada más.
+    die();
 }
-// --- FIN DEL BLOQUE CORS NUCLEAR ---
-
-// ... aquí debajo sigue el código original de CodeIgniter ...
-// Check PHP version...
-
 use CodeIgniter\Boot;
 use Config\Paths;
 

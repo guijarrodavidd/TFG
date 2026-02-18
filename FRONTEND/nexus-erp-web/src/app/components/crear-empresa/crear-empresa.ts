@@ -18,7 +18,6 @@ export class CrearEmpresaComponent implements OnInit {
   
   empresa = { nombre: '', cif: '', telefono: '', direccion: '', usuario_id: 0 };
   
-  // Estados de UI y Validación
   cargando = false;
   cifInvalido = false;
   telfInvalido = false;
@@ -43,17 +42,17 @@ export class CrearEmpresaComponent implements OnInit {
   }
 
   validarDatosLocales() {
-    // Validar CIF: B + 8 dígitos
+    // MANEJO DE ERRORES CIF
     const regexCIF = /^B[0-9]{8}$/;
     this.cifInvalido = this.empresa.cif.length > 0 && !regexCIF.test(this.empresa.cif);
 
-    // Validar Teléfono: Exactamente 9 dígitos
+    // MANEJO DE ERRORES PARA TLF
     const regexTelf = /^[0-9]{9}$/;
     this.telfInvalido = this.empresa.telefono.length > 0 && !regexTelf.test(this.empresa.telefono);
   }
 
   registrarEmpresa() {
-    // Validaciones finales antes de enviar
+    // MANEJO DE ERRORES
     if (!this.empresa.nombre || !this.empresa.cif) {
       this.mostrarToast('Nombre y CIF son obligatorios', 'warning');
       return;
@@ -67,7 +66,6 @@ export class CrearEmpresaComponent implements OnInit {
     this.cargando = true;
     this.empresaService.crearEmpresa(this.empresa).subscribe({
       next: (res: any) => {
-        // Actualizamos empresa_id en la sesión local
         this.usuarioLogueado.empresa_id = res.empresa_id;
         this.usuarioLogueado.empresa_nombre = this.empresa.nombre;
         localStorage.setItem('usuario', JSON.stringify(this.usuarioLogueado));

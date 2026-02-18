@@ -10,7 +10,6 @@ export class EmpresaService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  // Crear nueva empresa
   crearEmpresa(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/empresas/crear`, datos);
   }

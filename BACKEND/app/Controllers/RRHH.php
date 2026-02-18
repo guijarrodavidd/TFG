@@ -10,9 +10,7 @@ class RRHH extends ResourceController {
     
     protected $format = 'json';
 
-    /**
-     * SEGURIDAD: Solo permite el paso a Superadmin (1) o Encargado (2)
-     */
+    // SOLO SUPERADMIN O ENCARGADO
     private function verificarPermisosRRHH($usuarioId) {
         if (!$usuarioId) return false;
         $db = \Config\Database::connect();
@@ -20,9 +18,8 @@ class RRHH extends ResourceController {
         return ($user && in_array((int)$user['rol_id'], [1, 2]));
     }
 
-    // 1. OBTENER RESUMEN EMPLEADOS
+    // OBTENER RESUMEN EMPLEADOS
     public function getEmpleadosResumen($empresaId = null) {
-        // Obtenemos el ID del usuario que consulta (enviado por cabecera o query)
         $quienConsulta = $this->request->getGet('admin_id'); 
         if (!$this->verificarPermisosRRHH($quienConsulta)) {
             return $this->failForbidden('No tienes permisos para gestionar RRHH.');
@@ -50,7 +47,7 @@ class RRHH extends ResourceController {
         }
     }
 
-    // 2. ACTUALIZAR DÍAS DISPONIBLES
+    // ACTUALIZAR DÍAS DISPONIBLES
     public function actualizarDias() {
         $data = $this->request->getJSON(true) ?? $this->request->getPost();
         
@@ -73,7 +70,7 @@ class RRHH extends ResourceController {
         }
     }
 
-    // 3. GESTIONAR AUSENCIA (APROBAR/RECHAZAR)
+    // GESTION DE AUSENCIAS PARA ACPETAR O RECHAZAR
     public function gestionarAusencia() {
         $data = $this->request->getJSON(true);
 
@@ -113,7 +110,7 @@ class RRHH extends ResourceController {
         }
     }
 
-    // 4. SUBIR NÓMINA
+    // SUBIR NÓMINA
     public function subirNomina() {
         $adminId = $this->request->getPost('admin_id');
         if (!$this->verificarPermisosRRHH($adminId)) {

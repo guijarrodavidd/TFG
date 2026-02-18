@@ -18,7 +18,6 @@ export class Sidebar implements OnInit {
     const data = localStorage.getItem('usuario');
     if (data) {
       this.usuario = JSON.parse(data);
-      // Asegúrate de que al hacer login/registro guardas el 'rol' en el usuario
       console.log('Rol del usuario:', this.usuario.rol); 
     }
   }

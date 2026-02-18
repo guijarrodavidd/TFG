@@ -17,32 +17,32 @@ export class ProductosComponent implements OnInit {
   private productService = inject(ProductService);
   mediaUrl = environment.mediaUrl;
   
-  // --- DATOS DE SESIÓN ---
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
   
-  // --- DATOS PRINCIPALES ---
   productos: any[] = [];
   categorias: any[] = [];
   
-  // --- ESTADOS DE VISTA ---
   cargando: boolean = true;
-  modoBienvenida: boolean = false; // Se activa si no hay categorías
+  modoBienvenida: boolean = false; 
   modalCategoriaAbierto: boolean = false;
 
-  // --- FILTROS Y BÚSQUEDA ---
+  modalBorrarVisible: boolean = false;
+  productoIdParaBorrar: number | null = null;
+
   categoriaSeleccionada: number | null = null;
   textoBusqueda: string = '';
   mostrarAutocomplete: boolean = false;
   resultadosAutocomplete: any[] = [];
   
-  // --- PAGINACIÓN ---
-  productosFiltradosGlobal: any[] = []; // Lista completa ya filtrada (antes de paginar)
-  productosPaginados: any[] = [];       // Lo que se ve en pantalla (12 items)
+  productosFiltradosGlobal: any[] = []; 
+  productosPaginados: any[] = [];       
   paginaActual: number = 1;
   itemsPorPagina: number = 12;
   totalPaginas: number = 1;
 
-  // --- MODELO FORMULARIO CATEGORÍA ---
+  mensajeToast: string = '';
+  tipoToast: 'success' | 'error' = 'success';
+
   nuevaCategoria = {
     nombre: ''
   };
@@ -51,23 +51,19 @@ export class ProductosComponent implements OnInit {
     this.cargarDatos();
   }
 
-  // 1. CARGA INICIAL (Cadena de llamadas)
   cargarDatos() {
     if (!this.usuario.empresa_id) return;
     this.cargando = true;
 
-    // Primero cargamos categorías
     this.productService.getCategorias(this.usuario.empresa_id).subscribe({
       next: (cats: any) => {
         this.categorias = cats;
 
-        // Si no hay categorías, activamos modo bienvenida
         if (this.categorias.length === 0) {
           this.modoBienvenida = true;
           this.cargando = false;
         } else {
           this.modoBienvenida = false;
-          // Si hay categorías, cargamos productos
           this.cargarProductos();
         }
       },
@@ -82,7 +78,7 @@ export class ProductosComponent implements OnInit {
     this.productService.getProductosPorEmpresa(this.usuario.empresa_id).subscribe({
       next: (prods: any) => {
         this.productos = prods;
-        this.aplicarFiltros(); // Inicializa la lista filtrada
+        this.aplicarFiltros(); 
         this.cargando = false;
       },
       error: (err) => {
@@ -92,16 +88,13 @@ export class ProductosComponent implements OnInit {
     });
   }
 
-  // 2. LÓGICA DE FILTRADO Y BÚSQUEDA
   aplicarFiltros() {
     let resultado = this.productos;
 
-    // A. Filtro por Categoría
     if (this.categoriaSeleccionada !== null) {
       resultado = resultado.filter(p => p.categoria_id == this.categoriaSeleccionada);
     }
 
-    // B. Filtro por Texto (Buscador)
     if (this.textoBusqueda.trim()) {
       const termino = this.textoBusqueda.toLowerCase();
       resultado = resultado.filter(p => 
@@ -111,17 +104,16 @@ export class ProductosComponent implements OnInit {
     }
 
     this.productosFiltradosGlobal = resultado;
-    this.paginaActual = 1; // Resetear a página 1 al filtrar
+    this.paginaActual = 1; 
     this.actualizarPaginacion();
   }
 
   onBusquedaChange() {
-    // Lógica para el autocomplete
     if (this.textoBusqueda.length > 1) {
       this.mostrarAutocomplete = true;
       this.resultadosAutocomplete = this.productos.filter(p => 
         p.nombre.toLowerCase().includes(this.textoBusqueda.toLowerCase())
-      ).slice(0, 5); // Solo mostrar 5 sugerencias
+      ).slice(0, 5); 
     } else {
       this.mostrarAutocomplete = false;
     }
@@ -130,7 +122,6 @@ export class ProductosComponent implements OnInit {
   }
 
   cerrarAutocomplete() {
-    // Timeout pequeño para permitir que el click en la sugerencia ocurra antes de cerrar
     setTimeout(() => {
       this.mostrarAutocomplete = false;
     }, 200);
@@ -141,7 +132,6 @@ export class ProductosComponent implements OnInit {
     this.aplicarFiltros();
   }
 
-  // 3. LÓGICA DE PAGINACIÓN
   actualizarPaginacion() {
     this.totalPaginas = Math.ceil(this.productosFiltradosGlobal.length / this.itemsPorPagina);
     
@@ -155,12 +145,10 @@ export class ProductosComponent implements OnInit {
     if (nuevaPagina >= 1 && nuevaPagina <= this.totalPaginas) {
       this.paginaActual = nuevaPagina;
       this.actualizarPaginacion();
-      // Scroll suave arriba (opcional)
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
-  // 4. GESTIÓN DE CATEGORÍAS (MODAL)
   abrirModalCategoria() {
     this.modalCategoriaAbierto = true;
   }
@@ -171,7 +159,6 @@ export class ProductosComponent implements OnInit {
   }
 
   crearCategoria(event?: Event) {
-    // Prevenir submit si viene de un form
     if (event) {
       event.preventDefault();
       event.stopPropagation();
@@ -186,11 +173,51 @@ export class ProductosComponent implements OnInit {
 
     this.productService.createCategoria(datos).subscribe({
       next: () => {
-        // Recargar datos para que aparezca la nueva categoría
         this.cerrarModalCategoria();
         this.cargarDatos(); 
+        this.mostrarToast('Categoría creada con éxito', 'success');
       },
-      error: (err) => console.error('Error al crear categoría', err)
+      error: (err) => {
+        console.error('Error al crear categoría', err);
+        if (err.status === 409) {
+          this.mostrarToast('¡Esa categoría ya existe!', 'error');
+        } else {
+          this.mostrarToast('Error al crear la categoría', 'error');
+        }
+      }
     });
+  }
+
+  abrirModalBorrar(id: number) {
+    this.productoIdParaBorrar = id;
+    this.modalBorrarVisible = true;
+  }
+
+  cerrarModalBorrar() {
+    this.modalBorrarVisible = false;
+    this.productoIdParaBorrar = null;
+  }
+
+  borrarProducto() {
+    if (this.productoIdParaBorrar) {
+      this.productService.borrarProducto(this.productoIdParaBorrar.toString()).subscribe({
+        next: () => {
+          this.cerrarModalBorrar();
+          this.cargarDatos();
+          this.mostrarToast('Producto eliminado correctamente', 'success');
+        },
+        error: (err) => {
+          console.error('Error al eliminar', err);
+          this.cerrarModalBorrar();
+          this.mostrarToast('Error al eliminar el producto', 'error');
+        }
+      });
+    }
+  }
+
+  mostrarToast(msg: string, tipo: 'success' | 'error') {
+    this.mensajeToast = msg;
+    this.tipoToast = tipo;
+    setTimeout(() => this.mensajeToast = '', 3000);
   }
 }

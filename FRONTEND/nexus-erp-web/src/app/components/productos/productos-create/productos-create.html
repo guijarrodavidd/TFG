@@ -35,9 +35,21 @@
     <div class="col-lg-8">
       <div class="card border-0 shadow-sm rounded-4 p-4">
         <div class="row g-3">
-          <div class="col-md-12">
+          <div class="col-md-8">
             <label class="form-label fw-bold small text-muted">NOMBRE</label>
             <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="producto.nombre" name="nombre" required>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-bold small text-muted">SKU (CÓDIGO)</label>
+            <input type="text" class="form-control bg-light border-0 py-2" 
+                   [(ngModel)]="producto.sku" name="sku" 
+                   (input)="skuDuplicado = false"
+                   [class.is-invalid]="skuDuplicado"
+                   placeholder="Ej: CAM-001">
+            <div class="text-danger small mt-1" *ngIf="skuDuplicado">
+                Este SKU ya existe.
+            </div>
           </div>
           
           <div class="col-md-6">

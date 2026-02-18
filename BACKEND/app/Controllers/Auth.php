@@ -9,7 +9,6 @@ class Auth extends ResourceController
     protected $modelName = 'App\Models\UsuarioModel';
     protected $format    = 'json';
 
-    // 1. INICIAR SESIÓN
     public function login()
     {
         try {
@@ -17,45 +16,36 @@ class Auth extends ResourceController
             $email = $data['email'] ?? null;
             $password = $data['password'] ?? null;
 
-            // Buscamos usuario
             $usuario = $this->model->where('email', $email)->first();
 
             if (!$usuario || !password_verify($password, $usuario['password'])) {
                 return $this->failUnauthorized('Credenciales incorrectas');
             }
 
-            // Generar token simple
             $token = bin2hex(random_bytes(16));
             
-            // Intentamos guardar el token. 
-            // Si la columna 'token_sesion' no existe en la BD, esto podría fallar.
-            // Lo capturamos para que no rompa el login.
             try {
                 $this->model->update($usuario['id'], ['token_sesion' => $token]);
             } catch (\Exception $e) {
-                // Si falla la actualización del token, seguimos permitiendo el login
-                // pero logueamos el error internamente (opcional)
-                // log_message('error', 'Error guardando token: ' . $e->getMessage());
+
             }
 
             return $this->respond([
                 'status' => 'success',
-                'data'   => $usuario, // Enviamos datos usuario
+                'data'   => $usuario, 
                 'token'  => $token
             ]);
 
         } catch (\Exception $e) {
-            // Captura cualquier otro error fatal y lo muestra legible
             return $this->failServerError($e->getMessage());
         }
     }
 
-    // 2. REGISTRO JEFE / ENCARGADO
     public function registroEncargado()
     {
         $data = $this->request->getJSON(true);
         
-        // Validación mínima
+        // MANEJO DE ERRORES
         if (empty($data['email']) || empty($data['password'])) {
              return $this->fail('Faltan datos');
         }

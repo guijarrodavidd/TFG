@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { VentaService } from '../../services/venta.service';
 import { ClienteService } from '../../services/cliente.service';
-import { environment } from '../../../environments/environment'; // ✅ Importamos el entorno
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-ventas',
@@ -15,27 +15,23 @@ import { environment } from '../../../environments/environment'; // ✅ Importam
 })
 export class VentasComponent implements OnInit {
   
-  // Servicios
   private productService = inject(ProductService);
   private ventaService = inject(VentaService);
   private clienteService = inject(ClienteService);
 
-  // ✅ URL Base para imágenes
   mediaUrl = environment.mediaUrl;
 
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
 
-  // --- DATOS PRINCIPALES ---
   productos: any[] = [];
   categorias: any[] = [];
   listaClientes: any[] = [];
 
-  // --- CARRITO ---
   carrito: any[] = [];
   totalVenta: number = 0;
-  clienteSeleccionadoId: string = '';
+  
+  clienteNifInput: string = '';
 
-  // --- FILTROS Y PAGINACIÓN ---
   productosFiltrados: any[] = [];
   productosPaginados: any[] = [];
   
@@ -46,7 +42,6 @@ export class VentasComponent implements OnInit {
   itemsPorPagina: number = 9; 
   totalPaginas: number = 1;
 
-  // --- FEEDBACK ---
   mensajeToast: string = '';
   tipoToast: 'success' | 'error' = 'success';
 
@@ -169,15 +164,33 @@ export class VentasComponent implements OnInit {
   limpiarCarrito() {
     this.carrito = [];
     this.totalVenta = 0;
+    this.clienteNifInput = '';
   }
 
   procesarVenta() {
     if (this.carrito.length === 0) return;
 
+    // VALIDACIÓN: El NIF es obligatorio porque la BBDD no acepta cliente NULL
+    if (!this.clienteNifInput.trim()) {
+        this.mostrarToast('El campo NIF/CIF del cliente es obligatorio.', 'error');
+        return;
+    }
+
+    // Buscar cliente por NIF
+    const clienteEncontrado = this.listaClientes.find(c => 
+        c.nif && c.nif.toUpperCase() === this.clienteNifInput.trim().toUpperCase()
+    );
+
+    // VALIDACIÓN: El cliente debe existir en la base de datos
+    if (!clienteEncontrado) {
+        this.mostrarToast('No existe ningún cliente registrado con ese NIF/CIF.', 'error');
+        return;
+    }
+
     const datosVenta = {
       empresa_id: this.usuario.empresa_id,
       usuario_id: this.usuario.id,
-      cliente_id: this.clienteSeleccionadoId || null,
+      cliente_id: clienteEncontrado.id, // Usamos el ID del cliente encontrado
       total: this.totalVenta,
       detalles: this.carrito.map(item => ({
         producto_id: item.producto.id,
@@ -195,7 +208,7 @@ export class VentasComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        this.mostrarToast('Error al procesar la venta.', 'error');
+        this.mostrarToast('Error al procesar la venta. Revisa los datos.', 'error');
       }
     });
   }

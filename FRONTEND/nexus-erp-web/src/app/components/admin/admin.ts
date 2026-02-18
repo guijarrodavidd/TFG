@@ -63,7 +63,6 @@ export class AdminComponent implements OnInit {
         this.empresas = res;
         this.cargando = false;
         
-        // Actualizar datos del modal si está abierto
         if (this.empresaSeleccionada.id) {
             const empresaActualizada = this.empresas.find(e => e.id === this.empresaSeleccionada.id);
             if(empresaActualizada) this.empresaSeleccionada = empresaActualizada;

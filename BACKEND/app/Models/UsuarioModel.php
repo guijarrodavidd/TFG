@@ -11,14 +11,13 @@ class UsuarioModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     
-    // ✅ CORRECCIÓN: Añadimos todos los campos, especialmente 'token_sesion'
     protected $allowedFields    = [
         'nombre', 
         'email', 
         'password', 
         'rol_id', 
         'empresa_id', 
-        'token_sesion', // <--- IMPORTANTE: Si esto falta, el login da Error 500
+        'token_sesion',
         'created_at',
         'dias_disponibles'
     ];
@@ -27,7 +26,6 @@ class UsuarioModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Reglas de validación base
     protected $validationRules = [
         'email'    => 'required|valid_email|is_unique[usuarios.email,id,{id}]',
         'nombre'   => 'required|min_length[3]'

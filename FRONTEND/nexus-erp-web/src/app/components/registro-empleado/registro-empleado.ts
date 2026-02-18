@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-// 1. Importamos el servicio
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -13,7 +12,6 @@ import { AuthService } from '../../services/auth.service';
 })
 export class RegistroEmpleado implements OnInit {
 
-  // 2. Inyectamos AuthService en lugar de HttpClient
   private authService = inject(AuthService);
   router = inject(Router);
   route = inject(ActivatedRoute);
@@ -28,18 +26,18 @@ export class RegistroEmpleado implements OnInit {
   };
 
   ngOnInit() {
-    // Verificamos si hay usuario logueado (Jefe registrando)
+    // VERIFICA SI HAY ADMIN LOGUEADO
     const usuarioLogueado = JSON.parse(localStorage.getItem('usuario') || '{}');
     const esJefe = usuarioLogueado.rol === 'admin';
 
     this.route.queryParams.subscribe(params => {
       this.token = params['token'];
       
-      // Si no hay token Y NO es el jefe logueado -> Error
+      // NO TOKEN Y NO JEFE -> ERROR
       if (!this.token && !esJefe) {
         this.mensajeError = "¡Error! Enlace de invitación no válido.";
       } else if (esJefe) {
-        // Si es jefe, usamos su ID de empresa como token "automático"
+        // SI ES JEFE USAR SU ID EMPRESA COMO TOKEN
         this.token = usuarioLogueado.empresa_id; 
       }
     });
@@ -53,8 +51,7 @@ export class RegistroEmpleado implements OnInit {
       token: this.token
     };
 
-    // 3. Usamos el método del servicio
-    // Sintaxis limpia y legible
+    // LLAMAR AL SERVICE PARA REGISTRO Y CUANDO SE ENVIE LLEVAR A INICIAR SESION
     this.authService.registrarEmpleado(datosEnviar)
       .subscribe({
         next: (res: any) => {
@@ -63,7 +60,7 @@ export class RegistroEmpleado implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          // Gestión de errores centralizada en la respuesta
+          // MANEJO DE ERRORES CON ERROR PERSONALIZADO
           alert("Error al registrarse: " + (err.error?.message || "Revisa los datos"));
         }
       });

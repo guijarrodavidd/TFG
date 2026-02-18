@@ -17,27 +17,25 @@ export class ClientesComponent implements OnInit {
   private clienteService = inject(ClienteService);
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
   clientes: any[] = [];
+  clientesFiltrados: any[] = [];
   
-  // Estado
   toast = { visible: false, mensaje: '', tipo: 'success' as 'success' | 'error' | 'warning' };
   modoEdicion: boolean = false;
   
-  // Validación NIF
-  nifValido: boolean = false; // ANTES: dniValido
+  nifValido: boolean = false; 
   mensajeErrorNif: string = '';
-
-  // Datos
   clienteSeleccionado: any = null;
-  
-  // Modelo (Cambiado dni por nif)
   datosCliente = {
     id: null as number | null,
     nombre: '',
-    nif: '', // ✅ CAMBIADO
+    nif: '',
     email: '',
     telefono: '',
     direccion: ''
   };
+
+  filtroNombre: string = '';
+  filtroTipo: string = '';
 
   ngOnInit() {
     this.cargarClientes();
@@ -46,12 +44,29 @@ export class ClientesComponent implements OnInit {
   cargarClientes() {
     if(!this.usuario.empresa_id) return;
     this.clienteService.getClientesPorEmpresa(this.usuario.empresa_id).subscribe({
-      next: (data: any) => this.clientes = data,
+      next: (data: any) => {
+        this.clientes = data;
+        this.aplicarFiltros();
+      },
       error: () => this.mostrarToast('Error de conexión', 'error')
     });
   }
 
-  // --- MODALES ---
+  aplicarFiltros() {
+    this.clientesFiltrados = this.clientes.filter(cliente => {
+        const coincideNombre = cliente.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase());
+        
+        let coincideTipo = true;
+        if (this.filtroTipo === 'Empresa') {
+            coincideTipo = /^[A-HJ-NP-SUVW]\d{7}[0-9A-J]$/i.test(cliente.nif);
+        } else if (this.filtroTipo === 'Residencial') {
+            coincideTipo = !/^[A-HJ-NP-SUVW]\d{7}[0-9A-J]$/i.test(cliente.nif);
+        }
+
+        return coincideNombre && coincideTipo;
+    });
+  }
+
   abrirModalVer(cliente: any) {
     this.clienteSeleccionado = { ...cliente };
   }
@@ -61,7 +76,7 @@ export class ClientesComponent implements OnInit {
     this.datosCliente = { 
         id: null, 
         nombre: '', 
-        nif: '', // ✅ Resetear nif
+        nif: '',
         email: '', 
         telefono: '', 
         direccion: '' 
@@ -72,15 +87,13 @@ export class ClientesComponent implements OnInit {
 
   abrirModalEditar(cliente: any) {
     this.modoEdicion = true;
-    // Mapeamos el campo de la BD (nif) al formulario
     this.datosCliente = { 
         ...cliente, 
-        nif: cliente.nif || '' // ✅ Usamos cliente.nif
+        nif: cliente.nif || ''
     };
-    this.validarNif(); // ✅ Validar al abrir
+    this.validarNif();
   }
 
-  // --- VALIDACIÓN NIF (Antes validarDni) ---
   validarNif() {
     const nif = this.datosCliente.nif;
     this.mensajeErrorNif = '';
@@ -90,12 +103,9 @@ export class ClientesComponent implements OnInit {
         return;
     }
 
-    // Normalizar
     const str = nif.toUpperCase().replace(/\s/g, '').replace(/-/g, '');
     this.datosCliente.nif = str; 
 
-    // Formato básico (DNI, NIE, CIF básico)
-    // Aceptamos X,Y,Z para NIE y letras de CIF
     const regex = /^([ABCDEFGHJKLMNPQRSUVWXYZ]\d{7,8}|\d{8}|[XYZ]\d{7,8})([A-Z0-9])$/;
     
     if (!regex.test(str)) {
@@ -103,12 +113,8 @@ export class ClientesComponent implements OnInit {
         if(str.length > 0) this.mensajeErrorNif = 'Formato inválido';
         return;
     }
-
-    // Nota: Aquí podrías mantener el algoritmo del módulo 23 si es solo para DNI/NIE.
-    // Si aceptas CIF (empresas), el algoritmo es más complejo.
-    // Para simplificar y que no te falle con empresas, validaremos solo formato y longitud por ahora.
     
-    this.nifValido = true; // Asumimos válido si pasa el regex
+    this.nifValido = true; 
   }
 
   guardarCliente() {
@@ -117,7 +123,19 @@ export class ClientesComponent implements OnInit {
       return;
     }
 
-    // El objeto ya lleva la propiedad 'nif' correcta
+    if (this.datosCliente.nif) {
+        const duplicado = this.clientes.find(c => 
+            c.nif && 
+            c.nif.toUpperCase() === this.datosCliente.nif.toUpperCase() &&
+            c.id !== this.datosCliente.id
+        );
+
+        if (duplicado) {
+            this.mostrarToast("Ya existe un cliente con este NIF/CIF", "error");
+            return;
+        }
+    }
+
     const body = { ...this.datosCliente, empresa_id: this.usuario.empresa_id };
 
     const peticion = (this.modoEdicion && this.datosCliente.id) 

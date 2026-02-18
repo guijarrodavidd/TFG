@@ -5,13 +5,24 @@
             <h2 class="fw-bold mb-0 text-dark">Cartera de Clientes</h2>
             <p class="text-muted small">Gestiona tus contactos y empresas.</p>
         </div>
-        <button class="btn btn-primary d-flex align-items-center gap-2 shadow-sm rounded-pill px-4" 
-                data-bs-toggle="modal" 
-                data-bs-target="#modalFormCliente"
-                (click)="abrirModalCrear()">
-            <i class="bi bi-person-plus-fill"></i>
-            <span>Nuevo Cliente</span>
-        </button>
+        
+        <div class="d-flex gap-2">
+            <input type="text" class="form-control" placeholder="Buscar por nombre..." [(ngModel)]="filtroNombre" (input)="aplicarFiltros()">
+            
+            <select class="form-select" [(ngModel)]="filtroTipo" (change)="aplicarFiltros()">
+                <option value="">Todos</option>
+                <option value="Empresa">Empresa</option>
+                <option value="Residencial">Residencial</option>
+            </select>
+
+            <button class="btn btn-primary d-flex align-items-center gap-2 shadow-sm rounded-pill px-4" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#modalFormCliente"
+                    (click)="abrirModalCrear()">
+                <i class="bi bi-person-plus-fill"></i>
+                <span>Nuevo Cliente</span>
+            </button>
+        </div>
     </div>
 
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -26,7 +37,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let cliente of clientes" class="border-bottom border-light">
+                    <tr *ngFor="let cliente of clientesFiltrados" class="border-bottom border-light">
                         <td class="ps-4 py-3">
                             <div class="d-flex align-items-center" style="cursor: pointer;" (click)="abrirModalVer(cliente)" data-bs-toggle="modal" data-bs-target="#modalVerCliente">
                                 <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-3 rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px;">
@@ -168,7 +179,7 @@
 
 <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1060">
     <div class="toast align-items-center border-0 shadow-lg" [class.show]="toast.visible" 
-         [ngClass]="toast.tipo === 'success' ? 'text-bg-success' : 'text-bg-danger'">
+         [ngClass]="toast.tipo === 'success' ? 'text-bg-success' : (toast.tipo === 'error' ? 'text-bg-danger' : 'text-bg-warning')">
         <div class="d-flex">
             <div class="toast-body fw-bold">
                 <i class="bi me-2" [ngClass]="toast.tipo === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>

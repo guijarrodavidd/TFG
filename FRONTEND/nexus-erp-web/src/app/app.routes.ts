@@ -13,20 +13,15 @@ import { ClientesComponent } from './components/clientes/clientes';
 import { InvitarComponent } from './components/invitar/invitar'; 
 import { GestionUsuariosComponent } from './components/gestion-usuarios/gestion-usuarios';
 import { GestionRRHHComponent } from './components/gestion-rrhh/gestion-rrhh';
-
-// Importa tu componente de Admin
 import { AdminComponent } from './components/admin/admin'; 
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
-    
     { path: 'login', component: LoginComponent },
     { path: 'registro-encargado', component: RegistroEncargado },
     { path: 'registro-empleado', component: RegistroEmpleado }, 
     { path: 'crear-empresa', component: CrearEmpresaComponent },
-
-    // ✅ CORRECCIÓN: La ruta 'admin' debe estar AQUÍ (en la raíz), no dentro de dashboard
     { path: 'admin', component: AdminComponent },
 
     // Rutas del Dashboard

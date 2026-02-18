@@ -13,5 +13,5 @@ class NominaModel extends Model
     protected $allowedFields    = ['usuario_id', 'mes', 'archivo'];
     protected $useTimestamps    = true;
     protected $createdField     = 'created_at';
-    protected $updatedField     = ''; // No usamos updated_at
+    protected $updatedField     = '';
 }

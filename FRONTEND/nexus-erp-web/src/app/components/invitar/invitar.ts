@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-invitar',
@@ -14,6 +15,8 @@ export class InvitarComponent implements OnInit {
   enlaceInvitacion: string = '';
   copiado: boolean = false;
 
+  appUrl = environment.appUrl;
+
   ngOnInit() {
     const data = localStorage.getItem('usuario');
     if (data) {
@@ -24,18 +27,15 @@ export class InvitarComponent implements OnInit {
 
   generarEnlace() {
     if (!this.usuario.empresa_id) return;
-
-    // Construimos la URL dinámica basada en el dominio actual
-    const dominio = window.location.origin; // Ej: http://localhost:4200
-    const token = this.usuario.empresa_id; // Usamos el ID de empresa como token simple
+    const token = this.usuario.empresa_id; // TOKEN = ID DE EMPRESA PARA PERSONALIZAR
     
-    this.enlaceInvitacion = `${dominio}/registro-empleado?token=${token}`;
+    this.enlaceInvitacion = `${this.appUrl}/registro-empleado?token=${token}`;
   }
 
   copiarEnlace() {
     navigator.clipboard.writeText(this.enlaceInvitacion).then(() => {
       this.copiado = true;
-      setTimeout(() => this.copiado = false, 2000); // Resetear mensaje a los 2s
+      setTimeout(() => this.copiado = false, 2000); // A LOS DOS SEGUNDOS SE QUITA EL MSJ
     });
   }
 }
