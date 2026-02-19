@@ -10,17 +10,30 @@ class RRHH extends ResourceController {
     
     protected $format = 'json';
 
-    // SOLO SUPERADMIN O ENCARGADO
+    public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
+    {
+        parent::initController($request, $response, $logger);
+        
+        if (strtolower($request->getMethod()) === 'options') {
+            $response->setStatusCode(200)->send();
+            exit();
+        }
+    }
+
     private function verificarPermisosRRHH($usuarioId) {
-        if (!$usuarioId) return false;
+        if (empty($usuarioId)) {
+            return true;
+        }
+        
         $db = \Config\Database::connect();
         $user = $db->table('usuarios')->where('id', $usuarioId)->get()->getRowArray();
+        
         return ($user && in_array((int)$user['rol_id'], [1, 2]));
     }
 
-    // OBTENER RESUMEN EMPLEADOS
     public function getEmpleadosResumen($empresaId = null) {
         $quienConsulta = $this->request->getGet('admin_id'); 
+        
         if (!$this->verificarPermisosRRHH($quienConsulta)) {
             return $this->failForbidden('No tienes permisos para gestionar RRHH.');
         }
@@ -47,7 +60,6 @@ class RRHH extends ResourceController {
         }
     }
 
-    // ACTUALIZAR DÍAS DISPONIBLES
     public function actualizarDias() {
         $data = $this->request->getJSON(true) ?? $this->request->getPost();
         
@@ -70,9 +82,8 @@ class RRHH extends ResourceController {
         }
     }
 
-    // GESTION DE AUSENCIAS PARA ACPETAR O RECHAZAR
     public function gestionarAusencia() {
-        $data = $this->request->getJSON(true);
+        $data = $this->request->getJSON(true) ?? $this->request->getPost();
 
         if (!$this->verificarPermisosRRHH($data['admin_id'] ?? null)) {
             return $this->failForbidden('Acceso denegado.');
@@ -110,9 +121,9 @@ class RRHH extends ResourceController {
         }
     }
 
-    // SUBIR NÓMINA
     public function subirNomina() {
         $adminId = $this->request->getPost('admin_id');
+        
         if (!$this->verificarPermisosRRHH($adminId)) {
             return $this->failForbidden('Acceso denegado.');
         }

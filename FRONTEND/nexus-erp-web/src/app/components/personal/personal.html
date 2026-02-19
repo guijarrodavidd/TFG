@@ -38,7 +38,7 @@
                     <p class="text-muted small mb-0">Días disponibles</p>
                 </div>
                 <div class="col-5">
-                    <button class="btn btn-outline-dark h-100 w-100 rounded-4 d-flex flex-column align-items-center justify-content-center" (click)="enviarSolicitud()">
+                    <button class="btn btn-outline-dark h-100 w-100 rounded-4 d-flex flex-column align-items-center justify-content-center" (click)="abrirModalSolicitud()">
                         <i class="bi bi-calendar-plus fs-4"></i>
                         <span class="small fw-bold">Solicitar</span>
                     </button>
@@ -132,5 +132,56 @@
       </div>
 
     </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="modalSolicitudAbierto" style="z-index: 1040"></div>
+<div class="modal fade show d-block" *ngIf="modalSolicitudAbierto" tabindex="-1" style="z-index: 1050">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow-lg">
+      <div class="modal-header border-bottom-0 p-4 pb-0">
+        <h5 class="fw-bold mb-0">Solicitar Ausencia</h5>
+        <button type="button" class="btn-close" (click)="cerrarModalSolicitud()"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form (ngSubmit)="enviarSolicitud()">
+          
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted">TIPO DE AUSENCIA</label>
+            <select class="form-select bg-light border-0 py-2 fw-bold" [(ngModel)]="solicitud.tipo" name="tipo">
+              <option value="vacaciones">Vacaciones</option>
+              <option value="enfermedad">Baja por Enfermedad</option>
+              <option value="asuntos_propios">Asuntos Propios</option>
+            </select>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-6">
+              <label class="form-label small fw-bold text-muted">DESDE</label>
+              <input type="date" class="form-control bg-light border-0 py-2 fw-bold text-muted" [(ngModel)]="solicitud.fecha_inicio" name="fecha_inicio" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label small fw-bold text-muted">HASTA</label>
+              <input type="date" class="form-control bg-light border-0 py-2 fw-bold text-muted" [(ngModel)]="solicitud.fecha_fin" name="fecha_fin" required>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-bold text-muted">COMENTARIOS (OPCIONAL)</label>
+            <textarea class="form-control bg-light border-0 py-2" rows="3" [(ngModel)]="solicitud.comentarios" name="comentarios" placeholder="Añade algún detalle si es necesario..."></textarea>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-dark flex-grow-1 fw-bold rounded-pill py-2" [disabled]="!solicitud.fecha_inicio || !solicitud.fecha_fin">
+              Confirmar Solicitud
+            </button>
+            <button type="button" class="btn btn-light rounded-pill py-2 px-4 fw-bold" (click)="cerrarModalSolicitud()">
+              Cancelar
+            </button>
+          </div>
+
+        </form>
+      </div>
     </div>
+  </div>
 </div>

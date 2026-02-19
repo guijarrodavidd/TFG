@@ -11,32 +11,21 @@ use CodeIgniter\Filters\SecureHeaders;
 
 class Filters extends BaseConfig
 {
-    /**
-     * Alias de filtros
-     */
     public array $aliases = [
         'csrf'          => CSRF::class,
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
-        'cors'          => \CodeIgniter\Filters\Cors::class, // <--- ESTO ES VITAL
+        'cors'          => \CodeIgniter\Filters\Cors::class,
     ];
 
-    /**
-     * Filtros Globales (se ejecutan en CADA petición)
-     */
     public array $globals = [
         'before' => [
-            'cors', // <--- DEBE ESTAR EL PRIMERO DE LA LISTA
-            // 'honeypot',
-            // 'csrf',
-            // 'invalidchars',
+            'cors',
         ],
         'after' => [
             'toolbar',
-            // 'honeypot',
-            // 'secureheaders',
         ],
     ];
 

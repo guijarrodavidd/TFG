@@ -17,7 +17,6 @@ export class GestionRRHHComponent implements OnInit {
   
   empleados: any[] = [];
 
-  // TOASTS VARIABLES
   toastVisible: boolean = false;
   toastMensaje: string = '';
   toastTipo: 'warning' | 'error' | 'success' = 'warning';
@@ -34,22 +33,22 @@ export class GestionRRHHComponent implements OnInit {
   }
 
   cargarDatos() {
-  const empresaId = this.usuarioLogueado.empresa_id;
-  const adminId = this.usuarioLogueado.id;
+    const empresaId = this.usuarioLogueado.empresa_id;
+    const adminId = this.usuarioLogueado.id;
 
-  if (empresaId && adminId) {
-    this.rrhhService.getEmpleadosResumen(empresaId, adminId).subscribe({
-      next: (res: any) => {
-        this.empleados = res.filter((u: any) => u.id != adminId);
-      },
-      error: (err) => {
-        console.error('Error:', err);
-        this.mostrarToast('No se han podido cargar los empleados', 'error');
-      }
-    });
+    if (empresaId && adminId) {
+      this.rrhhService.getEmpleadosResumen(empresaId, adminId).subscribe({
+        next: (res: any) => {
+          this.empleados = res.filter((u: any) => u.id != adminId);
+        },
+        error: (err) => {
+          console.error(err);
+          this.mostrarToast('No se han podido cargar los empleados', 'error');
+        }
+      });
+    }
   }
-}
-  // PARA SOLICITAR VACACIONES + TOAST DE VALIDACIÓN O ERROR
+
   gestionarSolicitud(solicitud: any, accion: 'aprobada' | 'rechazada') {
     this.rrhhService.responderSolicitud(solicitud.id, accion).subscribe({
       next: () => {
@@ -63,7 +62,6 @@ export class GestionRRHHComponent implements OnInit {
     });
   }
 
-  // MODIFICAR VACACIONES
   guardarDias(empleado: any) {
     this.rrhhService.actualizarDias(empleado.id, empleado.dias_disponibles).subscribe({
         next: () => this.mostrarToast('Días actualizados con éxito', 'success'),
@@ -71,7 +69,6 @@ export class GestionRRHHComponent implements OnInit {
     });
   }
 
-  // SUBIR NOMINA + MANEJO DE ERRORES SI NO SE SUBE
   onFileSelected(event: any, userId: number, mes: string) {
     if(!mes) { 
       this.mostrarToast('Selecciona el mes de la nómina primero', 'warning'); 
@@ -89,6 +86,8 @@ export class GestionRRHHComponent implements OnInit {
         formData.append('nomina', file);
         formData.append('usuario_id', userId.toString());
         formData.append('mes', mes);
+        formData.append('admin_id', this.usuarioLogueado.id.toString());
+        formData.append('empresa_id', this.usuarioLogueado.empresa_id.toString());
 
         this.rrhhService.subirNomina(formData).subscribe({
             next: () => {

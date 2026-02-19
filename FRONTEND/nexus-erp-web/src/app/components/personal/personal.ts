@@ -22,6 +22,8 @@ export class PersonalComponent implements OnInit, OnDestroy {
   lunesActual = this.getLunes(new Date()); 
   private timerInterval: any;
 
+  modalSolicitudAbierto: boolean = false;
+
   datos: any = {
     usuario: {},
     nominas: [],
@@ -142,12 +144,21 @@ export class PersonalComponent implements OnInit, OnDestroy {
         (segundos < 10 ? '0' + segundos : segundos);
   }
 
+  abrirModalSolicitud() {
+    this.modalSolicitudAbierto = true;
+  }
+
+  cerrarModalSolicitud() {
+    this.modalSolicitudAbierto = false;
+    this.solicitud = { tipo: 'vacaciones', fecha_inicio: '', fecha_fin: '', comentarios: '' };
+  }
+
   enviarSolicitud() {
     const payload = { ...this.solicitud, usuario_id: this.usuarioLogueado.id, empresa_id: this.usuarioLogueado.empresa_id };
     this.personalService.solicitarVacaciones(payload).subscribe(() => {
-        alert('Solicitud enviada');
+        alert('Solicitud enviada correctamente');
         this.cargarDashboard();
-        this.solicitud = { tipo: 'vacaciones', fecha_inicio: '', fecha_fin: '', comentarios: '' };
+        this.cerrarModalSolicitud();
     });
   }
 }
